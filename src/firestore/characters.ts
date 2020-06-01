@@ -1,7 +1,7 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db, useUser } from "../firebase";
 import { firestore } from "firebase";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export interface Card {
   deck: string;
@@ -9,27 +9,26 @@ export interface Card {
 }
 
 export interface PlayerCharacter {
-  id: string;
   uid: string;
   name: string;
-  orgPlayId: string;
-  deckOne: string;
+  orgPlayId?: string;
+  deckOne?: string;
   deckOneSubstitutions?: {
     [adventure: string]: { [cards: string]: [string, string] };
   };
-  cardsOne: Card[];
-  deckTwo: string;
+  cardsOne?: Card[];
+  deckTwo?: string;
   deckTwoSubstitutions?: {
     [adventure: string]: { [cards: string]: [string, string] };
   };
-  cardsTwo: Card[];
-  deckThree: string;
+  cardsTwo?: Card[];
+  deckThree?: string;
   deckThreeSubstitutions?: {
     [adventure: string]: { [cards: string]: [string, string] };
   };
-  cardsThree: Card[];
-  character: string;
-  characterDeck: string;
+  cardsThree?: Card[];
+  character?: string;
+  characterDeck?: string;
   Strength?: boolean[];
   Dexterity?: boolean[];
   Constitution?: boolean[];
@@ -77,4 +76,19 @@ export function useCreateAccountCharacter() {
       }),
     [user]
   );
+}
+
+export function useUpdateAccountCharacter(
+  id: string
+): [(char: PlayerCharacter) => Promise<void>, Error | undefined] {
+  const [updateError, setUpdateError] = useState<Error | undefined>();
+
+  return [
+    useCallback(
+      (char: PlayerCharacter) =>
+        db?.collection("player_decks").doc(id).set(char).catch(setUpdateError),
+      [id]
+    ),
+    updateError,
+  ];
 }
