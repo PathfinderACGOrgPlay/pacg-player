@@ -1,6 +1,7 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import { useUser } from "../firebase";
-import firebase from "firebase";
+import { db, useUser } from "../firebase";
+import { firestore } from "firebase";
+import { useCallback } from "react";
 
 export interface Card {
   deck: string;
@@ -49,20 +50,31 @@ export function useAccountCharacters() {
   const user = useUser();
 
   return useCollection(
-    firebase.firestore().collection("player_decks").where("uid", "==", user.uid)
+    db.collection("player_decks").where("uid", "==", user.uid)
   ) as [
-    firebase.firestore.QuerySnapshot<PlayerCharacter> | undefined,
+    firestore.QuerySnapshot<PlayerCharacter> | undefined,
     boolean,
     Error | undefined
   ];
 }
 
 export function useAccountCharacter(id: string) {
-  return useDocument(
-    firebase.firestore().collection("player_decks").doc(id)
-  ) as [
-    firebase.firestore.DocumentSnapshot<PlayerCharacter> | undefined,
+  return useDocument(db.collection("player_decks").doc(id)) as [
+    firestore.DocumentSnapshot<PlayerCharacter> | undefined,
     boolean,
     Error | undefined
   ];
+}
+
+export function useCreateAccountCharacter() {
+  const user = useUser();
+
+  return useCallback(
+    () =>
+      db.collection("player_decks").add({
+        uid: user.uid,
+        name: "New Deck",
+      }),
+    [user]
+  );
 }

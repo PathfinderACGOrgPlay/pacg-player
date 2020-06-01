@@ -3,8 +3,5 @@
   "appId": "1:1025181507208:web:7e305bbac1355da554093d",
   "authDomain": "pacg-deckbuilder.firebaseapp.com",
   "databaseURL": "http://localhost:8080",
-  "measurementId": "G-HW38M7YMBK",
-  "messagingSenderId": "1025181507208",
-  "projectId": "pacg-deckbuilder",
-  "storageBucket": "pacg-deckbuilder.appspot.com"
+  "projectId": "pacg-deckbuilder"
 }
