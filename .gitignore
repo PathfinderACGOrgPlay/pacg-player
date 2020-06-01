@@ -20,3 +20,5 @@
 .env.production.local
 
 *.log*
+
+luaBuild/amalg.lua
