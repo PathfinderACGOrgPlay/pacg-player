@@ -1,5 +1,6 @@
 import glob from "glob";
 import { buildLua } from "./buildLua";
+import { getXml } from "./getXml";
 
 export function buildTTSLua() {
   return new Promise<string[]>((res, rej) => {
@@ -13,13 +14,18 @@ export function buildTTSLua() {
   })
     .then((files) =>
       Promise.all(
-        files.map((v) => buildLua("./tts", files, false).then((w) => [v, w]))
+        files.map((v) => {
+          return Promise.all([
+            buildLua("./tts", [v], false),
+            getXml(v),
+          ]).then((w) => [v, ...w]);
+        })
       )
     )
     .then((files) =>
       files.reduce((acc, v) => {
         acc[v[0]] = v[1];
         return acc;
-      }, {})
+      }, {} as { [filename: string]: string })
     );
 }
