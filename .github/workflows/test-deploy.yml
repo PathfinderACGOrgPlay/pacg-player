@@ -1,0 +1,26 @@
+name: Test Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - run: yarn install --frozen-lockfile
+    - run: yarn build
+    - name: Firebase GitHub Action
+      uses: pizzafox/firebase-action@1.0.7
+      env:
+        PROJECT_ID: "test-pacs-player"
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      with:
+        args: deploy

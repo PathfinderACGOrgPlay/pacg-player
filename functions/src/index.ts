@@ -1,9 +1,9 @@
 import { Firestore } from "@google-cloud/firestore";
 import * as functions from "firebase-functions";
-import * as classDecks from "../../src/classDecks.json";
-import * as adventures from "../../src/adventures.json";
-import * as characters from "../../src/characters.json";
-import { Deck } from "../../src/firebase";
+import * as classDecks from "../../src/oldData/classDecks.json";
+import * as adventures from "../../src/oldData/adventures.json";
+import * as characters from "../../src/oldData/characters.json";
+import { PlayerCharacter } from "../../src/firestore/characters";
 
 const firestore = new Firestore({
   projectId: "pacg-deckbuilder",
@@ -52,7 +52,7 @@ function substituteCards(
   return box;
 }
 
-function addMetadata(data: Deck) {
+function addMetadata(data: PlayerCharacter) {
   const boxes: any = {};
 
   if (data.deckOne && (classDecks as any)[data.deckOne]) {
@@ -105,7 +105,9 @@ function addMetadata(data: Deck) {
     characterDeck: data.characterDeck,
     characterName: data.character,
     character:
-      (characters as any)[data.character]?.[data.characterDeck] || null,
+      (characters as any)[data.character as string]?.[
+        data.characterDeck as string
+      ] || null,
     characterData: {
       Strength: data.Strength,
       Dexterity: data.Dexterity,
@@ -169,7 +171,7 @@ export const getTTSDeckByOrgPlayId = functions.https.onRequest(
             .status(404)
             .send({ error: "Unable to find the deck" });
         }
-        const data = doc.docs[0].data() as Deck;
+        const data = doc.docs[0].data() as PlayerCharacter;
         return response.status(200).send(addMetadata(data));
       })
       .catch((err: any) => {
