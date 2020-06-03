@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, ReactComponentElement, ReactElement } from "react";
 import {
   Container,
   FormControl,
@@ -62,7 +62,7 @@ function CardList({
     updateCards(cards);
   }
 
-  const deckList = classDecks[deck as keyof typeof classDecks];
+  const deckList = classDecks[deck as keyof typeof classDecks]?.Decks;
   const adventures = deckList
     ? Object.keys(deckList)
         .sort((a, b) => {
@@ -98,27 +98,57 @@ function CardList({
           </MenuItem>
         ))
     : [];
+  const cardLists =
+    deckList &&
+    Object.keys(deckList).reduce((acc, v) => {
+      // @ts-ignore
+      acc[v] = Object.keys(deckList[v])
+        .sort()
+        .map((w) => {
+          // @ts-ignore
+          const count = deckList[v][w].count || 1;
+          const setCount = cards.filter((x) => x.deck === v && x.card === w)
+            .length;
+          if (count === 1 && setCount > 0) {
+            return null;
+          }
+          const displayCount = count - setCount;
+          return [
+            w,
+            <MenuItem value={w} key={w}>
+              {w}
+              {displayCount > 1 ? <> ({displayCount})</> : null}
+            </MenuItem>,
+          ];
+        })
+        .filter((v) => v);
+      return acc;
+    }, {} as { [key: string]: [string, ReactElement][] });
 
-  cards = deckList ? [...cards, { deck: "", card: "" }] : cards;
+  const displayCards = deckList ? [...cards, { deck: "", card: "" }] : cards;
 
   return (
-    <FormControl className={styles.fill}>
-      <InputLabel id={`deck-${number}-label`}>Deck {number}</InputLabel>
-      <Select
-        labelId={`deck-${number}-label`}
-        id={`deck-${number}-select`}
-        value={deck}
-        onChange={(e) => updateDeck(e.currentTarget.value as string)}
-      >
-        <MenuItem value="">&nbsp;</MenuItem>
-        {Object.keys(classDecks)
-          .sort()
-          .map((v) => (
-            <MenuItem value={v} key={v}>
-              {v}
-            </MenuItem>
-          ))}
-      </Select>
+    <>
+      <br />
+      <FormControl className={styles.fill}>
+        <InputLabel id={`deck-${number}-label`}>Deck {number}</InputLabel>
+        <Select
+          labelId={`deck-${number}-label`}
+          id={`deck-${number}-select`}
+          value={deck}
+          onChange={(e) => updateDeck(e.target.value as string)}
+        >
+          <MenuItem value="">&nbsp;</MenuItem>
+          {Object.keys(classDecks)
+            .sort()
+            .map((v) => (
+              <MenuItem value={v} key={v}>
+                {v}
+              </MenuItem>
+            ))}
+        </Select>
+      </FormControl>
+      <br />
       <br />
       <Grid container spacing={3}>
         <Grid item lg={6}>
@@ -127,26 +157,48 @@ function CardList({
         <Grid item lg={6}>
           <Typography className={styles.center}>Card</Typography>
         </Grid>
-        {cards.map((v, i) => (
+        {displayCards.map((v, i) => (
           <Fragment key={i}>
             <Grid item lg={6}>
-              <Typography className={styles.center}>
+              <FormControl className={styles.fill}>
                 <Select
+                  labelId={`deck-card-${i}-${number}-label`}
                   id={`deck-${number}-card-${i}-select`}
-                  className={styles.fill}
+                  value={v.deck}
+                  onChange={(e) => update(i, "deck", e.target.value as string)}
                 >
                   <MenuItem value="">&nbsp;</MenuItem>
                   {adventures}
                 </Select>
-              </Typography>
+              </FormControl>
             </Grid>
             <Grid item lg={6}>
-              <Typography className={styles.center}>Card</Typography>
+              <FormControl className={styles.fill}>
+                <Select
+                  labelId={`deck-card-${i}-${number}-label`}
+                  id={`deck-${number}-card-${i}-select`}
+                  value={v.card}
+                  onChange={(e) => update(i, "card", e.target.value as string)}
+                >
+                  <MenuItem value="">&nbsp;</MenuItem>
+                  {(v.deck &&
+                    [
+                      [
+                        v.card,
+                        <MenuItem value={v.card} key="selected">
+                          {v.card}
+                        </MenuItem>,
+                      ] as [string, ReactElement],
+                      ...cardLists[v.deck].filter((w) => w[0] !== v.card),
+                    ].sort((a, b) => a[0].localeCompare(b[0]))) ||
+                    null}
+                </Select>
+              </FormControl>
             </Grid>
           </Fragment>
         ))}
       </Grid>
-    </FormControl>
+    </>
   );
 }
 
