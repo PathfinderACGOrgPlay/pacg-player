@@ -24,8 +24,8 @@ export function buildTTSLua() {
     )
     .then((files) =>
       files.reduce((acc, v) => {
-        acc[v[0]] = v[1];
+        acc[v[0]] = [v[1], v[2]];
         return acc;
-      }, {} as { [filename: string]: string })
+      }, {} as { [filename: string]: [string, string] })
     );
 }

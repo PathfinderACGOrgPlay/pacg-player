@@ -29,10 +29,12 @@
     "start:functions": "cd functions && tsc --watch",
     "start:firebase": "firebase emulators:start --only firestore,functions",
     "start:react": "cross-env BROWSER=none react-scripts start",
-    "start:tts": "ts-node --project ttsBuild/tsconfig.json ttsBuild/watchTTS.ts",
+    "start:tts": "yarn build:tts && copy \"build\\save.json\" \"%USERPROFILE%\\Documents\\My Games\\Tabletop Simulator\\Saves\\9999.json\" && ts-node --project ttsBuild/tsconfig.json ttsBuild/watchTTS.ts",
     "build:react": "react-scripts build",
     "build:functions": "cd functions && tsc",
+    "build:tts": "ts-node --project ttsBuild/tsconfig.json ttsBuild/buildTTS.ts",
     "build": "concurrently \"yarn build:react\" \"yarn build:functions\"",
+    "updateSaveFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/updateSaveFile.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

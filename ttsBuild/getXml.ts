@@ -1,4 +1,5 @@
 import fs, { Stats } from "fs";
+import { readFile } from "./util";
 
 export function getXml(file: string) {
   const xmlPath = "./tts" + file.replace(/.lua$/, ".xml");
@@ -11,17 +12,7 @@ export function getXml(file: string) {
       }
     });
   }).then(
-    () => {
-      return new Promise<string>((res, rej) => {
-        fs.readFile(xmlPath, (err, data) => {
-          if (err) {
-            rej(err);
-          } else {
-            res(data.toString());
-          }
-        });
-      });
-    },
+    () => readFile(xmlPath),
     () => ""
   );
 }

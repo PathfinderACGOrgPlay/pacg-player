@@ -1,3 +1,3 @@
 local gameCore = require("GameCore")
 
-gameCore.run()
+gameCore.run();
