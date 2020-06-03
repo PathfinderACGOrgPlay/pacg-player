@@ -23,6 +23,7 @@
     "typescript": "^3.9.3"
   },
   "scripts": {
+    "postinstall": "cd functions && yarn",
     "start": "concurrently \"yarn start:react\" \"yarn start:functions\" \"yarn start:firebase\"",
     "start:functions": "cd functions && tsc --watch",
     "start:firebase": "firebase emulators:start --only firestore,functions",
