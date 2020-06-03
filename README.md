@@ -1,44 +1,28 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the project for the pathfinder card game site.
 
-## Available Scripts
+# Developing
+To get started developing with this project you will first need the following:
+1. Windows (If someone wants to set things up on linux / macOS feel free to submit a pr)
+1. [Node 10](https://nodejs.org/dist/latest-v10.x/)
+1. [Yarn](https://yarnpkg.com/)
+1. [Lua](https://www.lua.org/) executable somewhere on your path, a prebuilt version can be found (here)[http://luadist.org/]
+1. (Optional) [Table Top Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/)
 
-In the project directory, you can run:
+Once you have all that installed open a terminal in this project and run `yarn`. When that completes run yarn start to start the web server.
 
-### `yarn start`
+For TTS development you should now have a save file with no title or picture in TTS with the save ID 9999. When you load that save the development server will connect to TTS.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+For Web development you only need to open a browser and visit http://localhost:3000/
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Both pieces will automatically update/reload when you save changes to the appropriate files
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Project Structure
+At the top level of this project there are a few important folders
+* build: If this folder exists it will contain build artifacts
+* functions: This contains the firebase functions project
+* gameCore: This contains the LUA for the core of the game logic which is shared between TTS and the Website
+* node_modules: Dependencies
+* public: Public files which get included in the website build
+* src: The react code for the website (written in typescript)
+* tts: The files for TTS. Filenames at the root of this file should be named {Object Name}.{Object GUID}.lua and {Object Name}.{Object GUID}.xml. Additionally there is a save.json which is the base TTS save file without the scripts
+* ttsBuild: Files used as part of the TTS build process
