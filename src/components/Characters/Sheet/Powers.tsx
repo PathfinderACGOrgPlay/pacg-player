@@ -1,11 +1,6 @@
 import React from "react";
 import { useCommonStyles } from "./common";
-import {
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Typography,
-} from "@material-ui/core";
+import { Checkbox, FormControlLabel, Typography } from "@material-ui/core";
 import { Checkboxes } from "./Checkboxes";
 import { makeStyles } from "@material-ui/core/styles";
 

@@ -2,7 +2,6 @@ import React from "react";
 import { PlayerCharacter } from "../../../firestore/characters";
 import {
   AppBar,
-  Button,
   Grid,
   Tab,
   Tabs,

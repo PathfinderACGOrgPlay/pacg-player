@@ -19,7 +19,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useRouteMatch } from "react-router-dom";
 import { Sheet } from "./Sheet";
 import { Cards } from "./Cards";
-import { Substitions } from "./Substitions";
+import { Substitutions } from "./Substitutions";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -138,7 +138,7 @@ export function Character({
         </Route>
         <Route path="/characters/:id/sheet" component={Sheet} />
         <Route path="/characters/:id/cards" component={Cards} />
-        <Route path="/characters/:id/substitions" component={Substitions} />
+        <Route path="/characters/:id/substitutions" component={Substitutions} />
       </form>
     </Container>
   );
