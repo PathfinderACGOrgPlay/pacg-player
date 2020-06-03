@@ -1,6 +1,5 @@
-import React, { Fragment, ReactComponentElement, ReactElement } from "react";
+import React, { Fragment, ReactElement } from "react";
 import {
-  Container,
   FormControl,
   Grid,
   InputLabel,
@@ -17,6 +16,7 @@ import {
   useUpdateAccountCharacter,
 } from "../../firestore/characters";
 import classDecks from "../../oldData/classDecks.json";
+import { useUser } from "../../firebase";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -28,12 +28,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CardList({
+  disabled,
   deck,
   updateDeck,
   number,
   cards,
   updateCards,
 }: {
+  disabled: boolean;
   deck: string;
   updateDeck(value: string): void;
   number: number;
@@ -133,6 +135,7 @@ function CardList({
       <FormControl className={styles.fill}>
         <InputLabel id={`deck-${number}-label`}>Deck {number}</InputLabel>
         <Select
+          disabled={disabled}
           labelId={`deck-${number}-label`}
           id={`deck-${number}-select`}
           value={deck}
@@ -162,6 +165,7 @@ function CardList({
             <Grid item lg={6}>
               <FormControl className={styles.fill}>
                 <Select
+                  disabled={disabled}
                   labelId={`deck-card-${i}-${number}-label`}
                   id={`deck-${number}-card-${i}-select`}
                   value={v.deck}
@@ -175,6 +179,7 @@ function CardList({
             <Grid item lg={6}>
               <FormControl className={styles.fill}>
                 <Select
+                  disabled={disabled}
                   labelId={`deck-card-${i}-${number}-label`}
                   id={`deck-${number}-card-${i}-select`}
                   value={v.card}
@@ -210,12 +215,13 @@ export function Cards({
   const [character] = useAccountCharacter(id);
   const data = character?.data();
   const [updateAccountCharacter, updateError] = useUpdateAccountCharacter(id);
+  const user = useUser();
+  const disabled = user?.uid !== data?.uid;
 
   function update(values: Partial<PlayerCharacter>) {
-    let oldValues = character?.data();
-    if (oldValues) {
+    if (data) {
       updateAccountCharacter({
-        ...oldValues,
+        ...data,
         ...values,
       });
     }
@@ -230,6 +236,7 @@ export function Cards({
       ) : null}
       <Grid item lg={4}>
         <CardList
+          disabled={disabled}
           deck={data?.deckOne || ""}
           updateDeck={(deckOne) => update({ deckOne })}
           cards={data?.cardsOne || []}
@@ -239,6 +246,7 @@ export function Cards({
       </Grid>
       <Grid item lg={4}>
         <CardList
+          disabled={disabled}
           deck={data?.deckTwo || ""}
           updateDeck={(deckTwo) => update({ deckTwo })}
           cards={data?.cardsTwo || []}
@@ -248,6 +256,7 @@ export function Cards({
       </Grid>
       <Grid item lg={4}>
         <CardList
+          disabled={disabled}
           deck={data?.deckThree || ""}
           updateDeck={(deckThree) => update({ deckThree })}
           cards={data?.cardsThree || []}

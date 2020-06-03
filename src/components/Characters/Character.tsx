@@ -59,10 +59,9 @@ export function Character({
   const data = character?.data();
 
   function update(values: Partial<PlayerCharacter>) {
-    let oldValues = character?.data();
-    if (oldValues) {
+    if (data) {
       updateAccountCharacter({
-        ...oldValues,
+        ...data,
         ...values,
       });
     }
