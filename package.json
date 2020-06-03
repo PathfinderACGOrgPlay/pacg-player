@@ -27,7 +27,9 @@
     "start:functions": "cd functions && tsc --watch",
     "start:firebase": "firebase emulators:start --only firestore,functions",
     "start:react": "cross-env BROWSER=none react-scripts start",
-    "build": "react-scripts build",
+    "build:react": "react-scripts build",
+    "build:functions": "cd functions && tsc",
+    "build": "concurrently \"yarn build:react\" \"yarn build:functions\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

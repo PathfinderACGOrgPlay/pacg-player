@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Build
 
 on:
   push:
@@ -19,4 +19,4 @@ jobs:
         node-version: 10.x
     - run: yarn install --frozen-lockfile
     - run: yarn build
-    - run: yarn test
+    #- run: yarn test
