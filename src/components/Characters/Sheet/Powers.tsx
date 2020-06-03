@@ -79,6 +79,7 @@ export function Powers({
                       [v.name]: !proficienciesValues?.[v.name],
                     })
                   }
+                  disabled={disabled}
                   name={`proficiencies-${v.name}`}
                 />
               }
