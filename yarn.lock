@@ -12564,6 +12564,11 @@ tiny-invariant@^1.0.2:
   resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.1.0.tgz#634c5f8efdc27714b7f386c35e6760991d230875"
   integrity sha512-ytxQvrb1cPc9WBEI/HSeYYoGD0kWnGEOR8RY6KomWLBVhqz0RgTwVO9dLrGz7dC+nN9llyI7OKAgRq8Vq4ZBSw==
 
+tiny-typed-emitter@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/tiny-typed-emitter/-/tiny-typed-emitter-2.0.1.tgz#6ee2384bd79718a186dbc691d56564458d3aaec7"
+  integrity sha512-QxoNcwVW6fO7bMW+5ibOUWpLpuxYaHNjK5Zs+USOA24JOgZGGAf4CVML7eq109rZI0xecZ++fXThvLjA1U1oAA==
+
 tiny-warning@^1.0.0, tiny-warning@^1.0.2, tiny-warning@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
@@ -12686,6 +12691,13 @@ tsutils@^3.17.1:
   integrity sha512-kzeQ5B8H3w60nFY2g8cJIuH7JDpsALXySGtwGJ0p2LSjLgay3NdIpqq5SoOBe46bKDW2iq25irHCr8wjomUS2g==
   dependencies:
     tslib "^1.8.1"
+
+ttstk-channels@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/ttstk-channels/-/ttstk-channels-0.2.2.tgz#0bbbd693c1661893d4b0b875e3181d298ba2db4b"
+  integrity sha512-GIZ+iyj9viUx7BaIYJwE6iFy8XOCiQAQd+0Rkr0s0gyx04d9WDwwNsV0ZT0y84JllU7fhfBJTVqGHjdSBmEzEA==
+  dependencies:
+    tiny-typed-emitter "^2.0.1"
 
 tty-browserify@0.0.0:
   version "0.0.0"
