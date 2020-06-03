@@ -114,7 +114,7 @@ export function Character({
               <TextField
                 id="name"
                 label="Name"
-                helperText="This is just a description for you to help find things later"
+                helperText="This is just a description for you to help find this deck later"
                 {...commonProps("name")}
               />
             </Grid>
