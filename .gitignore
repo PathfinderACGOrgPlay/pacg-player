@@ -21,4 +21,4 @@
 
 *.log*
 
-luaBuild/amalg.lua
+ttsBuild/amalg.lua
