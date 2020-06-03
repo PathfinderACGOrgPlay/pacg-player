@@ -42,9 +42,13 @@ export const useCommonStyles = makeStyles((theme) => ({
   column1: {
     padding: "9px",
     width: "105px",
+    fontWeight: 600,
   },
   column2: {
     padding: "9px",
     width: "44px",
+  },
+  column: {
+    padding: "9px",
   },
 }));

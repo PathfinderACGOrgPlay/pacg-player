@@ -1,17 +1,12 @@
 import React from "react";
 import { PlayerCharacter } from "../../../firestore/characters";
-import { Grid, TextField } from "@material-ui/core";
+import { Grid, TextField, Typography } from "@material-ui/core";
 import characters from "../../../oldData/characters.json";
 import { makeStyles } from "@material-ui/core/styles";
-import { CharacterType } from "./common";
+import { CharacterType, useCommonStyles } from "./common";
 import { Skills } from "./Skills";
 import { DeckList } from "./DeckList";
-
-const useStyles = makeStyles((theme) => ({
-  fill: {
-    width: "100%",
-  },
-}));
+import { Powers } from "./Powers";
 
 export function CharacterSheet({
   data,
@@ -22,7 +17,7 @@ export function CharacterSheet({
   disabled: boolean;
   update(data: Partial<PlayerCharacter>): void;
 }) {
-  const styles = useStyles();
+  const styles = useCommonStyles();
   const character: CharacterType = (characters as any)[data.character!]?.[
     data.characterDeck!
   ];
@@ -49,7 +44,23 @@ export function CharacterSheet({
           <br />
           <Skills data={data} disabled={disabled} update={update} />
         </Grid>
-        <Grid item lg={5}></Grid>
+        <Grid item lg={5}>
+          <Typography className={styles.center}>Powers</Typography>
+          <Powers
+            powers={character.powers.powers}
+            powerCheckboxesValues={data.powers}
+            updatePowerCheckboxes={(values) => update({ powers: values })}
+            proficiencies={character.powers.proficiencies}
+            proficienciesValues={data.proficiencies}
+            updateProficienciesValues={(values) =>
+              update({ proficiencies: values })
+            }
+            handSize={character.powers.handSize}
+            handSizeValues={data.handSize}
+            updateHandSizeValues={(values) => update({ handSize: values })}
+            disabled={disabled}
+          />
+        </Grid>
         <Grid item lg={3}>
           <DeckList
             cardsList={character.cardsList}
