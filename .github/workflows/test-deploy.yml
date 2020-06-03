@@ -17,10 +17,4 @@ jobs:
         node-version: 10.x
     - run: yarn install --frozen-lockfile
     - run: yarn build
-    - name: Firebase GitHub Action
-      uses: pizzafox/firebase-action@1.0.7
-      env:
-        PROJECT_ID: "test-pacs-player"
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      with:
-        args: deploy
+    - run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
