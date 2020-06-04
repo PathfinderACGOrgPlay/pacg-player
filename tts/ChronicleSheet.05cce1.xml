@@ -1,0 +1,210 @@
+<Defaults>
+    <Button fontSize="50"/>
+    <Text fontSize="80"/>
+    <InputField fontSize="60" placeholder=" " onValueChanged="saveValue"/>
+    <Dropdown fontSize="16"/>
+    <VerticalLayout/>
+    <HorizontalLayout/>
+    <ToggleButton minWidth="90" onValueChanged="saveValue"/>
+</Defaults>
+
+<Panel id="pasteView" active="false" height="1900" width="4650" position="0 0 -11" scale="0.1 0.1" spacing="5"
+       rotation="0 0 180">
+<Button position="-2280 905 0" width="120" height="120" onClick="togglePaste" fontSize="100">↶</Button>
+<InputField lineType="MultiLineNewLine" readOnly="true" id="pasteText" width="4440" height="1700" position="0 0 0"/>
+</Panel>
+
+<Panel id="pasteView" active="false" height="1900" width="4650" position="0 0 -11" scale="0.1 0.1" spacing="5"
+       rotation="0 0 180">
+<Button position="-2280 905 0" width="120" height="120" onClick="togglePaste" fontSize="100">↶</Button>
+<InputField lineType="MultiLineNewLine" readOnly="true" id="pasteText" width="4440" height="1700" position="0 0 0"/>
+</Panel>
+
+<Panel id="editView" height="1900" width="4650" position="0 0 -11" scale="0.1 0.1" spacing="5" rotation="0 0 180">
+<Button position="-2280 905 0" width="120" height="120" onClick="togglePaste">
+    <Image image="Paste" width="78" height="96"/>
+</Button>
+<Image image="Logo" width="1399" height="600" position="-1405 527 0"/>
+<InputField id="playerName" fontSize="100" width="900" height="150" position="200 700 0" placeholder="Player Name"/>
+<Text fontSize="80" position="850 700 0">A.K.A</Text>
+<InputField id="characterName" fontSize="100" width="1200" height="150" position="1600 700 0"
+            placeholder="Character Name"/>
+
+
+<InputField id="playNumber" fontSize="100" width="900" height="150" position="200 400 0"
+            placeholder="Organized Play #"/>
+<InputField id="class" fontSize="100" width="1200" height="150" position="1600 400 0" placeholder="Character Class"/>
+<Button position="-350 400 0" width="120" height="120" onClick="SpawnDeck">
+    <Image image="Spawn" width="96" height="96"/>
+</Button>
+
+<HorizontalLayout width="4440" height="1050" position="0 -320 0" childForceExpandWidth="0">
+    <Image minHeight="8" minWidth="8" color="#000000"/>
+    <VerticalLayout childForceExpandHeight="0" flexibleWidth="1">
+        <Image minHeight="8" minWidth="8" color="#000000"/>
+        <Panel color="#AAAAAA" minHeight="90">
+            <HorizontalLayout childForceExpandWidth="0" spacing="25">
+                <Panel minWidth="2050">
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Scenario:</Text>
+                        <InputField id="scenario" flexibleWidth="1"/>
+                        <Image minHeight="8" minWidth="8" color="#000000"/>
+                    </HorizontalLayout>
+                </Panel>
+                <HorizontalLayout flexibleWidth="1" spacing="25">
+                    <Panel>
+                        <HorizontalLayout childForceExpandWidth="0">
+                            <Text>Tier:</Text>
+                            <InputField id="tier" flexibleWidth="1"/>
+                            <Image minHeight="8" minWidth="8" color="#000000"/>
+                        </HorizontalLayout>
+                    </Panel>
+                    <Panel>
+                        <HorizontalLayout childForceExpandWidth="0">
+                            <Text>XP:</Text>
+                            <InputField id="xp" flexibleWidth="1"/>
+                            <Image minHeight="8" minWidth="8" color="#000000"/>
+                        </HorizontalLayout>
+                    </Panel>
+                    <Panel>
+                        <HorizontalLayout childForceExpandWidth="0">
+                            <Text>Date:</Text>
+                            <InputField id="date" flexibleWidth="1"/>
+                        </HorizontalLayout>
+                    </Panel>
+                </HorizontalLayout>
+            </HorizontalLayout>
+        </Panel>
+        <Image minHeight="8" minWidth="8" color="#000000"/>
+        <Panel minHeight="90">
+            <HorizontalLayout childForceExpandWidth="0" spacing="25">
+                <Panel minWidth="1500">
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Event #:</Text>
+                        <InputField id="eventNumber" flexibleWidth="1"/>
+                        <Image minHeight="8" minWidth="8" color="#000000"/>
+                    </HorizontalLayout>
+                </Panel>
+                <Panel minWidth="2200">
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Coordinator OP #:</Text>
+                        <InputField id="coordinatorOp" flexibleWidth="1"/>
+                        <Image minHeight="8" minWidth="8" color="#000000"/>
+                    </HorizontalLayout>
+                </Panel>
+                <Panel flexibleWidth="1">
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Reported?</Text>
+                        <Text flexibleWidth="1"/>
+                        <ToggleButton id="reported" minWidth="90"/>
+                        <Text flexibleWidth="1"/>
+                    </HorizontalLayout>
+                </Panel>
+            </HorizontalLayout>
+        </Panel>
+        <Image minHeight="8" minWidth="8" color="#000000"/>
+        <Panel minHeight="380">
+            <VerticalLayout spacing="5" childForceExpandHeight="0">
+                <HorizontalLayout minHeight="90" childForceExpandWidth="0">
+                    <Text>Reward:</Text>
+                    <ToggleButton id="reward"/>
+                </HorizontalLayout>
+                <InputField lineType="MultiLineNewLine" id="rewardText" minHeight="180"/>
+                <HorizontalLayout minHeight="90" childForceExpandWidth="0">
+                    <ToggleButton id="replayed"/>
+                    <Text>None - Replayed Scenario</Text>
+                    <Text flexibleWidth="1"/>
+                    <ToggleButton id="failed"/>
+                    <Text>None - Failed Scenario</Text>
+                    <Text flexibleWidth="1"/>
+                </HorizontalLayout>
+            </VerticalLayout>
+        </Panel>
+        <Image minHeight="8" minWidth="8" color="#000000"/>
+        <Panel minHeight="90">
+            <HorizontalLayout spacing="25">
+                <Panel minWidth="200">
+                    <Text>Hero Point Spend:</Text>
+                </Panel>
+                <Panel>
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <ToggleButton id="skillFeat"/>
+                        <Text>Skill Feat</Text>
+                    </HorizontalLayout>
+                </Panel>
+                <Panel>
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <ToggleButton id="powerFeat"/>
+                        <Text>Power Feat</Text>
+                        <Text flexibleWidth="1"/>
+                    </HorizontalLayout>
+                </Panel>
+                <Panel>
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <ToggleButton id="cardFeat"/>
+                        <Text>Card Feat</Text>
+                        <Text flexibleWidth="1"/>
+                    </HorizontalLayout>
+                </Panel>
+                <Panel minWidth="200">
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <ToggleButton id="noSpend"/>
+                        <Text>Did Not Spend</Text>
+                        <Text flexibleWidth="1"/>
+                    </HorizontalLayout>
+                </Panel>
+                <Panel>
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Used:</Text>
+                        <InputField id="used" flexibleWidth="1"/>
+                    </HorizontalLayout>
+                </Panel>
+                <Panel minWidth="200">
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Remaining:</Text>
+                        <InputField id="remaining" flexibleWidth="1"/>
+                    </HorizontalLayout>
+                </Panel>
+            </HorizontalLayout>
+        </Panel>
+        <Image minHeight="8" minWidth="8" color="#000000"/>
+        <Panel minHeight="90">
+            <HorizontalLayout spacing="25">
+                <Panel minWidth="200">
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Deck Upgrade:</Text>
+                        <InputField id="upgrade" flexibleWidth="1"/>
+                        <Image minHeight="8" minWidth="8" color="#000000"/>
+                    </HorizontalLayout>
+                </Panel>
+                <Panel>
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Bonus Deck Upgrade:</Text>
+                        <InputField id="upgrade2" flexibleWidth="1"/>
+                        <Image minHeight="8" minWidth="8" color="#000000"/>
+                    </HorizontalLayout>
+                </Panel>
+                <Panel>
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Bonus Deck Upgrade:</Text>
+                        <InputField id="upgrade3" flexibleWidth="1"/>
+                    </HorizontalLayout>
+                </Panel>
+            </HorizontalLayout>
+        </Panel>
+        <Image minHeight="8" minWidth="8" color="#000000"/>
+        <Panel flexibleHeight="1">
+            <HorizontalLayout spacing="25">
+                <Panel minWidth="200">
+                    <HorizontalLayout childForceExpandWidth="0">
+                        <Text>Notes:</Text>
+                        <InputField lineType="MultiLineNewLine" id="notes" flexibleWidth="1"/>
+                    </HorizontalLayout>
+                </Panel>
+            </HorizontalLayout>
+        </Panel>
+        <Image minHeight="8" minWidth="8" color="#000000"/>
+    </VerticalLayout>
+    <Image minHeight="8" minWidth="8" color="#000000"/>
+</HorizontalLayout>
+</Panel>

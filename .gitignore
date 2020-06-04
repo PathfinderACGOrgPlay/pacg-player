@@ -22,3 +22,4 @@
 *.log*
 
 ttsBuild/amalg.lua
+luaCache

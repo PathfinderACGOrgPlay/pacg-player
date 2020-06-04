@@ -1,6 +1,7 @@
 import { stat, Stats, writeFile } from "fs";
 import axios from "axios";
 import { exec, ExecOptions } from "child_process";
+import { readFile } from "./util";
 
 function runCmd(command: string, options: ExecOptions) {
   return new Promise<string>((res, rej) => {
@@ -17,7 +18,7 @@ function runCmd(command: string, options: ExecOptions) {
   });
 }
 
-export function buildLua(cwd: string, files: string[], debug?: boolean) {
+function prepare() {
   return new Promise<Stats>((res, rej) => {
     stat("./ttsBuild/amalg.lua", (err, stats) => {
       if (err) {
@@ -44,17 +45,27 @@ export function buildLua(cwd: string, files: string[], debug?: boolean) {
           });
         });
     })
-    .then(() => runCmd(`lua ./ttsBuild/getPackagePath.lua`, {}))
-    .then((packagePath) => {
+    .then(() => runCmd(`lua ./ttsBuild/getPackagePath.lua`, {}));
+}
+
+export function buildLua(cwd: string, file: string, debug?: boolean) {
+  return Promise.all([prepare(), readFile(cwd + "/" + file)])
+    .then(([packagePath, contents]) => {
+      const regexp = RegExp('require\\("([^"]*)"\\)', "g");
+      let match: RegExpExecArray;
+      const deps: string[] = [];
+      while ((match = regexp.exec(contents)) !== null) {
+        deps.push(match[1]);
+      }
       return runCmd(
-        `lua ../ttsBuild/amalg.lua ${debug ? "-d" : ""} -s ${files.join(
-          " -s "
-        )} GameCore`,
+        `lua ../ttsBuild/amalg.lua ${debug ? "-d" : ""} -s ${file} ${deps.join(
+          " "
+        )}`,
         {
           cwd,
           env: {
             ...process.env,
-            LUA_PATH: `..\\gameCore\\?.lua;` + packagePath,
+            LUA_PATH: `..\\gameCore\\?.lua;common\\?.lua;` + packagePath,
           },
         }
       );
@@ -65,6 +76,9 @@ export function buildLua(cwd: string, files: string[], debug?: boolean) {
             local moduleCache = {}
             function require(module)
                 if moduleCache[module] == nil then
+                    if modules[module] == nil then
+                      assert(false, "Module not found, make sure it's required at the top of the object's lua file " .. module)
+                    end
                     moduleCache[module] = modules[module]()
                 end
                 return moduleCache[module]

@@ -16,7 +16,7 @@ export function buildTTSLua() {
       Promise.all(
         files.map((v) => {
           return Promise.all([
-            buildLua("./tts", [v], false),
+            buildLua("./tts", v, false),
             getXml(v),
           ]).then((w) => [v, ...w]);
         })

@@ -20,9 +20,12 @@ Both pieces will automatically update/reload when you save changes to the approp
 At the top level of this project there are a few important folders
 * build: If this folder exists it will contain build artifacts
 * functions: This contains the firebase functions project
-* gameCore: This contains the LUA for the core of the game logic which is shared between TTS and the Website
+* gameCore: This contains the LUA for the core of the game logic which is shared between TTS and the Website and other supporting files
+* luaCache: While developing this will contain the files which were sent to TTS, you can use it when debugging errors from tts
 * node_modules: Dependencies
 * public: Public files which get included in the website build
 * src: The react code for the website (written in typescript)
 * tts: The files for TTS. Filenames at the root of this file should be named {Object Name}.{Object GUID}.lua and {Object Name}.{Object GUID}.xml. Additionally there is a save.json which is the base TTS save file without the scripts
 * ttsBuild: Files used as part of the TTS build process
+
+Note: Due to a limit of the way the lua is built you will need to require all files which are needed in the root script file

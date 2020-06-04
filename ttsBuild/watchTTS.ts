@@ -1,11 +1,20 @@
 import { TabletopSimulatorClient } from "ttstk-channels/dist/src/TabletopSimulatorClient";
 import { TabletopSimulatorService } from "ttstk-channels/dist/src/TabletopSimulatorService";
 import { buildTTSLua } from "./buildTTSLua";
+import fs from "fs";
 
 const chokidar = require("chokidar");
 
 const client = new TabletopSimulatorClient();
 const service = new TabletopSimulatorService();
+// @ts-ignore
+const origHandle = service.HandleMessage;
+// @ts-ignore
+service.HandleMessage = function (data) {
+  try {
+    return origHandle.apply(this, [data]);
+  } catch {}
+};
 let saving = false;
 
 service.Open();
@@ -34,8 +43,18 @@ service.on("returnvaluemessage", (id, value) => {
     }, 100);
   }
 });
+service.on(
+  "errormessage",
+  (message: string, guid: string, errorMessagePrefix: string) => {
+    console.log({ message, guid, errorMessagePrefix });
+  }
+);
 
-const watch = chokidar.watch(["gameCore/**/*.lua", "tts/**/*.lua"]);
+const watch = chokidar.watch([
+  "gameCore/**/*.lua",
+  "tts/**/*.lua",
+  "tts/**/*.xml",
+]);
 
 function run() {
   buildTTSLua().then((v) => {
@@ -47,6 +66,12 @@ function run() {
         if (guid === "-1") {
           v[w][0] += "\nlocal isTTSDebug = true";
         }
+        fs.writeFile("luaCache/" + w, v[w][0], () => {});
+        fs.writeFile(
+          "luaCache/" + w.replace(/.lua$/, ".xml"),
+          v[w][1],
+          console.log
+        );
         return {
           guid: guid,
           name: name.slice(0, name.length - 1).join("."),
