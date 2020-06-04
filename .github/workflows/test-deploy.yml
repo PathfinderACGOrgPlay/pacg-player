@@ -8,8 +8,19 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
-    
+
     steps:
+      - name: Steam Upload
+        run: |
+          curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
+          ls -lah
+          ./steamcmd.sh +quit
+          ls -lah
+          pwd
+          mkdir config
+          echo '${{ secrets.STEAM_CONFIG }}' | base64 -d > $HOME/Steam/config/config.vdf
+          echo '${{ secrets.STEAM_CREDENTIAL }}' | base64 -d > ssfn27522370558009133
+          ./steamcmd.sh +login ${{ secrets.STEAM_LOGIN }} +quit
       - uses: actions/checkout@v2
       - name: Use Node.js 10.x
         uses: actions/setup-node@v1
@@ -17,8 +28,4 @@ jobs:
           node-version: 10.x
       - run: yarn install --frozen-lockfile
       - run: yarn build
-      - run: yarn firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
-      - run: >
-          docker run -it --name=steamcmd cm2network/steamcmd bash -c "
-            steamcmd +login ${{ secrets.STEAM_LOGIN }} ${{ secrets.STEAM_PASSWORD }} +quit
-          "
+      - run: yarn firebase deploy --project test-pacs-player-site --token ${{ secrets.FIREBASE_TOKEN }}
