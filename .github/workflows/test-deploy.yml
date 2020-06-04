@@ -10,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - run: >
-        docker run -it --name=steamcmd cm2network/steamcmd bash -c "
-          steamcmd +login ${{ secrets.STEAM_LOGIN }} ${{ secrets.STEAM_PASSWORD }} +quit
-        "
-    - uses: actions/checkout@v2
-    - name: Use Node.js 10.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 10.x
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
-    - run: yarn firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: yarn firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+      - run: >
+          docker run -it --name=steamcmd cm2network/steamcmd bash -c "
+            steamcmd +login ${{ secrets.STEAM_LOGIN }} ${{ secrets.STEAM_PASSWORD }} +quit
+          "
