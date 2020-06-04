@@ -1,3 +1,3 @@
 return {
-    functionsBaseUrl = "http://localhost:4000/functions"
+    functionsBaseUrl = "http://localhost:5001/pacg-deckbuilder/us-central1"
 }
