@@ -6,7 +6,7 @@ import * as characters from "../../src/oldData/characters.json";
 import { PlayerCharacter } from "../../src/firestore/characters";
 
 const firestore = new Firestore({
-  projectId: "pacg-deckbuilder",
+  projectId: "test-pacs-player-site",
   timestampsInSnapshots: true,
 });
 

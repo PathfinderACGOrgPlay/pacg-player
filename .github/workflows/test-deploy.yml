@@ -18,3 +18,6 @@ jobs:
     - run: yarn install --frozen-lockfile
     - run: yarn build
     - run: yarn firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+    - run: >
+        sudo apt install steamcmd
+        steamcmd login ${{ secrets.STEAM_LOGIN }} ${{ secrets.STEAM_PASSWORD }}

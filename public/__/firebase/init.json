@@ -1,7 +1,7 @@
 {
   "apiKey": "AIzaSyD0EIkRxQgHXgRZMYCOXIKHFYVI2PbjwGg",
   "appId": "1:1025181507208:web:7e305bbac1355da554093d",
-  "authDomain": "pacg-deckbuilder.firebaseapp.com",
+  "authDomain": "test-pacs-player-site.firebaseapp.com",
   "databaseURL": "http://localhost:8080",
-  "projectId": "pacg-deckbuilder"
+  "projectId": "test-pacs-player-site"
 }
