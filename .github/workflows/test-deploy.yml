@@ -18,6 +18,7 @@ jobs:
     - run: yarn install --frozen-lockfile
     - run: yarn build
     - run: >
-       sudo apt install steamcmd
-       steamcmd login ${{ secrets.STEAM_LOGIN }} ${{ secrets.STEAM_PASSWORD }}
+        docker run -it --name=steamcmd cm2network/steamcmd bash -c "
+          steamcmd login ${{ secrets.STEAM_LOGIN }} ${{ secrets.STEAM_PASSWORD }}
+        "
     - run: yarn firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
