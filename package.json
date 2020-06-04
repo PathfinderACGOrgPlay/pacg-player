@@ -30,10 +30,10 @@
     "start:firebase": "firebase emulators:start --only firestore,functions",
     "start:react": "cross-env BROWSER=none react-scripts start",
     "start:tts": "yarn build:tts && mkdir luaCache || echo && copy \"build\\save.json\" \"%USERPROFILE%\\Documents\\My Games\\Tabletop Simulator\\Saves\\9999.json\" && ts-node --project ttsBuild/tsconfig.json ttsBuild/watchTTS.ts",
-    "build:react": "react-scripts build",
+    "build:react": "react-scripts build && rm -rf build/__",
     "build:functions": "cd functions && yarn build",
     "build:tts": "ts-node --project ttsBuild/tsconfig.json ttsBuild/buildTTS.ts",
-    "build": "concurrently \"yarn build:react\" \"yarn build:functions\"",
+    "build": "concurrently \"yarn build:react\" \"yarn build:functions\" \"yarn build:tts\"",
     "updateSaveFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/updateSaveFile.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -55,6 +55,7 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.5",
+    "bson": "^4.0.4",
     "concurrently": "^5.2.0",
     "cross-env": "^7.0.2",
     "prettier": "^2.0.5",
