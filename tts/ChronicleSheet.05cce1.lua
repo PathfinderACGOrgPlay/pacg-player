@@ -1,7 +1,7 @@
 require("common/Decker")
 local SpawnDeckFromSite = require("common/SpawnDeckFromSite")
 local littleLuaLibrary = require("common/LittleLuaLibrary")
-local config = require("config")
+local config = require("gameCore/config")
 
 value = {}
 

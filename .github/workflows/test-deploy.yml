@@ -28,17 +28,4 @@ jobs:
           mkdir config
           echo '${{ secrets.STEAM_CONFIG }}' | base64 -d > $HOME/Steam/config/config.vdf
           echo '${{ secrets.STEAM_CREDENTIAL }}' | base64 -d > ssfn27522370558009133
-          echo '
-            "workshopitem"
-            {
-             "appid" "286160"
-             "publishedfileid" "2118294255"
-             "contentfolder" "D:\\Content\\workshopitem"
-             "previewfile" "D:\\Content\\preview.jpg"
-             "visibility" "0"
-             "title" "Team Fortress Green Hat"
-             "description" "A green hat for Team Fortress"
-             "changenote" "Version 1.2"
-            }
-          '
-          ./steamcmd.sh +login ${{ secrets.STEAM_LOGIN }} +workshop_build_item +quit
+          ./steamcmd.sh +login ${{ secrets.STEAM_LOGIN }} +quit

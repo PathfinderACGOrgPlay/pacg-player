@@ -5,7 +5,6 @@ To get started developing with this project you will first need the following:
 1. Windows (If someone wants to set things up on linux / macOS feel free to submit a pr)
 1. [Node 10](https://nodejs.org/dist/latest-v10.x/)
 1. [Yarn](https://yarnpkg.com/)
-1. [Lua](https://www.lua.org/) executable somewhere on your path, a prebuilt version can be found (here)[http://luadist.org/]
 1. (Optional) [Table Top Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/)
 
 Once you have all that installed open a terminal in this project and run `yarn`. When that completes run yarn start to start the web server.
@@ -21,7 +20,6 @@ At the top level of this project there are a few important folders
 * build: If this folder exists it will contain build artifacts
 * functions: This contains the firebase functions project
 * gameCore: This contains the LUA for the core of the game logic which is shared between TTS and the Website and other supporting files
-* luaCache: While developing this will contain the files which were sent to TTS, you can use it when debugging errors from tts
 * node_modules: Dependencies
 * public: Public files which get included in the website build
 * src: The react code for the website (written in typescript)

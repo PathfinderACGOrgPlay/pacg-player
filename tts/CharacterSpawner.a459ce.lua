@@ -1,6 +1,6 @@
 require("common/Decker")
 local SpawnDeckFromSite = require("common/SpawnDeckFromSite")
-local config = require("config")
+local config = require("gameCore/config")
 local id = ""
 local loaded = false
 
@@ -42,7 +42,6 @@ function updateId(object, color, value, selected)
 end
 
 function Go()
-    print(config.functionsBaseUrl .. "/getTTSDeck/" .. id)
     SpawnDeckFromSite(config.functionsBaseUrl .. "/getTTSDeck/" .. id)
 end
 
