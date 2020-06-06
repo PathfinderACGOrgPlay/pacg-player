@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
   displayField: {
     width: "100%",
     borderBottom: "1px solid black",
+  },
+  topBorder: {
+    width: "100%",
+    borderBottom: "2px solid black",
     minHeight: "2px",
   },
   displayDescription: {
@@ -186,7 +190,7 @@ export function ChroniclePrintProvider({ children }: { children: ReactNode }) {
             </Grid>
           </Grid>
         </Grid>
-        <div className={styles.displayField} />
+        <div className={styles.topBorder} />
       </div>
       {children}
     </div>

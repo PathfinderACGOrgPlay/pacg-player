@@ -29,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     verticalAlign: "middle",
     display: "inline-flex",
+    maxWidth: "15.5%",
+    flexBasis: "15.5%",
   },
   skillFeat: {
     maxWidth: "13%",
@@ -39,12 +41,12 @@ const useStyles = makeStyles((theme) => ({
     flexBasis: "15%",
   },
   cardFeat: {
-    maxWidth: "13.333333%",
-    flexBasis: "13.333333%",
+    maxWidth: "14%",
+    flexBasis: "14%",
   },
   noSpend: {
-    maxWidth: "17%",
-    flexBasis: "17%",
+    maxWidth: "17.5%",
+    flexBasis: "17.5%",
   },
 }));
 
