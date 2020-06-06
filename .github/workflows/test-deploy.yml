@@ -17,7 +17,7 @@ jobs:
           node-version: 10.x
       - run: yarn install --frozen-lockfile
       - run: yarn build
-      - run: yarn firebase deploy --project test-pacs-player-site --token ${{ secrets.FIREBASE_TOKEN }}
+      - run: yarn firebase deploy --project test-adventurecard-game --token ${{ secrets.FIREBASE_TOKEN }}
       - uses: actions/upload-artifact@v2
         with:
           name: tts-mod.json
