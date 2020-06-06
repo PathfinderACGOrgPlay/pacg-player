@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuthState } from "react-firebase-hooks/auth";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { Redirect, Route } from "react-router";
 import { Characters } from "./Characters";
 import { Link as RouterLink } from "react-router-dom";

@@ -1,6 +1,6 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db, useUser } from "../firebase";
-import { firestore } from "firebase";
+import { firestore } from "firebase/app";
 import { useCallback, useState } from "react";
 
 export interface Card {
@@ -49,7 +49,7 @@ export function useAccountCharacters() {
   const user = useUser();
 
   return useCollection(
-    db.collection("player_decks").where("uid", "==", user.uid)
+    db.collection("account_characters").where("uid", "==", user.uid)
   ) as [
     firestore.QuerySnapshot<PlayerCharacter> | undefined,
     boolean,
@@ -58,7 +58,7 @@ export function useAccountCharacters() {
 }
 
 export function useAccountCharacter(id: string) {
-  return useDocument(db.collection("player_decks").doc(id)) as [
+  return useDocument(db.collection("account_characters").doc(id)) as [
     firestore.DocumentSnapshot<PlayerCharacter> | undefined,
     boolean,
     Error | undefined
@@ -70,7 +70,7 @@ export function useCreateAccountCharacter() {
 
   return useCallback(
     () =>
-      db.collection("player_decks").add({
+      db.collection("account_characters").add({
         uid: user.uid,
         name: "New Deck",
       }),
@@ -86,9 +86,32 @@ export function useUpdateAccountCharacter(
   return [
     useCallback(
       (char: PlayerCharacter) =>
-        db?.collection("player_decks").doc(id).set(char).catch(setUpdateError),
+        db
+          ?.collection("account_characters")
+          .doc(id)
+          .set(char)
+          .catch(setUpdateError),
       [id]
     ),
     updateError,
+  ];
+}
+
+export function useDeleteAccountCharacter(
+  id: string
+): [() => Promise<void>, Error | undefined] {
+  const [deleteError, setDeleteError] = useState<Error | undefined>();
+
+  return [
+    useCallback(
+      () =>
+        db
+          ?.collection("account_characters")
+          .doc(id)
+          .delete()
+          .catch(setDeleteError),
+      [id]
+    ),
+    deleteError,
   ];
 }

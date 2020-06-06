@@ -141,7 +141,7 @@ export const characterList = functions.https.onRequest((request, response) => {
 
 export const getTTSDeck = functions.https.onRequest((request, response) => {
   firestore
-    .collection("player_decks")
+    .collection("account_characters")
     .doc(request.path.substr(1))
     .get()
     .then((doc: any) => {
@@ -162,7 +162,7 @@ export const getTTSDeck = functions.https.onRequest((request, response) => {
 export const getTTSDeckByOrgPlayId = functions.https.onRequest(
   (request, response) => {
     firestore
-      .collection("player_decks")
+      .collection("account_characters")
       .where("orgPlayId", "==", request.path.substr(1))
       .get()
       .then((doc) => {
