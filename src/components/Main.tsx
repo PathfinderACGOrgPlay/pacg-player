@@ -15,6 +15,7 @@ import { Redirect, Route } from "react-router";
 import { Characters } from "./Characters";
 import { Link as RouterLink } from "react-router-dom";
 import { Tables } from "./Tables";
+import { ChroniclePrintProvider } from "./Common/ChroniclePrintProvider";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -44,7 +45,7 @@ export function Main() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   return (
-    <>
+    <ChroniclePrintProvider>
       <AppBar position="static" color="default" elevation={0}>
         <Toolbar className={classes.toolbar}>
           <Typography
@@ -123,6 +124,6 @@ export function Main() {
       </Route>
       <Route component={Characters} path={"/characters"} />
       <Route component={Tables} path={"/tables"} />
-    </>
+    </ChroniclePrintProvider>
   );
 }

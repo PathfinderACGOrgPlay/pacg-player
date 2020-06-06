@@ -84,9 +84,9 @@ export function CharacterDisplay({
 
   const readOnly = user?.uid !== data?.uid;
 
-  function commonProps(key: keyof PlayerCharacter) {
+  function commonProps(key: keyof PlayerCharacter, className?: string) {
     return {
-      className: classes.fill,
+      className: [classes.fill, className].filter((v) => v).join(" "),
       defaultValue: readOnly ? data?.[key] || "" : undefined,
       value: readOnly ? undefined : data?.[key] || "",
       onChange: (e: ChangeEvent<HTMLInputElement>) =>
@@ -102,9 +102,9 @@ export function CharacterDisplay({
       {updateError ? <div>{updateError}</div> : null}
       {error ? <div>Failed to read decks: {error.message}</div> : null}
       <form noValidate autoComplete="off">
-        <br />
+        <br className="chroniclePrintHide" />
         {loading ? null : (
-          <Grid container spacing={3}>
+          <Grid container spacing={3} className="chroniclePrintHide">
             <Grid item xs={6}>
               <TextField
                 id="org-play-id"

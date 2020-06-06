@@ -59,7 +59,9 @@ export function Chronicles({
         </>
       )}
       <br />
-      <Button onClick={() => createSheet()}>Add Chronicle Sheet</Button>
+      <Button onClick={() => createSheet()} className="chroniclePrintHide">
+        Add Chronicle Sheet
+      </Button>
     </div>
   );
 }

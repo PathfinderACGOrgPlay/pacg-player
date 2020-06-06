@@ -65,7 +65,9 @@ export function getCharacter(id: string) {
 }
 
 export function useAccountCharacter(id: string) {
-  return useDocument(db.collection("account_characters").doc(id)) as [
+  return useDocument(
+    id ? db.collection("account_characters").doc(id) : null
+  ) as [
     firestore.DocumentSnapshot<PlayerCharacter> | undefined,
     boolean,
     Error | undefined

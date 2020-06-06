@@ -30,6 +30,22 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: "middle",
     display: "inline-flex",
   },
+  skillFeat: {
+    maxWidth: "13%",
+    flexBasis: "13%",
+  },
+  powerFeat: {
+    maxWidth: "15%",
+    flexBasis: "15%",
+  },
+  cardFeat: {
+    maxWidth: "13.333333%",
+    flexBasis: "13.333333%",
+  },
+  noSpend: {
+    maxWidth: "17%",
+    flexBasis: "17%",
+  },
 }));
 
 export function Chronicle({
@@ -50,6 +66,7 @@ export function Chronicle({
     multiline,
     rows,
     type,
+    className,
   }: {
     xs: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
     sheetKey: TKey;
@@ -58,6 +75,7 @@ export function Chronicle({
     multiline?: boolean;
     rows?: number;
     type?: string;
+    className?: string;
   }) {
     const fieldProps = subKey
       ? {
@@ -80,7 +98,7 @@ export function Chronicle({
         };
 
     return (
-      <Grid item xs={xs}>
+      <Grid item xs={xs} className={className}>
         <TextField
           id={`${sheetKey}-${subKey || ""}-${id}`}
           className={styles.fill}
@@ -99,11 +117,13 @@ export function Chronicle({
     sheetKey,
     subKey,
     label,
+    className,
   }: {
     xs: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
     sheetKey: TKey;
     subKey?: keyof Exclude<ChronicleSheet[TKey], undefined>;
     label?: string;
+    className?: string;
   }) {
     const fieldProps = subKey
       ? {
@@ -128,7 +148,7 @@ export function Chronicle({
         };
 
     return (
-      <Grid item xs={xs}>
+      <Grid item xs={xs} className={className}>
         <KeyboardDatePicker
           id={`${sheetKey}-${subKey || ""}-${id}`}
           className={styles.fill}
@@ -148,12 +168,14 @@ export function Chronicle({
     subKey,
     label,
     labelAfter,
+    className,
   }: {
     xs: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
     sheetKey: TKey;
     subKey?: keyof Exclude<ChronicleSheet[TKey], undefined>;
     label: string;
     labelAfter?: boolean;
+    className?: string;
   }) {
     const fieldProps = subKey
       ? {
@@ -181,8 +203,8 @@ export function Chronicle({
         };
 
     return (
-      <Grid item xs={xs}>
-        <FormGroup row>
+      <Grid item xs={xs} className={className}>
+        <FormGroup className="checkbox" row>
           <FormControlLabel
             id={`${sheetKey}-${subKey || ""}-${id}`}
             control={<Checkbox {...fieldProps} name="checkedA" />}
@@ -196,17 +218,37 @@ export function Chronicle({
 
   return (
     <>
-      <br />
-      <Card>
+      <br className="chroniclePrintHide" />
+      <Card className="printBorders">
         <CardContent className={styles.rewardCard}>
           {updateError ? (
             <div>Failed to Update: {updateError.message}</div>
           ) : null}
           <Grid container spacing={1}>
-            <SheetTextField xs={6} sheetKey="scenario" label="Scenario" />
-            <SheetTextField xs={2} sheetKey="tier" label="Tier" />
-            <SheetTextField xs={2} sheetKey="xp" label="XP" />
-            <SheetDateField xs={2} sheetKey="date" label="Date" />
+            <SheetTextField
+              xs={7}
+              sheetKey="scenario"
+              label="Scenario"
+              className="firstRow"
+            />
+            <SheetTextField
+              xs={1}
+              sheetKey="tier"
+              label="Tier"
+              className="firstRow"
+            />
+            <SheetTextField
+              xs={1}
+              sheetKey="xp"
+              label="XP"
+              className="firstRow"
+            />
+            <SheetDateField
+              xs={3}
+              sheetKey="date"
+              label="Date"
+              className="firstRow"
+            />
 
             <SheetTextField xs={5} sheetKey="eventNumber" label="Event #" />
             <SheetTextField
@@ -225,6 +267,7 @@ export function Chronicle({
                       sheetKey="reward"
                       subKey="received"
                       label="Reward: "
+                      className="noBorder"
                     />
                     <SheetTextField
                       xs={12}
@@ -232,6 +275,7 @@ export function Chronicle({
                       subKey="text"
                       multiline
                       rows={3}
+                      className="noBorder"
                     />
                     <SheetCheckField
                       xs={6}
@@ -239,6 +283,7 @@ export function Chronicle({
                       subKey="noneReplayed"
                       label=" None - Replayed Scenario"
                       labelAfter
+                      className="noBorder"
                     />
                     <SheetCheckField
                       xs={6}
@@ -246,6 +291,7 @@ export function Chronicle({
                       subKey="noneFailed"
                       label=" None - Failed Scenario"
                       labelAfter
+                      className="noBorder"
                     />
                   </Grid>
                 </CardContent>
@@ -256,10 +302,11 @@ export function Chronicle({
               <Typography>Hero Point Spend:</Typography>
             </Grid>
             <SheetCheckField
-              xs={2}
+              xs={1}
               sheetKey="heroPoint"
               subKey="skill"
               label=" Skill Feat"
+              className={styles.skillFeat}
               labelAfter
             />
             <SheetCheckField
@@ -267,6 +314,7 @@ export function Chronicle({
               sheetKey="heroPoint"
               subKey="power"
               label=" Power Feat"
+              className={styles.powerFeat}
               labelAfter
             />
             <SheetCheckField
@@ -274,6 +322,7 @@ export function Chronicle({
               sheetKey="heroPoint"
               subKey="card"
               label=" Card Feat"
+              className={styles.cardFeat}
               labelAfter
             />
             <SheetCheckField
@@ -281,6 +330,7 @@ export function Chronicle({
               sheetKey="heroPoint"
               subKey="noSpend"
               label=" Did Not Spend"
+              className={styles.noSpend}
               labelAfter
             />
             <SheetTextField
@@ -291,7 +341,7 @@ export function Chronicle({
               label="Used"
             />
             <SheetTextField
-              xs={1}
+              xs={2}
               sheetKey="heroPoint"
               subKey="remaining"
               type="number"
@@ -299,13 +349,13 @@ export function Chronicle({
             />
 
             <SheetTextField
-              xs={5}
+              xs={4}
               sheetKey="deckUpgrade"
               subKey="one"
               label="Deck Upgrade"
             />
             <SheetTextField
-              xs={3}
+              xs={4}
               sheetKey="deckUpgrade"
               subKey="two"
               label="Bonus Deck Upgrade"
