@@ -81,7 +81,7 @@ export function Table({
         path="/tables/:id/chronicles/:characterId?"
         component={Chronicles}
       />
-      <Route path="/tables/:id/players" component={Players} />
+      <Route path="/tables/:id/players/:characterId?" component={Players} />
       <Route path="/tables/:id/settings" component={Settings} />
     </Container>
   );

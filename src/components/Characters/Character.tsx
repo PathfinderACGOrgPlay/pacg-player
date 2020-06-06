@@ -22,6 +22,7 @@ import { Cards } from "./Cards";
 import { Substitutions } from "./Substitutions";
 import { Settings } from "./Settings";
 import { Chronicles } from "./Chronicles";
+import { CharacterSheet } from "./Sheet/CharacterSheet";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -38,22 +39,32 @@ export const useTabsWithRouter = (
   return match?.path ?? defaultRoute;
 };
 
-const tabs = [
-  { to: "/characters/:id/sheet", label: "Character Sheet" },
-  { to: "/characters/:id/cards", label: "Cards" },
-  { to: "/characters/:id/substitutions", label: "Substitutions" },
-  { to: "/characters/:id/chronicles", label: "Chronicle Sheets" },
-  { to: "/characters/:id/settings", label: "Settings" },
-];
-
 export function Character({
   match: {
     params: { id },
   },
 }: RouteComponentProps<{ id: string }>) {
+  return <CharacterDisplay id={id} baseRoute="/characters" />;
+}
+
+export function CharacterDisplay({
+  id,
+  baseRoute,
+}: {
+  id: string;
+  baseRoute: string;
+}) {
+  const tabs = [
+    { to: `${baseRoute}/${id}/sheet`, label: "Character Sheet" },
+    { to: `${baseRoute}/${id}/cards`, label: "Cards" },
+    { to: `${baseRoute}/${id}/substitutions`, label: "Substitutions" },
+    { to: `${baseRoute}/${id}/chronicles`, label: "Chronicle Sheets" },
+    { to: `${baseRoute}/${id}/settings`, label: "Settings" },
+  ];
+
   const tabValue = useTabsWithRouter(
     tabs.map((v) => v.to),
-    "/characters/:id"
+    baseRoute
   );
   const [character, loading, error] = useAccountCharacter(id);
   const [updateAccountCharacter, updateError] = useUpdateAccountCharacter(id);
@@ -127,21 +138,24 @@ export function Character({
               <Tab
                 key={v.to}
                 component={RouterLink}
-                to={v.to.replace(":id", id)}
+                to={v.to}
                 value={v.to}
                 label={v.label}
               />
             ))}
           </Tabs>
         </AppBar>
-        <Route exact path="/characters/:id">
-          <Redirect to={`/characters/${id}/sheet`} />
+        <Route exact path={`${baseRoute}/:id`}>
+          <Redirect to={`${baseRoute}/${id}/sheet`} />
         </Route>
-        <Route path="/characters/:id/sheet" component={Sheet} />
-        <Route path="/characters/:id/cards" component={Cards} />
-        <Route path="/characters/:id/substitutions" component={Substitutions} />
-        <Route path="/characters/:id/chronicles" component={Chronicles} />
-        <Route path="/characters/:id/settings" component={Settings} />
+        <Route path={`${baseRoute}/:id/sheet`} component={Sheet} />
+        <Route path={`${baseRoute}/:id/cards`} component={Cards} />
+        <Route
+          path={`${baseRoute}/:id/substitutions`}
+          component={Substitutions}
+        />
+        <Route path={`${baseRoute}/:id/chronicles`} component={Chronicles} />
+        <Route path={`${baseRoute}/:id/settings`} component={Settings} />
       </form>
     </Container>
   );
