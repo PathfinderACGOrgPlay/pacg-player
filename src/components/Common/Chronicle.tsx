@@ -158,7 +158,7 @@ export function Chronicle({
     const fieldProps = subKey
       ? {
           // @ts-ignore
-          checked: (sheet[sheetKey] || {})[subKey] || "",
+          checked: (sheet[sheetKey] || {})[subKey] || false,
           onChange: (
             e: React.ChangeEvent<HTMLInputElement>,
             checked: boolean
@@ -173,7 +173,7 @@ export function Chronicle({
             }),
         }
       : {
-          checked: sheet[sheetKey] || "",
+          checked: sheet[sheetKey] || false,
           onChange: (
             e: React.ChangeEvent<HTMLInputElement>,
             checked: boolean
