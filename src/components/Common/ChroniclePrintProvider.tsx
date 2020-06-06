@@ -135,7 +135,7 @@ export function ChroniclePrintProvider({ children }: { children: ReactNode }) {
       <div className={styles.printShow}>
         <Grid container>
           <Grid item xs={5} className="noBorder">
-            <img src={require("./PACSLogo.png")} />
+            <img src={require("./PACSLogo.png")} alt="" />
           </Grid>
           <Grid item xs={7} className={`noBorder ${styles.header}`}>
             <Grid container>

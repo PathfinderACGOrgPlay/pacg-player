@@ -1,26 +1,11 @@
-import React, { useState } from "react";
-import {
-  AppBar,
-  CircularProgress,
-  Container,
-  Tab,
-  Tabs,
-  Typography,
-} from "@material-ui/core";
+import React from "react";
+import { AppBar, CircularProgress, Tab, Tabs } from "@material-ui/core";
 import { Redirect, Route, RouteComponentProps } from "react-router";
 import { useTable } from "../../firestore/tables";
-import { useCreateChronicleSheet } from "../../firestore/chronicles";
 import { useAccountCharacterList } from "../../firestore/characters";
 import { useEqualsMemo } from "../../useEqualsMemo";
-import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
 import { CharacterDisplay } from "../Characters/Character";
-
-const useStyles = makeStyles((theme) => ({
-  addChronicle: {
-    minWidth: "30em",
-  },
-}));
 
 export function Players({
   match: {
@@ -28,7 +13,6 @@ export function Players({
   },
 }: RouteComponentProps<{ id: string; characterId: string }>) {
   const [table, , error] = useTable(id);
-  const styles = useStyles();
 
   const tableData = table?.data();
   const [

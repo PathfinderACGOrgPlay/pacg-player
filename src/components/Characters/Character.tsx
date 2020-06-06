@@ -22,7 +22,6 @@ import { Cards } from "./Cards";
 import { Substitutions } from "./Substitutions";
 import { Settings } from "./Settings";
 import { Chronicles } from "./Chronicles";
-import { CharacterSheet } from "./Sheet/CharacterSheet";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
