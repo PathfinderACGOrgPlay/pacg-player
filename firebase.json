@@ -18,8 +18,36 @@
     ],
     "rewrites": [
       {
-        "source": "**",
+        "source": "!/@(f)/**",
         "destination": "/index.html"
+      },
+      {
+        "source": "/f/adventure",
+        "function": "adventure"
+      },
+      {
+        "source": "/f/adventuresList",
+        "function": "adventuresList"
+      },
+      {
+        "source": "/f/characterList",
+        "function": "characterList"
+      },
+      {
+        "source": "/f/classDeck",
+        "function": "classDeck"
+      },
+      {
+        "source": "/f/classDeckList",
+        "function": "classDeckList"
+      },
+      {
+        "source": "/f/getTTSDeck",
+        "function": "getTTSDeck"
+      },
+      {
+        "source": "/f/getTTSDeckByOrgPlayId",
+        "function": "getTTSDeckByOrgPlayId"
       }
     ]
   },
