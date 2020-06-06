@@ -109,7 +109,9 @@ export function Settings({
   return (
     <div>
       {error ? <div>Error While Loading Table: {error.message}</div> : null}
-      {error ? <div>Error While Updating Table: {updateError}</div> : null}
+      {updateError ? (
+        <div>Error While Updating Table: {updateError.message}</div>
+      ) : null}
       {addTableCharacterByOrgPlayIdError ? (
         <div>
           Error While Adding Player: {addTableCharacterByOrgPlayIdError.message}

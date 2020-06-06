@@ -77,7 +77,10 @@ export function Table({
       <Route exact path="/tables/:id">
         <Redirect to={`/tables/${id}/chronicles`} />
       </Route>
-      <Route path="/tables/:id/chronicles" component={Chronicles} />
+      <Route
+        path="/tables/:id/chronicles/:characterId?"
+        component={Chronicles}
+      />
       <Route path="/tables/:id/players" component={Players} />
       <Route path="/tables/:id/settings" component={Settings} />
     </Container>

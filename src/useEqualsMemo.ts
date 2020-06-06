@@ -12,7 +12,7 @@ export function useEqualsMemo<T>(
     if (!deepEquals(data, value)) {
       setValue(data);
     }
-  }, [data, value]);
+  }, [data, deps, value]);
 
   return value;
 }

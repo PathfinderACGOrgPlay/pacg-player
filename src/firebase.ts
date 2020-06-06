@@ -10,12 +10,11 @@ import { useCollection } from "react-firebase-hooks/firestore";
 
 export let db: firestore.Firestore;
 
-firebase.firestore().enablePersistence();
-
 export const initFirebase = fetch("/__/firebase/init.json")
   .then((response) => response.json())
   .then((v) => {
     const app = firebase.initializeApp(v);
+
     if (v.measurementId) {
       firebase.analytics();
     }
@@ -27,6 +26,8 @@ export const initFirebase = fetch("/__/firebase/init.json")
         ssl: false,
       });
     }
+
+    firebase.firestore().enablePersistence();
   });
 
 let updatingUser = false;

@@ -55,6 +55,16 @@ export function useChronicleSheetsForCharacter(id: string) {
   ];
 }
 
+export function useChronicleSheetsForTable(id: string) {
+  return useCollection(
+    db.collection("chronicles").where("table", "==", id)
+  ) as [
+    firestore.QuerySnapshot<ChronicleSheet> | undefined,
+    boolean,
+    Error | undefined
+  ];
+}
+
 export function useCreateChronicleSheet(
   characterId: string,
   table: string = ""

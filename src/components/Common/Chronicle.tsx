@@ -82,7 +82,7 @@ export function Chronicle({
     return (
       <Grid item xs={xs}>
         <TextField
-          id={`${sheetKey}-${id}`}
+          id={`${sheetKey}-${subKey || ""}-${id}`}
           className={styles.fill}
           label={label}
           multiline={multiline}
@@ -130,7 +130,7 @@ export function Chronicle({
     return (
       <Grid item xs={xs}>
         <KeyboardDatePicker
-          id={`${sheetKey}-${id}`}
+          id={`${sheetKey}-${subKey || ""}-${id}`}
           className={styles.fill}
           variant="inline"
           format="MM/dd/yyyy"
@@ -184,7 +184,7 @@ export function Chronicle({
       <Grid item xs={xs}>
         <FormGroup row>
           <FormControlLabel
-            id={`${sheetKey}-${id}`}
+            id={`${sheetKey}-${subKey || ""}-${id}`}
             control={<Checkbox {...fieldProps} name="checkedA" />}
             label={label}
             labelPlacement={labelAfter ? "end" : "start"}
