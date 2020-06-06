@@ -13,6 +13,10 @@ import {
   Container,
   Card,
   CardContent,
+  InputAdornment,
+  IconButton,
+  Input,
+  CardHeader,
 } from "@material-ui/core";
 import { RouteComponentProps } from "react-router";
 import {
@@ -79,6 +83,7 @@ export function Settings({
   const styles = useStyles();
   const [orgPlayId, setOrgPlayId] = useState("");
   const [deckId, setDeckId] = useState("");
+  const [addScenario, setAddScenario] = useState("");
 
   const data = table?.data();
   const [
@@ -162,80 +167,138 @@ export function Settings({
           </FormHelperText>
         </FormControl>
       )}
-      <Typography>Characters</Typography>
-      {charactersError ? (
-        <div>Error While Loading Characters: {charactersError}</div>
-      ) : null}
-      {charactersLoading ? (
-        <CircularProgress />
-      ) : (
-        <Grid container spacing={3}>
-          {characters?.map((v) => {
-            const data = v.data();
-            if (!data) {
-              return null;
-            }
-            const userData = users?.docs
-              .find((v) => v.data().uid === data.uid)
-              ?.data();
-            return (
-              <Grid item lg={6} key={v.id}>
-                <Card>
-                  <CardContent className={styles.characterCard}>
-                    <Typography variant="h4" component="h2">
-                      {data.character}
-                    </Typography>
-                    <Typography>{data.characterDeck}</Typography>
-                    <Typography>{data.orgPlayId || id}</Typography>
-                    <Typography>
-                      {userData?.displayName || userData?.email}
-                    </Typography>
-                    <Button
-                      className={styles.remove}
-                      onClick={() => removeTableCharacterByDeckId(v.id)}
-                    >
-                      Remove
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            );
-          })}
-        </Grid>
-      )}
-      <div>
-        <TextField
-          className={styles.orField}
-          id="orgPlayId"
-          label="Organized Play Id"
-          value={orgPlayId}
-          onChange={(e) => setOrgPlayId(e.currentTarget.value)}
-          disabled={!!deckId}
-        />
-        <Typography className={styles.or}>Or</Typography>
-        <TextField
-          className={styles.orField}
-          id="deckId"
-          label="Deck Id"
-          value={deckId}
-          onChange={(e) => setDeckId(e.currentTarget.value)}
-          disabled={!!orgPlayId}
-        />
-        <Button
-          className={styles.orButton}
-          onClick={() => {
-            if (orgPlayId) {
-              addTableCharacterByOrgPlayId(orgPlayId);
-              setOrgPlayId("");
-            } else if (deckId) {
-              addTableCharacterByDeckId(deckId);
-              setDeckId("");
-            }
-          }}
-        >
-          +
-        </Button>
-      </div>
+      <br />
+      <br />
+      <Card>
+        <CardHeader title="Characters" />
+        <CardContent>
+          {charactersError ? (
+            <div>Error While Loading Characters: {charactersError}</div>
+          ) : null}
+          {charactersLoading ? (
+            <CircularProgress />
+          ) : (
+            <Grid container spacing={3}>
+              {characters?.map((v) => {
+                const data = v.data();
+                if (!data) {
+                  return null;
+                }
+                const userData = users?.docs
+                  .find((v) => v.data().uid === data.uid)
+                  ?.data();
+                return (
+                  <Grid item lg={6} key={v.id}>
+                    <Card variant="outlined">
+                      <CardContent className={styles.characterCard}>
+                        <Typography variant="h4" component="h2">
+                          {data.character}
+                        </Typography>
+                        <Typography>{data.characterDeck}</Typography>
+                        <Typography>{data.orgPlayId || id}</Typography>
+                        <Typography>
+                          {userData?.displayName || userData?.email}
+                        </Typography>
+                        <Button
+                          className={styles.remove}
+                          onClick={() => removeTableCharacterByDeckId(v.id)}
+                        >
+                          Remove
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          )}
+          <div>
+            <TextField
+              className={styles.orField}
+              id="orgPlayId"
+              label="Organized Play Id"
+              value={orgPlayId}
+              onChange={(e) => setOrgPlayId(e.currentTarget.value)}
+              disabled={!!deckId}
+            />
+            <Typography className={styles.or}>Or</Typography>
+            <TextField
+              className={styles.orField}
+              id="deckId"
+              label="Deck Id"
+              value={deckId}
+              onChange={(e) => setDeckId(e.currentTarget.value)}
+              disabled={!!orgPlayId}
+            />
+            <IconButton
+              className={styles.orButton}
+              onClick={() => {
+                if (orgPlayId) {
+                  addTableCharacterByOrgPlayId(orgPlayId);
+                  setOrgPlayId("");
+                } else if (deckId) {
+                  addTableCharacterByDeckId(deckId);
+                  setDeckId("");
+                }
+              }}
+            >
+              +
+            </IconButton>
+          </div>
+        </CardContent>
+      </Card>
+      <br />
+      <Card>
+        <CardHeader title="Scenarios" />
+        <CardContent>
+          {data?.scenarios.map((v, i) => (
+            <Typography key={i}>
+              {v.id}
+              <IconButton
+                onClick={() => {
+                  updateTable({
+                    ...data!,
+                    scenarios: data!.scenarios.filter((v, j) => j !== i),
+                  });
+                  setAddScenario("");
+                }}
+              >
+                -
+              </IconButton>
+            </Typography>
+          ))}
+          <FormControl>
+            <Input
+              id="add-scenario"
+              value={addScenario}
+              onChange={(e) => setAddScenario(e.currentTarget.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => {
+                      updateTable({
+                        ...data!,
+                        scenarios: [
+                          ...data!.scenarios,
+                          { id: addScenario, custom: true },
+                        ],
+                      });
+                      setAddScenario("");
+                    }}
+                  >
+                    +
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            <FormHelperText>
+              Feel free to enter whatever text you want here, this will be
+              autofilled into the chronicle sheets in the scenario field for
+              each player
+            </FormHelperText>
+          </FormControl>
+        </CardContent>
+      </Card>
     </div>
   );
 }

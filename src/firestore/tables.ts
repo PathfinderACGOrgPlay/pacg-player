@@ -9,6 +9,7 @@ export interface Table {
   managers: string[];
   players: string[];
   characters: string[];
+  scenarios: { id: string; custom: boolean }[];
 }
 
 export function useManagedTables() {
@@ -45,6 +46,7 @@ export function useCreateTable() {
         managers: [user.uid],
         players: [],
         characters: [],
+        scenarios: [],
       }),
     [user]
   );
