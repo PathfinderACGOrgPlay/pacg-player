@@ -214,7 +214,7 @@ export function Chronicle({
               sheetKey="coordinatorOP"
               label="Coordinator OP #"
             />
-            <SheetCheckField xs={2} sheetKey="reward" label="Reported? " />
+            <SheetCheckField xs={2} sheetKey="reported" label="Reported? " />
 
             <Grid item xs={12}>
               <Card variant="outlined">
