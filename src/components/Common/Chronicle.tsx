@@ -199,131 +199,138 @@ export function Chronicle({
   }
 
   return (
-    <MuiPickersUtilsProvider utils={LuxonUtils}>
-      {updateError ? <div>Failed to Update: {updateError.message}</div> : null}
-      <Grid container spacing={1}>
-        <SheetTextField xs={6} sheetKey="scenario" label="Scenario" />
-        <SheetTextField xs={2} sheetKey="tier" label="Tier" />
-        <SheetTextField xs={2} sheetKey="xp" label="XP" />
-        <SheetDateField xs={2} sheetKey="date" label="Date" />
+    <>
+      <br />
+      <Card>
+        <CardContent className={styles.rewardCard}>
+          {updateError ? (
+            <div>Failed to Update: {updateError.message}</div>
+          ) : null}
+          <Grid container spacing={1}>
+            <SheetTextField xs={6} sheetKey="scenario" label="Scenario" />
+            <SheetTextField xs={2} sheetKey="tier" label="Tier" />
+            <SheetTextField xs={2} sheetKey="xp" label="XP" />
+            <SheetDateField xs={2} sheetKey="date" label="Date" />
 
-        <SheetTextField xs={5} sheetKey="eventNumber" label="Event #" />
-        <SheetTextField
-          xs={5}
-          sheetKey="coordinatorOP"
-          label="Coordinator OP #"
-        />
-        <SheetCheckField xs={2} sheetKey="reward" label="Reported? " />
+            <SheetTextField xs={5} sheetKey="eventNumber" label="Event #" />
+            <SheetTextField
+              xs={5}
+              sheetKey="coordinatorOP"
+              label="Coordinator OP #"
+            />
+            <SheetCheckField xs={2} sheetKey="reward" label="Reported? " />
 
-        <Grid item xs={12}>
-          <Card>
-            <CardContent className={styles.rewardCard}>
-              <Grid container>
-                <SheetCheckField
-                  xs={12}
-                  sheetKey="reward"
-                  subKey="received"
-                  label="Reward: "
-                />
-                <SheetTextField
-                  xs={12}
-                  sheetKey="reward"
-                  subKey="text"
-                  multiline
-                  rows={3}
-                />
-                <SheetCheckField
-                  xs={6}
-                  sheetKey="reward"
-                  subKey="noneReplayed"
-                  label=" None - Replayed Scenario"
-                  labelAfter
-                />
-                <SheetCheckField
-                  xs={6}
-                  sheetKey="reward"
-                  subKey="noneFailed"
-                  label=" None - Failed Scenario"
-                  labelAfter
-                />
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+            <Grid item xs={12}>
+              <Card variant="outlined">
+                <CardContent className={styles.rewardCard}>
+                  <Grid container>
+                    <SheetCheckField
+                      xs={12}
+                      sheetKey="reward"
+                      subKey="received"
+                      label="Reward: "
+                    />
+                    <SheetTextField
+                      xs={12}
+                      sheetKey="reward"
+                      subKey="text"
+                      multiline
+                      rows={3}
+                    />
+                    <SheetCheckField
+                      xs={6}
+                      sheetKey="reward"
+                      subKey="noneReplayed"
+                      label=" None - Replayed Scenario"
+                      labelAfter
+                    />
+                    <SheetCheckField
+                      xs={6}
+                      sheetKey="reward"
+                      subKey="noneFailed"
+                      label=" None - Failed Scenario"
+                      labelAfter
+                    />
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
 
-        <Grid item xs={2} className={styles.pointSpend}>
-          <Typography>Hero Point Spend:</Typography>
-        </Grid>
-        <SheetCheckField
-          xs={2}
-          sheetKey="heroPoint"
-          subKey="skill"
-          label=" Skill Feat"
-          labelAfter
-        />
-        <SheetCheckField
-          xs={2}
-          sheetKey="heroPoint"
-          subKey="power"
-          label=" Power Feat"
-          labelAfter
-        />
-        <SheetCheckField
-          xs={2}
-          sheetKey="heroPoint"
-          subKey="card"
-          label=" Card Feat"
-          labelAfter
-        />
-        <SheetCheckField
-          xs={2}
-          sheetKey="heroPoint"
-          subKey="noSpend"
-          label=" Did Not Spend"
-          labelAfter
-        />
-        <SheetTextField
-          xs={1}
-          sheetKey="heroPoint"
-          subKey="used"
-          type="number"
-          label="Used"
-        />
-        <SheetTextField
-          xs={1}
-          sheetKey="heroPoint"
-          subKey="remaining"
-          type="number"
-          label="Remaining"
-        />
+            <Grid item xs={2} className={styles.pointSpend}>
+              <Typography>Hero Point Spend:</Typography>
+            </Grid>
+            <SheetCheckField
+              xs={2}
+              sheetKey="heroPoint"
+              subKey="skill"
+              label=" Skill Feat"
+              labelAfter
+            />
+            <SheetCheckField
+              xs={2}
+              sheetKey="heroPoint"
+              subKey="power"
+              label=" Power Feat"
+              labelAfter
+            />
+            <SheetCheckField
+              xs={2}
+              sheetKey="heroPoint"
+              subKey="card"
+              label=" Card Feat"
+              labelAfter
+            />
+            <SheetCheckField
+              xs={2}
+              sheetKey="heroPoint"
+              subKey="noSpend"
+              label=" Did Not Spend"
+              labelAfter
+            />
+            <SheetTextField
+              xs={1}
+              sheetKey="heroPoint"
+              subKey="used"
+              type="number"
+              label="Used"
+            />
+            <SheetTextField
+              xs={1}
+              sheetKey="heroPoint"
+              subKey="remaining"
+              type="number"
+              label="Remaining"
+            />
 
-        <SheetTextField
-          xs={5}
-          sheetKey="deckUpgrade"
-          subKey="one"
-          label="Deck Upgrade"
-        />
-        <SheetTextField
-          xs={3}
-          sheetKey="deckUpgrade"
-          subKey="two"
-          label="Bonus Deck Upgrade"
-        />
-        <SheetTextField
-          xs={4}
-          sheetKey="deckUpgrade"
-          subKey="three"
-          label="Bonus Deck Upgrade"
-        />
+            <SheetTextField
+              xs={5}
+              sheetKey="deckUpgrade"
+              subKey="one"
+              label="Deck Upgrade"
+            />
+            <SheetTextField
+              xs={3}
+              sheetKey="deckUpgrade"
+              subKey="two"
+              label="Bonus Deck Upgrade"
+            />
+            <SheetTextField
+              xs={4}
+              sheetKey="deckUpgrade"
+              subKey="three"
+              label="Bonus Deck Upgrade"
+            />
 
-        <SheetTextField
-          xs={12}
-          sheetKey="notes"
-          label="Notes"
-          multiline
-          rows={3}
-        />
-      </Grid>
-    </MuiPickersUtilsProvider>
+            <SheetTextField
+              xs={12}
+              sheetKey="notes"
+              label="Notes"
+              multiline
+              rows={3}
+            />
+          </Grid>
+        </CardContent>
+      </Card>
+    </>
   );
 }

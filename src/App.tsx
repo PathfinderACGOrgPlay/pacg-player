@@ -12,6 +12,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { BrowserRouter as Router } from "react-router-dom";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import LuxonUtils from "@date-io/luxon";
 
 const useStyles = makeStyles((theme) => ({
   loginHeader: {
@@ -36,36 +38,38 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {loading ? null : user ? (
-        <Router>
-          <Main />
-        </Router>
-      ) : (
-        <>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={styles.loginHeader}
-          >
-            Welcome to the Pathfinder Adventure Card Game site please login to
-            continue
-          </Typography>
-          <FirebaseAuth
-            uiConfig={{
-              siteName: "Pathfinder Adventure Card Game",
+      <MuiPickersUtilsProvider utils={LuxonUtils}>
+        <CssBaseline />
+        {loading ? null : user ? (
+          <Router>
+            <Main />
+          </Router>
+        ) : (
+          <>
+            <Typography
+              variant="h6"
+              color="inherit"
+              noWrap
+              className={styles.loginHeader}
+            >
+              Welcome to the Pathfinder Adventure Card Game site please login to
+              continue
+            </Typography>
+            <FirebaseAuth
+              uiConfig={{
+                siteName: "Pathfinder Adventure Card Game",
 
-              signInFlow: "redirect",
-              signInOptions: [
-                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                firebase.auth.EmailAuthProvider.PROVIDER_ID,
-              ],
-            }}
-            firebaseAuth={firebase.auth()}
-          />
-        </>
-      )}
+                signInFlow: "redirect",
+                signInOptions: [
+                  firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                  firebase.auth.EmailAuthProvider.PROVIDER_ID,
+                ],
+              }}
+              firebaseAuth={firebase.auth()}
+            />
+          </>
+        )}
+      </MuiPickersUtilsProvider>
     </ThemeProvider>
   );
 }
