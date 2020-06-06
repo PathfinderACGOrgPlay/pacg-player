@@ -1,21 +1,14 @@
 import React, { useState } from "react";
 import {
   Button,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
   makeStyles,
-  Modal,
   TextField,
 } from "@material-ui/core";
-import {
-  useAccountCharacter,
-  useDeleteAccountCharacter,
-  useUpdateAccountCharacter,
-} from "../../firestore/characters";
+import { useDeleteAccountCharacter } from "../../firestore/characters";
 import { RouteComponentProps, useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,8 +25,6 @@ export function Settings({
     params: { id },
   },
 }: RouteComponentProps<{ id: string }>) {
-  const [character, , error] = useAccountCharacter(id);
-  const [updateAccountCharacter, updateError] = useUpdateAccountCharacter(id);
   const [deleteAccountCharacter, deleteError] = useDeleteAccountCharacter(id);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const styles = useStyles();
@@ -42,9 +33,7 @@ export function Settings({
   return (
     <div>
       <br />
-      {updateError ? <div>{updateError}</div> : null}
       {deleteError ? <div>{deleteError}</div> : null}
-      {error ? <div>Failed to read deck: {error.message}</div> : null}
       <TextField
         id="deck-id"
         label="Deck Id"

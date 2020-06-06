@@ -4,7 +4,6 @@ import {
 } from "../../firestore/chronicles";
 import React, { ChangeEvent } from "react";
 import Grid from "@material-ui/core/Grid";
-import LuxonUtils from "@date-io/luxon";
 import {
   makeStyles,
   TextField,
@@ -15,10 +14,7 @@ import {
   Checkbox,
   Typography,
 } from "@material-ui/core";
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import { KeyboardDatePicker } from "@material-ui/pickers";
 import { DateTime } from "luxon";
 import { firestore } from "firebase";
 

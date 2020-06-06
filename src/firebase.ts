@@ -7,7 +7,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { firestore } from "firebase/app";
 import { useEffect } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { PlayerCharacter } from "./firestore/characters";
 
 export let db: firestore.Firestore;
 

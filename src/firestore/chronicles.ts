@@ -1,5 +1,5 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import { db, useUser } from "../firebase";
+import { db } from "../firebase";
 import { firestore } from "firebase";
 import { getCharacter, PlayerCharacter } from "./characters";
 import { useCallback, useState } from "react";
@@ -59,8 +59,6 @@ export function useCreateChronicleSheet(
   characterId: string,
   table: string = ""
 ) {
-  const user = useUser();
-
   return useCallback(
     (scenario: string = "") =>
       getCharacter(characterId).then((char) => {
@@ -79,7 +77,7 @@ export function useCreateChronicleSheet(
 
         return db.collection("chronicles").add(newSheet);
       }),
-    [user]
+    [characterId, table]
   );
 }
 
