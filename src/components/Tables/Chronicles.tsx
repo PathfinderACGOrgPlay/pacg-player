@@ -10,7 +10,6 @@ import {
   Tab,
   Tabs,
   Typography,
-  InputAdornment,
 } from "@material-ui/core";
 import { Redirect, Route, RouteComponentProps } from "react-router";
 import {
@@ -23,7 +22,6 @@ import { useAccountCharacterList } from "../../firestore/characters";
 import { useEqualsMemo } from "../../useEqualsMemo";
 import { Link as RouterLink } from "react-router-dom";
 import { Chronicle } from "../Common/Chronicle";
-import classDecks from "../../oldData/classDecks.json";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
