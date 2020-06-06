@@ -1,24 +1,57 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useMemo, useState } from "react";
 import {
   FormHelperText,
   Select,
   TextField,
   CircularProgress,
   MenuItem,
-  Avatar,
-  Link,
   InputLabel,
-  FormControlLabel,
   FormControl,
+  Typography,
+  Button,
+  Grid,
+  Container,
+  Card,
+  CardContent,
 } from "@material-ui/core";
 import { RouteComponentProps } from "react-router";
-import { useTable, useUpdateTable, Table } from "../../firestore/tables";
+import {
+  useTable,
+  useUpdateTable,
+  Table,
+  useAddTableCharacterByOrgPlayId,
+  useAddTableCharacterByDeckId,
+  useRemoveTableCharacterByDeckId,
+} from "../../firestore/tables";
 import { useUser, useUsers } from "../../firebase";
 import { makeStyles } from "@material-ui/core/styles";
+import { useAccountCharacterList } from "../../firestore/characters";
+import { useEqualsMemo } from "../../useEqualsMemo";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
     width: "100%",
+  },
+  or: {
+    display: "inline-block",
+    marginTop: theme.spacing(2.5),
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  orButton: {
+    display: "inline-block",
+    marginLeft: theme.spacing(1),
+  },
+  orField: {
+    display: "inline-block",
+  },
+  remove: {
+    position: "absolute",
+    right: theme.spacing(1),
+    bottom: theme.spacing(1),
+  },
+  characterCard: {
+    position: "relative",
   },
 }));
 
@@ -29,11 +62,32 @@ export function Settings({
 }: RouteComponentProps<{ id: string }>) {
   const [table, , error] = useTable(id);
   const [updateTable, updateError] = useUpdateTable(id);
+  const [
+    addTableCharacterByOrgPlayId,
+    addTableCharacterByOrgPlayIdError,
+  ] = useAddTableCharacterByOrgPlayId(id);
+  const [
+    addTableCharacterByDeckId,
+    addTableCharacterByDeckIdError,
+  ] = useAddTableCharacterByDeckId(id);
+  const [
+    removeTableCharacterByDeckId,
+    removeTableCharacterByDeckIdError,
+  ] = useRemoveTableCharacterByDeckId(id);
   const user = useUser();
   const [users, usersLoading, usersError] = useUsers();
   const styles = useStyles();
+  const [orgPlayId, setOrgPlayId] = useState("");
+  const [deckId, setDeckId] = useState("");
 
   const data = table?.data();
+  const [
+    characters,
+    charactersLoading,
+    charactersError,
+  ] = useAccountCharacterList(
+    useEqualsMemo(() => data?.characters || [], [data])
+  );
 
   if (data?.managers.indexOf(user.uid) === -1) {
     return null;
@@ -52,6 +106,22 @@ export function Settings({
     <div>
       {error ? <div>Error While Loading Table: {error.message}</div> : null}
       {error ? <div>Error While Updating Table: {updateError}</div> : null}
+      {addTableCharacterByOrgPlayIdError ? (
+        <div>
+          Error While Adding Player: {addTableCharacterByOrgPlayIdError.message}
+        </div>
+      ) : null}
+      {addTableCharacterByDeckIdError ? (
+        <div>
+          Error While Adding Player: {addTableCharacterByDeckIdError.message}
+        </div>
+      ) : null}
+      {removeTableCharacterByDeckIdError ? (
+        <div>
+          Error While Removing Player:{" "}
+          {removeTableCharacterByDeckIdError.message}
+        </div>
+      ) : null}
       <br />
       <TextField
         id="name"
@@ -92,6 +162,80 @@ export function Settings({
           </FormHelperText>
         </FormControl>
       )}
+      <Typography>Characters</Typography>
+      {charactersError ? (
+        <div>Error While Loading Characters: {charactersError}</div>
+      ) : null}
+      {charactersLoading ? (
+        <CircularProgress />
+      ) : (
+        <Grid container spacing={3}>
+          {characters?.map((v) => {
+            const data = v.data();
+            if (!data) {
+              return null;
+            }
+            const userData = users?.docs
+              .find((v) => v.data().uid === data.uid)
+              ?.data();
+            return (
+              <Grid item lg={6} key={v.id}>
+                <Card>
+                  <CardContent className={styles.characterCard}>
+                    <Typography variant="h4" component="h2">
+                      {data.character}
+                    </Typography>
+                    <Typography>{data.characterDeck}</Typography>
+                    <Typography>{data.orgPlayId || id}</Typography>
+                    <Typography>
+                      {userData?.displayName || userData?.email}
+                    </Typography>
+                    <Button
+                      className={styles.remove}
+                      onClick={() => removeTableCharacterByDeckId(v.id)}
+                    >
+                      Remove
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
+      )}
+      <div>
+        <TextField
+          className={styles.orField}
+          id="orgPlayId"
+          label="Organized Play Id"
+          value={orgPlayId}
+          onChange={(e) => setOrgPlayId(e.currentTarget.value)}
+          disabled={!!deckId}
+        />
+        <Typography className={styles.or}>Or</Typography>
+        <TextField
+          className={styles.orField}
+          id="deckId"
+          label="Deck Id"
+          value={deckId}
+          onChange={(e) => setDeckId(e.currentTarget.value)}
+          disabled={!!orgPlayId}
+        />
+        <Button
+          className={styles.orButton}
+          onClick={() => {
+            if (orgPlayId) {
+              addTableCharacterByOrgPlayId(orgPlayId);
+              setOrgPlayId("");
+            } else if (deckId) {
+              addTableCharacterByDeckId(deckId);
+              setDeckId("");
+            }
+          }}
+        >
+          +
+        </Button>
+      </div>
     </div>
   );
 }

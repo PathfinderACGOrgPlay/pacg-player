@@ -1,7 +1,7 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db, useUser } from "../firebase";
 import { firestore } from "firebase/app";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export interface Card {
   deck: string;
@@ -63,6 +63,48 @@ export function useAccountCharacter(id: string) {
     boolean,
     Error | undefined
   ];
+}
+
+export function getCharacterList(ids: string[]) {
+  return Promise.all(
+    ids.map(
+      (v) =>
+        db.collection("account_characters").doc(v).get() as Promise<
+          firestore.DocumentSnapshot<PlayerCharacter>
+        >
+    )
+  );
+}
+
+export function useAccountCharacterList(
+  ids: string[]
+): [
+  firestore.DocumentSnapshot<PlayerCharacter>[] | undefined,
+  boolean,
+  Error | undefined
+] {
+  const [documents, setDocuments] = useState<
+    firestore.DocumentSnapshot<PlayerCharacter>[] | undefined
+  >(undefined);
+  const [error, setError] = useState<Error | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getCharacterList(ids)
+      .then((docs) => {
+        setError(undefined);
+        setDocuments(docs);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setError(e);
+        setDocuments(undefined);
+        setLoading(false);
+      });
+  }, [ids]);
+
+  return [documents, loading, error];
 }
 
 export function useCreateAccountCharacter() {

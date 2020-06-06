@@ -97,7 +97,15 @@ export function Character({
                 id="org-play-id"
                 label="Organized Play Id"
                 placeholder="#####-####"
-                helperText="This is the full account-character id number from paizo"
+                helperText={
+                  <>
+                    This is the full account-character id number from paizo,
+                    your gm will use this to find your character.
+                    <br />
+                    If you don't have one give your gm your deck id from the
+                    settings page
+                  </>
+                }
                 {...commonProps("orgPlayId")}
               />
             </Grid>
