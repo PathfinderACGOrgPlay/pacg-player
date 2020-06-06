@@ -5,6 +5,9 @@ import "firebase/firestore";
 import "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { firestore } from "firebase/app";
+import { useEffect } from "react";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { PlayerCharacter } from "./firestore/characters";
 
 export let db: firestore.Firestore;
 
@@ -25,6 +28,50 @@ export const initFirebase = fetch("/__/firebase/init.json")
     }
   });
 
+let updatingUser = false;
+
 export function useUser() {
-  return useAuthState(firebase.auth())[0]!;
+  const auth = useAuthState(firebase.auth())[0]!;
+
+  useEffect(() => {
+    if (auth && !updatingUser) {
+      updatingUser = true;
+      db.collection("accounts")
+        .where("uid", "==", auth.uid)
+        .get()
+        .then((v) => {
+          const updateData: DbUser = {
+            uid: auth.uid,
+            displayName: auth.displayName,
+            photoURL: auth.photoURL,
+            email: auth.email,
+          };
+          if (v.docs.length) {
+            db.collection("accounts")
+              .doc(v.docs[0].id)
+              .set({ ...v.docs[0].data(), ...updateData });
+          } else {
+            db.collection("accounts").add(updateData);
+          }
+          updatingUser = false;
+        });
+    }
+  }, [auth]);
+
+  return auth;
+}
+
+export interface DbUser {
+  uid: string;
+  displayName: string | null;
+  photoURL: string | null;
+  email: string | null;
+}
+
+export function useUsers() {
+  return useCollection(db.collection("accounts")) as [
+    firestore.QuerySnapshot<DbUser> | undefined,
+    boolean,
+    Error | undefined
+  ];
 }

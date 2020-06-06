@@ -14,6 +14,7 @@ import firebase from "firebase/app";
 import { Redirect, Route } from "react-router";
 import { Characters } from "./Characters";
 import { Link as RouterLink } from "react-router-dom";
+import { Tables } from "./Tables";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -55,6 +56,16 @@ export function Main() {
             Pathfinder Adventure Card Game
           </Typography>
           <nav>
+            <Link
+              variant="button"
+              color="textPrimary"
+              href="#"
+              component={RouterLink}
+              to="/tables"
+              className={classes.link}
+            >
+              Tables
+            </Link>
             <Link
               variant="button"
               color="textPrimary"
@@ -111,6 +122,7 @@ export function Main() {
         <Redirect to={"/characters"} />
       </Route>
       <Route component={Characters} path={"/characters"} />
+      <Route component={Tables} path={"/tables"} />
     </>
   );
 }
