@@ -43,6 +43,7 @@ export interface PlayerCharacter {
   roleHandSize?: boolean[];
   roleProficiencies?: { [label: string]: boolean };
   rolePowers?: boolean[][];
+  chronicleOrder?: string[];
 }
 
 export function useAccountCharacters() {
@@ -57,6 +58,12 @@ export function useAccountCharacters() {
   ];
 }
 
+export function getCharacter(id: string) {
+  return db.collection("account_characters").doc(id).get() as Promise<
+    firestore.DocumentSnapshot<PlayerCharacter>
+  >;
+}
+
 export function useAccountCharacter(id: string) {
   return useDocument(db.collection("account_characters").doc(id)) as [
     firestore.DocumentSnapshot<PlayerCharacter> | undefined,
@@ -66,14 +73,7 @@ export function useAccountCharacter(id: string) {
 }
 
 export function getCharacterList(ids: string[]) {
-  return Promise.all(
-    ids.map(
-      (v) =>
-        db.collection("account_characters").doc(v).get() as Promise<
-          firestore.DocumentSnapshot<PlayerCharacter>
-        >
-    )
-  );
+  return Promise.all(ids.map((v) => getCharacter(v)));
 }
 
 export function useAccountCharacterList(

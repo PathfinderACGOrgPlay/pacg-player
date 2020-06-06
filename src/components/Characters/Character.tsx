@@ -21,6 +21,7 @@ import { Sheet } from "./Sheet";
 import { Cards } from "./Cards";
 import { Substitutions } from "./Substitutions";
 import { Settings } from "./Settings";
+import { Chronicles } from "./Chronicles";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -41,6 +42,7 @@ const tabs = [
   { to: "/characters/:id/sheet", label: "Character Sheet" },
   { to: "/characters/:id/cards", label: "Cards" },
   { to: "/characters/:id/substitutions", label: "Substitutions" },
+  { to: "/characters/:id/chronicles", label: "Chronicle Sheets" },
   { to: "/characters/:id/settings", label: "Settings" },
 ];
 
@@ -92,7 +94,7 @@ export function Character({
         <br />
         {loading ? null : (
           <Grid container spacing={3}>
-            <Grid item lg={6}>
+            <Grid item xs={6}>
               <TextField
                 id="org-play-id"
                 label="Organized Play Id"
@@ -103,13 +105,13 @@ export function Character({
                     your gm will use this to find your character.
                     <br />
                     If you don't have one give your gm your deck id from the
-                    settings page
+                    settings page.
                   </>
                 }
                 {...commonProps("orgPlayId")}
               />
             </Grid>
-            <Grid item lg={6}>
+            <Grid item xs={6}>
               <TextField
                 id="name"
                 label="Name"
@@ -138,6 +140,7 @@ export function Character({
         <Route path="/characters/:id/sheet" component={Sheet} />
         <Route path="/characters/:id/cards" component={Cards} />
         <Route path="/characters/:id/substitutions" component={Substitutions} />
+        <Route path="/characters/:id/chronicles" component={Chronicles} />
         <Route path="/characters/:id/settings" component={Settings} />
       </form>
     </Container>

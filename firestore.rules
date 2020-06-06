@@ -1,3 +1,4 @@
+rules_version = '2'
 service cloud.firestore {
   match /databases/{database}/documents {
   	match /{document=**} {
@@ -17,6 +18,15 @@ service cloud.firestore {
       allow read: if true
       allow write: if request.auth.uid in resource.data.managers;
       allow create: if request.auth.uid in request.resource.data.managers;
+    }
+    match /chronicles/{chronicle} {
+      function checkPerms(data) {
+        return request.auth.uid == data.uid || (data.table && request.auth.uid in get(/tables/$(data.table)).data.managers)
+      }
+
+      allow read: if true
+      allow write: if checkPerms(resource.data)
+      allow create: if checkPerms(request.resource.data)
     }
   }
 }
