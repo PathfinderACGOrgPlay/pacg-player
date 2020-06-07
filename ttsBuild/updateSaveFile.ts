@@ -23,7 +23,7 @@ Promise.all([
   saveData.XmlUI = "";
   Object.keys(other).forEach((v) => {
     const name = v.split(".");
-    const guid = name[name.length - 1];
+    const guid = name[name.length - 2];
     const object = saveData.ObjectStates.find((v) => v.GUID === guid);
     if (object) {
       object.LuaScript = "";
