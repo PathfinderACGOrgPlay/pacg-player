@@ -16,10 +16,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
+      - run: yarn install --frozen-lockfile
       - run: |
           export FUNCTIONS_BASE_URL=https://adventurecard.games/f/
           yarn createConfigFile
-      - run: yarn install --frozen-lockfile
       - run: yarn build
       - run: yarn firebase deploy --project adventurecard-game --token ${{ secrets.FIREBASE_TOKEN }}
       - uses: actions/upload-artifact@v2
