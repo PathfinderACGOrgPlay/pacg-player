@@ -1,11 +1,4 @@
-import {
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@material-ui/core";
-import classDecks from "../../../oldData/classDecks.json";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useCardSystems } from "../../../firestore/wiki/card-systems";
 import { ErrorDisplay } from "../../Common/ErrorDisplay";

@@ -1,7 +1,7 @@
-import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import { db, useUser } from "../../firebase";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { db } from "../../firebase";
 import { firestore } from "firebase/app";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 const collection = () => db?.collection("wiki");
 
