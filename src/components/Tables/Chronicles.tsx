@@ -110,7 +110,7 @@ export function Chronicles({
         }))
         .filter((v) => v.characterId === characterId)
         .map((v) => (
-          <Chronicle id={v.id} sheet={v} />
+          <Chronicle id={v.id} sheet={v} key={v.id} />
         ))}
       {availableChronicles?.[characterId]?.length ? (
         <>
