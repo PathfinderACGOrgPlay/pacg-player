@@ -26,10 +26,16 @@ import {
   useAddTableCharacterByDeckId,
   useRemoveTableCharacterByDeckId,
 } from "../../firestore/tables";
-import { useUser, useUsers } from "../../firebase";
+import { DbUser, useUser, useUsers } from "../../firebase";
 import { makeStyles } from "@material-ui/core/styles";
-import { useAccountCharacterList } from "../../firestore/characters";
+import {
+  PlayerCharacter,
+  useAccountCharacterList,
+} from "../../firestore/characters";
 import { useEqualsMemo } from "../../useEqualsMemo";
+import { firestore } from "firebase";
+import { useCharacter } from "../../firestore/wiki/character";
+import { useDeck } from "../../firestore/wiki/deck";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -57,6 +63,54 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
   },
 }));
+
+function CharacterDisplay({
+  id,
+  data,
+  users,
+  removeTableCharacterByDeckId,
+}: {
+  id: string;
+  data: PlayerCharacter | undefined;
+  users: firestore.QuerySnapshot<DbUser> | undefined;
+  removeTableCharacterByDeckId(id: string): void;
+}) {
+  const styles = useStyles();
+  const [characterRecord] = useCharacter(
+    data?.systemId || "",
+    data?.deckId || "",
+    data?.characterId || ""
+  );
+  const characterData = characterRecord?.data();
+  const [deckRecord] = useDeck(data?.systemId || "", data?.deckId || "");
+  const deck = characterRecord?.data();
+
+  if (!data) {
+    return null;
+  }
+
+  const userData = users?.docs.find((v) => v.data().uid === data.uid)?.data();
+  return (
+    <Grid item lg={6} key={id}>
+      <Card variant="outlined">
+        <CardContent className={styles.characterCard}>
+          <Typography variant="h4" component="h2">
+            {characterData?.name}
+          </Typography>
+          <Typography>{deck?.name}</Typography>
+          <Typography>{data.orgPlayId || id}</Typography>
+          <Typography>{userData?.displayName || userData?.email}</Typography>
+          <Button
+            className={styles.remove}
+            onClick={() => removeTableCharacterByDeckId(id)}
+          >
+            Remove
+          </Button>
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+}
 
 export function Settings({
   match: {
@@ -180,37 +234,15 @@ export function Settings({
             <CircularProgress />
           ) : (
             <Grid container spacing={3}>
-              {characters?.map((v) => {
-                const data = v.data();
-                if (!data) {
-                  return null;
-                }
-                const userData = users?.docs
-                  .find((v) => v.data().uid === data.uid)
-                  ?.data();
-                return (
-                  <Grid item lg={6} key={v.id}>
-                    <Card variant="outlined">
-                      <CardContent className={styles.characterCard}>
-                        <Typography variant="h4" component="h2">
-                          {data.character}
-                        </Typography>
-                        <Typography>{data.characterDeck}</Typography>
-                        <Typography>{data.orgPlayId || id}</Typography>
-                        <Typography>
-                          {userData?.displayName || userData?.email}
-                        </Typography>
-                        <Button
-                          className={styles.remove}
-                          onClick={() => removeTableCharacterByDeckId(v.id)}
-                        >
-                          Remove
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                );
-              })}
+              {characters?.map((v) => (
+                <CharacterDisplay
+                  key={v.id}
+                  id={v.id}
+                  data={v.data()}
+                  users={users}
+                  removeTableCharacterByDeckId={removeTableCharacterByDeckId}
+                />
+              ))}
             </Grid>
           )}
           <div>

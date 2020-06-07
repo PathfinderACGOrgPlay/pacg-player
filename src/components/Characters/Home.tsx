@@ -1,4 +1,5 @@
 import {
+  PlayerCharacter,
   useAccountCharacters,
   useCreateAccountCharacter,
 } from "../../firestore/characters";
@@ -13,6 +14,9 @@ import {
   Button,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import { useDeck } from "../../firestore/wiki/deck";
+import { ErrorDisplay } from "../Common/ErrorDisplay";
+import { useCharacter } from "../../firestore/wiki/character";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -20,10 +24,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function Home() {
-  const [characters, , error] = useAccountCharacters();
+function CharacterDisplay({
+  id,
+  character,
+}: {
+  id: string;
+  character: PlayerCharacter;
+}) {
+  const [deck, , deckError] = useDeck(
+    character.systemId || "",
+    character.deckId || ""
+  );
+  const [char, , charError] = useCharacter(
+    character.systemId || "",
+    character.deckId || "",
+    character.characterId || ""
+  );
   const styles = useStyles();
   const history = useHistory();
+
+  return (
+    <Grid item lg={6}>
+      <ErrorDisplay label="Failed to load deck" error={deckError} />
+      <ErrorDisplay label="Failed to load character" error={charError} />
+      <Card
+        className={styles.card}
+        onClick={() => history.push(`/characters/${id}`)}
+      >
+        <CardContent>
+          <Typography variant="h4" component="h2">
+            {character.name}
+          </Typography>
+          <Typography variant="h5" component="h2">
+            {deck?.data()?.name}
+            {char?.data()?.name ? <> - {char?.data()?.name}</> : null}
+          </Typography>
+          <Typography variant="h6" component="h2">
+            {character.deckOne}
+            {character.deckTwo ? <> - {character.deckTwo}</> : null}
+            {character.deckThree ? <> - {character.deckThree}</> : null}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+}
+
+export function Home() {
+  const [characters, , error] = useAccountCharacters();
   const createAccountCharacter = useCreateAccountCharacter();
   const [createError, setCreateError] = useState<string | undefined>();
 
@@ -32,32 +80,9 @@ export function Home() {
       <Grid container spacing={3}>
         {error ? <div>Failed to read decks: {error.message}</div> : null}
         {createError ? <div>{createError}</div> : null}
-        {characters?.docs.map((v) => {
-          const data = v.data();
-          return (
-            <Grid item lg={6} key={v.id}>
-              <Card
-                className={styles.card}
-                onClick={() => history.push(`/characters/${v.id}`)}
-              >
-                <CardContent>
-                  <Typography variant="h4" component="h2">
-                    {data.name}
-                  </Typography>
-                  <Typography variant="h5" component="h2">
-                    {data.characterDeck}
-                    {data.character ? <> - {data.character}</> : null}
-                  </Typography>
-                  <Typography variant="h6" component="h2">
-                    {data.deckOne}
-                    {data.deckTwo ? <> - {data.deckTwo}</> : null}
-                    {data.deckThree ? <> - {data.deckThree}</> : null}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          );
-        })}
+        {characters?.docs.map((v) => (
+          <CharacterDisplay key={v.id} id={v.id} character={v.data()} />
+        ))}
         <Grid item lg={12}>
           <Button
             onClick={() => {

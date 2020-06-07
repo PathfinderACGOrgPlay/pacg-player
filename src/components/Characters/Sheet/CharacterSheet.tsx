@@ -15,6 +15,8 @@ import { Skills } from "./Skills";
 import { DeckList } from "./DeckList";
 import { Powers } from "./Powers";
 import { Role } from "./Role";
+import { useCharacter } from "../../../firestore/wiki/character";
+import { ErrorDisplay } from "../../Common/ErrorDisplay";
 
 const useStyles = makeStyles((theme) => ({
   roleSelect: {
@@ -34,12 +36,15 @@ export function CharacterSheet({
 }) {
   const commonStyles = useCommonStyles();
   const styles = useStyles();
-  const character: CharacterType = (characters as any)[data.character!]?.[
-    data.characterDeck!
-  ];
+  const [characterRecord, , charError] = useCharacter(
+    data.systemId || "",
+    data.deckId || "",
+    data.characterId || ""
+  );
+  const character = characterRecord?.data();
 
   if (!character) {
-    return null;
+    return <ErrorDisplay label="Failed to load character" error={charError} />;
   }
 
   return (
@@ -63,15 +68,15 @@ export function CharacterSheet({
         <Grid item lg={5}>
           <Typography className={commonStyles.center}>Powers</Typography>
           <Powers
-            powers={character.powers.powers}
+            powers={character.base.powers}
             powerCheckboxesValues={data.powers}
             updatePowerCheckboxes={(values) => update({ powers: values })}
-            proficiencies={character.powers.proficiencies}
+            proficiencies={character.base.proficiencies}
             proficienciesValues={data.proficiencies}
             updateProficienciesValues={(values) =>
               update({ proficiencies: values })
             }
-            handSize={character.powers.handSize}
+            handSize={character.base.handSize}
             handSizeValues={data.handSize}
             updateHandSizeValues={(values) => update({ handSize: values })}
             disabled={disabled}
@@ -80,6 +85,7 @@ export function CharacterSheet({
         <Grid item lg={3}>
           <DeckList
             cardsList={character.cardsList}
+            extraCardsText={character.extraCardsText}
             values={data!.deckList}
             setValues={(v) => update({ deckList: v })}
             disabled={disabled}
@@ -113,7 +119,7 @@ export function CharacterSheet({
         </AppBar>
         <Grid item lg={6}>
           <Role
-            role={character.roles[0].powers}
+            role={character.roles[0]}
             disabled={disabled || data.role !== 0}
             deck={data}
             update={update}
@@ -121,7 +127,7 @@ export function CharacterSheet({
         </Grid>
         <Grid item lg={6}>
           <Role
-            role={character.roles[1].powers}
+            role={character.roles[1]}
             disabled={disabled || data.role !== 1}
             deck={data}
             update={update}

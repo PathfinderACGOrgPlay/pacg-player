@@ -25,7 +25,7 @@ export function Powers({
   updateHandSizeValues,
   disabled,
 }: {
-  powers: string[][];
+  powers: { optional: boolean; texts: string[] }[];
   powerCheckboxesValues?: boolean[][];
   updatePowerCheckboxes(values: boolean[][]): void;
   proficiencies: { name: string; optional: boolean }[];
@@ -86,30 +86,32 @@ export function Powers({
         )}
       </div>
       <hr className={styles.firstRule} />
-      {powers.map((v, i) => (
-        <Typography>
-          {v.map((w, j) => (
-            <>
-              {j !== 0 ? (
-                <Checkbox
-                  className={styles.powersCheck}
-                  disabled={disabled}
-                  size="small"
-                  checked={powerCheckboxesValues?.[i]?.[j - 1] || false}
-                  onChange={() => {
-                    const newPowers = { ...(powerCheckboxesValues || []) };
-                    newPowers[i] = { ...(newPowers[i] || []) };
-                    newPowers[i][j - 1] = !newPowers[i][j - 1];
-                    updatePowerCheckboxes(newPowers);
-                  }}
-                />
-              ) : null}
-              {w}
-            </>
-          ))}
-          <hr />
-        </Typography>
-      ))}
+      {powers.map((v, i) => {
+        return (
+          <Typography>
+            {v.texts.map((w, j) => (
+              <>
+                {j !== 0 || v.optional ? (
+                  <Checkbox
+                    className={styles.powersCheck}
+                    disabled={disabled}
+                    size="small"
+                    checked={powerCheckboxesValues?.[i]?.[j - 1] || false}
+                    onChange={() => {
+                      const newPowers = { ...(powerCheckboxesValues || []) };
+                      newPowers[i] = { ...(newPowers[i] || []) };
+                      newPowers[i][j - 1] = !newPowers[i][j - 1];
+                      updatePowerCheckboxes(newPowers);
+                    }}
+                  />
+                ) : null}
+                {w}
+              </>
+            ))}
+            <hr />
+          </Typography>
+        );
+      })}
     </>
   );
 }

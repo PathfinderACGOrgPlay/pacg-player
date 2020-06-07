@@ -1,6 +1,20 @@
 {
   "indexes": [
     {
+      "collectionGroup": "deck",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "removed",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "wiki",
       "queryScope": "COLLECTION",
       "fields": [
@@ -10,6 +24,24 @@
         },
         {
           "fieldPath": "name",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "wiki_character",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "removed",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "systemId",
           "order": "ASCENDING"
         }
       ]

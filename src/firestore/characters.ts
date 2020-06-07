@@ -11,6 +11,9 @@ export interface Card {
 export interface PlayerCharacter {
   uid: string;
   name: string;
+  systemId?: string;
+  deckId?: string;
+  characterId?: string;
   orgPlayId?: string;
   deckOne?: string;
   deckOneSubstitutions?: {
@@ -27,8 +30,6 @@ export interface PlayerCharacter {
     [adventure: string]: { [cards: string]: [string, string] };
   };
   cardsThree?: Card[];
-  character?: string;
-  characterDeck?: string;
   Strength?: boolean[];
   Dexterity?: boolean[];
   Constitution?: boolean[];

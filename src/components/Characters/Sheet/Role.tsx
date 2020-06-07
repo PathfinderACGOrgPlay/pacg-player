@@ -2,6 +2,7 @@ import { CharacterType } from "./common";
 import { PlayerCharacter } from "../../../firestore/characters";
 import { Powers } from "./Powers";
 import { makeStyles } from "@material-ui/core/styles";
+import { Powers as PowersType } from "../../../firestore/wiki/character";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,7 +17,7 @@ export function Role({
   deck,
   update,
 }: {
-  role: CharacterType["roles"][0]["powers"];
+  role: PowersType & { name: string };
   disabled: boolean;
   deck: PlayerCharacter;
   update(values: Partial<PlayerCharacter>): void;

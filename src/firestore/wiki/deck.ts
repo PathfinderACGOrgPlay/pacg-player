@@ -1,7 +1,8 @@
-import { useCollection } from "react-firebase-hooks/firestore";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 import { firestore } from "firebase/app";
 import { useCallback, useState } from "react";
+import { PlayerCharacter } from "../characters";
 
 const collection = (systemId: string) =>
   systemId
@@ -46,5 +47,13 @@ export function useUpdateDeck(
       [id, systemId]
     ),
     updateError,
+  ];
+}
+
+export function useDeck(systemId: string, id: string) {
+  return useDocument(id ? collection(systemId)?.doc(id) : null) as [
+    firestore.DocumentSnapshot<PlayerCharacter> | undefined,
+    boolean,
+    Error | undefined
   ];
 }

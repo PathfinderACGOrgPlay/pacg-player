@@ -6,6 +6,7 @@ import { useAccountCharacterList } from "../../firestore/characters";
 import { useEqualsMemo } from "../../useEqualsMemo";
 import { Link as RouterLink } from "react-router-dom";
 import { CharacterDisplay } from "../Characters/Character";
+import { CharacterTab } from "./CharacterTab";
 
 export function Players({
   match: {
@@ -31,18 +32,9 @@ export function Players({
       {charactersLoading ? <CircularProgress /> : null}
       <AppBar position="static" color="default">
         <Tabs value={characterId}>
-          {characters?.map((v) => {
-            const data = v.data();
-            return (
-              <Tab
-                key={v.id}
-                component={RouterLink}
-                to={`/tables/${id}/players/${v.id}`}
-                value={v.id}
-                label={data?.character}
-              />
-            );
-          })}
+          {characters?.map((v) => (
+            <CharacterTab key={v.id} id={v.id} data={v.data()} />
+          ))}
         </Tabs>
       </AppBar>
       {characters?.[0] ? (

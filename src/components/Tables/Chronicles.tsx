@@ -7,7 +7,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Tab,
   Tabs,
   Typography,
 } from "@material-ui/core";
@@ -20,9 +19,9 @@ import {
 import { useTable } from "../../firestore/tables";
 import { useAccountCharacterList } from "../../firestore/characters";
 import { useEqualsMemo } from "../../useEqualsMemo";
-import { Link as RouterLink } from "react-router-dom";
 import { Chronicle } from "../Common/Chronicle";
 import { makeStyles } from "@material-ui/core/styles";
+import { CharacterTab } from "./CharacterTab";
 
 const useStyles = makeStyles((theme) => ({
   addChronicle: {
@@ -69,7 +68,6 @@ export function Chronicles({
     return acc;
   }, {} as { [playerId: string]: string[] });
 
-  console.log(availableChronicles, characters, tableData?.characters);
   return (
     <Typography>
       {error ? <div>Error While Loading Table: {error.message}</div> : null}
@@ -84,18 +82,9 @@ export function Chronicles({
       {loadTableChronicles || charactersLoading ? <CircularProgress /> : null}
       <AppBar position="static" color="default">
         <Tabs value={characterId}>
-          {characters?.map((v) => {
-            const data = v.data();
-            return (
-              <Tab
-                key={v.id}
-                component={RouterLink}
-                to={`/tables/${id}/chronicles/${v.id}`}
-                value={v.id}
-                label={data?.character}
-              />
-            );
-          })}
+          {characters?.map((v) => (
+            <CharacterTab key={v.id} id={v.id} data={v.data()} />
+          ))}
         </Tabs>
       </AppBar>
       {characters?.[0] ? (

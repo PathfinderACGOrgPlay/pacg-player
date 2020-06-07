@@ -31,6 +31,12 @@ export function CharacterDropdown({
     }
   }, [loading, setValue, characters, value]);
 
+  const filteredCharacters = deckId
+    ? characters?.docs.map((v) => ({ id: v.id, name: v.data().name }))
+    : characters?.docs
+        .map((v) => ({ id: v.data().name, name: v.data().name }))
+        .filter((v, i, arr) => arr.findIndex((w) => v.id === w.id) === i);
+
   return (
     <>
       <ErrorDisplay label="Failed to load characters" error={error} />
@@ -44,9 +50,9 @@ export function CharacterDropdown({
           IconComponent={selectLoadingComponent(loading)}
         >
           <MenuItem value="">&nbsp;</MenuItem>
-          {characters?.docs.map((v) => (
+          {filteredCharacters?.map((v) => (
             <MenuItem value={v.id} key={v.id}>
-              {v.data().name}
+              {v.name}
             </MenuItem>
           ))}
         </Select>

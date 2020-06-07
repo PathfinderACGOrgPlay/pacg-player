@@ -3,6 +3,9 @@ import { makeStyles, Grid } from "@material-ui/core";
 import { useRouteMatch } from "react-router";
 import { useAccountCharacter } from "../../firestore/characters";
 import { useUsers } from "../../firebase";
+import { useCharacter } from "../../firestore/wiki/character";
+import { ErrorDisplay } from "./ErrorDisplay";
+import { useDeck } from "../../firestore/wiki/deck";
 
 const hideClasses = [
   "MuiToolbar-root",
@@ -129,6 +132,14 @@ export function ChroniclePrintProvider({ children }: { children: ReactNode }) {
   const data = character?.data();
   const [users] = useUsers();
   const userData = users?.docs.find((v) => v.data().uid === data?.uid)?.data();
+  const [characterRecord] = useCharacter(
+    data?.systemId || "",
+    data?.deckId || "",
+    data?.characterId || ""
+  );
+  const characterData = characterRecord?.data();
+  const [deckRecord] = useDeck(data?.systemId || "", data?.deckId || "");
+  const deck = deckRecord?.data();
 
   return (
     <div className={route ? styles.container : null}>
@@ -158,7 +169,7 @@ export function ChroniclePrintProvider({ children }: { children: ReactNode }) {
               </Grid>
               <Grid item xs={5} className="noBorder">
                 <div className={styles.displayField}>
-                  {data?.character || <>&nbsp;</>}
+                  {characterData?.name || <>&nbsp;</>}
                 </div>
                 <div
                   className={`${styles.displayDescription} displayDescription`}
@@ -179,12 +190,12 @@ export function ChroniclePrintProvider({ children }: { children: ReactNode }) {
               <Grid item xs={2} className="noBorder" />
               <Grid item xs={5} className="noBorder">
                 <div className={styles.displayField}>
-                  {data?.characterDeck || <>&nbsp;</>}
+                  {deck?.name || <>&nbsp;</>}
                 </div>
                 <div
                   className={`${styles.displayDescription} displayDescription`}
                 >
-                  Character Product
+                  Character Deck
                 </div>
               </Grid>
             </Grid>

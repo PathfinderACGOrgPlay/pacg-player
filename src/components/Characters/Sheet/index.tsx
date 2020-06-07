@@ -17,6 +17,8 @@ import { resetValues } from "./common";
 import characters from "../../../oldData/characters.json";
 import { CharacterSheet } from "./CharacterSheet";
 import { useUser } from "../../../firebase";
+import { DeckDropdown } from "../../Wiki/Common/DeckDropdown";
+import { CharacterDropdown } from "../../Wiki/Common/CharacterDropdown";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -61,64 +63,36 @@ export function Sheet({
         <Grid item lg={6}>
           <FormControl className={styles.fill}>
             <InputLabel id="character-deck-label">Deck</InputLabel>
-            <Select
-              labelId={`character-deck-label`}
-              id={`character-deck-select`}
-              value={data?.characterDeck || ""}
-              onChange={(e) =>
+            <DeckDropdown
+              systemId={data?.systemId || ""}
+              value={data?.deckId || ""}
+              setValue={(value) =>
                 update({
-                  characterDeck: e.target.value as string,
+                  deckId: value,
                   ...resetValues,
                 })
               }
-              disabled={disabled}
-            >
-              <MenuItem value="">&nbsp;</MenuItem>
-              {boxNames
-                .filter(
-                  (v) =>
-                    !data?.character || (characters as any)[data.character]?.[v]
-                )
-                .map((v) => (
-                  <MenuItem value={v} key={v}>
-                    {v}
-                  </MenuItem>
-                ))}
-            </Select>
+            />
           </FormControl>
         </Grid>
         <Grid item lg={6}>
           <FormControl className={styles.fill}>
             <InputLabel id="character-deck-label">Character</InputLabel>
-            <Select
-              labelId={`character-deck-label`}
-              id={`character-deck-select`}
-              value={data?.character || ""}
-              onChange={(e) =>
+            <CharacterDropdown
+              systemId={data?.systemId || ""}
+              deckId={data?.deckId || ""}
+              value={data?.characterId || ""}
+              setValue={(value) =>
                 update({
-                  character: e.target.value as string,
+                  characterId: value,
                   ...resetValues,
                 })
               }
-              disabled={disabled}
-            >
-              <MenuItem value="">&nbsp;</MenuItem>
-              {characterNames
-                .filter(
-                  (v) =>
-                    !data?.characterDeck ||
-                    (characters as any)[v]?.[data.characterDeck]
-                )
-                .map((v) => (
-                  <MenuItem value={v} key={v}>
-                    {v}
-                  </MenuItem>
-                ))}
-            </Select>
+            />
           </FormControl>
         </Grid>
       </Grid>
-      {data && data.character && data.characterDeck ? (
+      {data && data.characterId && data.deckId ? (
         <CharacterSheet data={data} update={update} disabled={disabled} />
       ) : null}
     </>

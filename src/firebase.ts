@@ -27,7 +27,9 @@ export const initFirebase = fetch("/__/firebase/init.json")
       });
     }
 
-    firebase.firestore().enablePersistence();
+    if (process.env.NODE_ENV !== "development") {
+      firebase.firestore().enablePersistence();
+    }
   });
 
 let updatingUser = false;
