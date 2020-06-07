@@ -22,6 +22,7 @@ import { Cards } from "./Cards";
 import { Substitutions } from "./Substitutions";
 import { Settings } from "./Settings";
 import { Chronicles } from "./Chronicles";
+import { useDebounceUpdate } from "../Common/useDebounceUpdate";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -83,18 +84,24 @@ export function CharacterDisplay({
 
   const readOnly = user?.uid !== data?.uid;
 
-  function commonProps(key: keyof PlayerCharacter, className?: string) {
+  function useCommonProps(key: keyof PlayerCharacter, className?: string) {
+    const updateProps: any = useDebounceUpdate(
+      data?.[key] || "",
+      (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
+      (value) => update({ [key]: value })
+    );
     return {
       className: [classes.fill, className].filter((v) => v).join(" "),
       defaultValue: readOnly ? data?.[key] || "" : undefined,
-      value: readOnly ? undefined : data?.[key] || "",
-      onChange: (e: ChangeEvent<HTMLInputElement>) =>
-        update({ [key]: e.currentTarget.value }),
+      ...(readOnly ? {} : updateProps),
       InputProps: {
         readOnly,
       },
     };
   }
+
+  const orgPlayProps = useCommonProps("orgPlayId");
+  const nameProps = useCommonProps("name");
 
   return (
     <Container>
@@ -118,7 +125,7 @@ export function CharacterDisplay({
                     settings page.
                   </>
                 }
-                {...commonProps("orgPlayId")}
+                {...orgPlayProps}
               />
             </Grid>
             <Grid item xs={6}>
@@ -126,7 +133,7 @@ export function CharacterDisplay({
                 id="name"
                 label="Name"
                 helperText="This is just a description for you to help find this deck later"
-                {...commonProps("name")}
+                {...nameProps}
               />
             </Grid>
           </Grid>

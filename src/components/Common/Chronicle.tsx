@@ -17,6 +17,7 @@ import {
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import { DateTime } from "luxon";
 import { firestore } from "firebase";
+import { useDebounceUpdate } from "./useDebounceUpdate";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -79,26 +80,6 @@ export function Chronicle({
     type?: string;
     className?: string;
   }) {
-    const fieldProps = subKey
-      ? {
-          // @ts-ignore
-          value: (sheet[sheetKey] || {})[subKey] || "",
-          onChange: (e: ChangeEvent<HTMLInputElement>) =>
-            update({
-              ...sheet,
-              [sheetKey]: {
-                // @ts-ignore
-                ...sheet[sheetKey],
-                [subKey]: e.currentTarget.value,
-              },
-            }),
-        }
-      : {
-          value: sheet[sheetKey] || "",
-          onChange: (e: ChangeEvent<HTMLInputElement>) =>
-            update({ ...sheet, [sheetKey]: e.currentTarget.value }),
-        };
-
     return (
       <Grid item xs={xs} className={className}>
         <TextField
@@ -108,7 +89,24 @@ export function Chronicle({
           multiline={multiline}
           rows={rows}
           type={type}
-          {...fieldProps}
+          {...useDebounceUpdate(
+            subKey
+              ? // @ts-ignore
+                (sheet[sheetKey] || {})[subKey] || ""
+              : sheet[sheetKey] || "",
+            (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
+            (value) =>
+              subKey
+                ? update({
+                    ...sheet,
+                    [sheetKey]: {
+                      // @ts-ignore
+                      ...sheet[sheetKey],
+                      [subKey]: value,
+                    },
+                  })
+                : update({ ...sheet, [sheetKey]: value })
+          )}
         />
       </Grid>
     );

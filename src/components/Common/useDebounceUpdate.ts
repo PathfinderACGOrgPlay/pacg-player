@@ -4,11 +4,9 @@ export function useDebounceUpdate<T, U>(
   value: T,
   onChange: (val: U) => T,
   onTimeout: (val: T) => void,
-  timeout?: number
-): {
-  value: T;
-  onChange: (val: U) => any;
-} {
+  timeout?: number,
+  valueKey?: string
+): any {
   const [inputValue, changeInputValue] = useState(value);
   const [origValue, changeOrigValue] = useState(value);
   const [updating, changeUpdating] = useState(false);
@@ -24,8 +22,8 @@ export function useDebounceUpdate<T, U>(
   }, [origValue, updating, value]);
 
   return {
-    value: inputValue,
-    onChange: (val) => {
+    [valueKey || "value"]: inputValue,
+    onChange: (val: U) => {
       const newVal = onChange(val);
       changeInputValue(newVal);
       changeUpdating(true);

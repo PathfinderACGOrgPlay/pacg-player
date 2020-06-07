@@ -15,7 +15,7 @@ import {
   useCreateCardSystem,
   useUpdateCardSystem,
 } from "../../../firestore/wiki/card-systems";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { ErrorDisplay } from "../../Common/ErrorDisplay";
 import { useDebounceUpdate } from "../../Common/useDebounceUpdate";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -40,7 +40,7 @@ function System({ system, id }: { system: CardSystem; id: string }) {
         label="System Name"
         {...useDebounceUpdate(
           system.name,
-          (e) => e.currentTarget.value,
+          (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
           (name) => update({ ...system, name })
         )}
         InputProps={{
