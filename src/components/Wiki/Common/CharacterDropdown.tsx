@@ -1,44 +1,50 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import React, { useEffect } from "react";
-import { useCardSystems } from "../../../firestore/wiki/card-systems";
 import { ErrorDisplay } from "../../Common/ErrorDisplay";
 import { selectLoadingComponent } from "../../Common/selectLoadingComponent";
+import { useCharacters } from "../../../firestore/wiki/character";
 
-export function SystemDropdown({
+export function CharacterDropdown({
+  systemId,
+  deckId,
   fullWidth,
   value,
   setValue,
 }: {
+  systemId: string;
+  deckId?: string;
   fullWidth?: boolean;
   value: string;
   setValue(value: string): void;
 }) {
-  const [systems, loading, error] = useCardSystems();
+  const [characters, loading, error] = useCharacters(systemId, deckId);
 
   useEffect(() => {
     if (
       !loading &&
-      systems &&
-      systems.docs.length &&
-      (!value || !systems.docs.find((v) => v.id === value))
+      characters &&
+      characters.docs.length &&
+      value &&
+      !characters.docs.find((v) => v.id === value)
     ) {
-      setValue(systems.docs[0].id);
+      setValue("");
     }
-  }, [loading, setValue, systems, value]);
+  }, [loading, setValue, characters, value]);
 
   return (
     <>
-      <ErrorDisplay label="Failed to load systems" error={error} />
+      <ErrorDisplay label="Failed to load characters" error={error} />
       <FormControl fullWidth={fullWidth}>
-        <InputLabel id="system-label">System</InputLabel>
+        <InputLabel id="character-label">Character</InputLabel>
         <Select
-          labelId="system-label"
-          id="system-select"
+          labelId="character-label"
+          id="character-select"
           value={value}
           onChange={(e) => setValue(e.target.value as string)}
           IconComponent={selectLoadingComponent(loading)}
         >
-          {systems?.docs.map((v) => (
+          <MenuItem value="">&nbsp;</MenuItem>
+          {characters?.docs.map((v) => (
             <MenuItem value={v.id} key={v.id}>
               {v.data().name}
             </MenuItem>

@@ -56,7 +56,7 @@ export function Main() {
             noWrap
             className={classes.toolbarTitle}
           >
-            Pathfinder Adventure Card Game
+            AdventureCard.Game
           </Typography>
           <nav>
             <Link

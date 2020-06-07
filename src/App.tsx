@@ -52,12 +52,11 @@ function App() {
               noWrap
               className={styles.loginHeader}
             >
-              Welcome to the Pathfinder Adventure Card Game site please login to
-              continue
+              Welcome to the AdventureCard.Game site please login to continue
             </Typography>
             <FirebaseAuth
               uiConfig={{
-                siteName: "Pathfinder Adventure Card Game",
+                siteName: "AdventureCard.Game",
 
                 signInFlow: "redirect",
                 signInOptions: [
