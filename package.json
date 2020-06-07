@@ -33,7 +33,7 @@
     "postinstall": "cd functions && yarn",
     "start": "concurrently \"yarn start:react\" \"yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
     "start:functions": "cd functions && tsc --project tsconfig.json --watch",
-    "start:firebase": "firebase emulators:start --only firestore,functions",
+    "start:firebase": "firebase emulators:start --only firestore,functions --inspect-functions",
     "start:react": "cross-env BROWSER=none react-scripts start",
     "start:tts": "yarn build:tts && mkdir luaCache || echo && copy \"build\\save.json\" \"%USERPROFILE%\\Documents\\My Games\\Tabletop Simulator\\Saves\\9999.json\" && ts-node --project ttsBuild/tsconfig.json ttsBuild/watchTTS.ts",
     "build:react": "react-scripts build && rm -rf build/__",

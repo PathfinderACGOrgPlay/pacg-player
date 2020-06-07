@@ -16,6 +16,7 @@ import { Characters } from "./Characters";
 import { Link as RouterLink } from "react-router-dom";
 import { Tables } from "./Tables";
 import { ChroniclePrintProvider } from "./Common/ChroniclePrintProvider";
+import { Wiki } from "./Wiki";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -43,6 +44,7 @@ export function Main() {
   const classes = useStyles();
   const [user] = useAuthState(firebase.auth());
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [wikiAnchorEl, setWikiAnchorEl] = useState<HTMLElement | null>(null);
 
   return (
     <ChroniclePrintProvider>
@@ -57,6 +59,19 @@ export function Main() {
             Pathfinder Adventure Card Game
           </Typography>
           <nav>
+            <Link
+              variant="button"
+              color="textPrimary"
+              href="#"
+              aria-controls="wiki-menu"
+              aria-haspopup="true"
+              onClick={(event: MouseEvent<HTMLElement>) => {
+                setWikiAnchorEl(event.currentTarget);
+              }}
+              className={classes.link}
+            >
+              Wiki
+            </Link>
             <Link
               variant="button"
               color="textPrimary"
@@ -117,13 +132,41 @@ export function Main() {
               Logout
             </MenuItem>
           </Menu>
+          <Menu
+            id="wiki-menu"
+            className={classes.menu}
+            anchorEl={wikiAnchorEl}
+            keepMounted
+            open={Boolean(wikiAnchorEl)}
+            onClose={() => {
+              setWikiAnchorEl(null);
+            }}
+          >
+            <MenuItem
+              color="textPrimary"
+              href="#"
+              component={RouterLink}
+              to="/wiki/home"
+            >
+              Home
+            </MenuItem>
+            <MenuItem
+              color="textPrimary"
+              href="#"
+              component={RouterLink}
+              to="/wiki/characters"
+            >
+              Characters
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
-      <Route exact path={"/"}>
-        <Redirect to={"/characters"} />
+      <Route exact path="/">
+        <Redirect to="/characters" />
       </Route>
-      <Route component={Characters} path={"/characters"} />
-      <Route component={Tables} path={"/tables"} />
+      <Route component={Characters} path="/characters" />
+      <Route component={Tables} path="/tables" />
+      <Route component={Wiki} path="/wiki" />
     </ChroniclePrintProvider>
   );
 }
