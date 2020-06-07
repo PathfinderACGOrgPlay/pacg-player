@@ -167,5 +167,9 @@ import * as functions from "firebase-functions";
 //       });
 //   }
 // );
-export const getTTSDeck = functions.https.onRequest(() => {});
-export const getTTSDeckByOrgPlayId = functions.https.onRequest(() => {});
+export const getTTSDeck = functions.https.onRequest(() => {
+  throw new Error();
+});
+export const getTTSDeckByOrgPlayId = functions.https.onRequest(() => {
+  throw new Error();
+});
