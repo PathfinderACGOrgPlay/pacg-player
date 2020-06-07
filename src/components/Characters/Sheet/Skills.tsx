@@ -1,4 +1,3 @@
-import characters from "../../../oldData/characters.json";
 import { Typography } from "@material-ui/core";
 import { Checkboxes } from "./Checkboxes";
 import React from "react";

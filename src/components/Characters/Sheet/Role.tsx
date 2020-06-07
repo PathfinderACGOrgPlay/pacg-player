@@ -1,4 +1,3 @@
-import { CharacterType } from "./common";
 import { PlayerCharacter } from "../../../firestore/characters";
 import { Powers } from "./Powers";
 import { makeStyles } from "@material-ui/core/styles";

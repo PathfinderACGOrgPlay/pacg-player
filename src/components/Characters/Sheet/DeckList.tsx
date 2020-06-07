@@ -1,4 +1,4 @@
-import { CharacterType, useCommonStyles } from "./common";
+import { useCommonStyles } from "./common";
 import { Checkboxes } from "./Checkboxes";
 import React from "react";
 import { Typography } from "@material-ui/core";

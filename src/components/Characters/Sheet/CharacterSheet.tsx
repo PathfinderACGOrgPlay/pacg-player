@@ -8,9 +8,8 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import characters from "../../../oldData/characters.json";
 import { makeStyles } from "@material-ui/core/styles";
-import { CharacterType, roleResetValues, useCommonStyles } from "./common";
+import { roleResetValues, useCommonStyles } from "./common";
 import { Skills } from "./Skills";
 import { DeckList } from "./DeckList";
 import { Powers } from "./Powers";

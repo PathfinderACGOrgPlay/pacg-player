@@ -1,10 +1,9 @@
 import React from "react";
-import { AppBar, CircularProgress, Tab, Tabs } from "@material-ui/core";
+import { AppBar, CircularProgress, Tabs } from "@material-ui/core";
 import { Redirect, Route, RouteComponentProps } from "react-router";
 import { useTable } from "../../firestore/tables";
 import { useAccountCharacterList } from "../../firestore/characters";
 import { useEqualsMemo } from "../../useEqualsMemo";
-import { Link as RouterLink } from "react-router-dom";
 import { CharacterDisplay } from "../Characters/Character";
 import { CharacterTab } from "./CharacterTab";
 

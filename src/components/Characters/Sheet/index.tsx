@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  FormControl,
-  Grid,
-  InputLabel,
-  makeStyles,
-  MenuItem,
-  Select,
-} from "@material-ui/core";
+import { FormControl, Grid, InputLabel, makeStyles } from "@material-ui/core";
 import { RouteComponentProps } from "react-router";
 import {
   PlayerCharacter,
@@ -14,7 +7,6 @@ import {
   useUpdateAccountCharacter,
 } from "../../../firestore/characters";
 import { resetValues } from "./common";
-import characters from "../../../oldData/characters.json";
 import { CharacterSheet } from "./CharacterSheet";
 import { useUser } from "../../../firebase";
 import { DeckDropdown } from "../../Wiki/Common/DeckDropdown";
@@ -25,14 +17,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
 }));
-
-const characterNames = Object.keys(characters).sort();
-const boxNames = [
-  ...characterNames.reduce((acc, v) => {
-    Object.keys((characters as any)[v]).forEach(acc.add.bind(acc));
-    return acc;
-  }, new Set()),
-].sort() as string[];
 
 export function Sheet({
   match: {

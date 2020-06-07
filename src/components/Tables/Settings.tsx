@@ -83,7 +83,7 @@ function CharacterDisplay({
   );
   const characterData = characterRecord?.data();
   const [deckRecord] = useDeck(data?.systemId || "", data?.deckId || "");
-  const deck = characterRecord?.data();
+  const deck = deckRecord?.data();
 
   if (!data) {
     return null;

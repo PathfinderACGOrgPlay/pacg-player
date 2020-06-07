@@ -4,7 +4,6 @@ import { useRouteMatch } from "react-router";
 import { useAccountCharacter } from "../../firestore/characters";
 import { useUsers } from "../../firebase";
 import { useCharacter } from "../../firestore/wiki/character";
-import { ErrorDisplay } from "./ErrorDisplay";
 import { useDeck } from "../../firestore/wiki/deck";
 
 const hideClasses = [
