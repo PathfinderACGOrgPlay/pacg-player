@@ -41,6 +41,7 @@
     "build:tts": "ts-node --project ttsBuild/tsconfig.json ttsBuild/buildTTS.ts",
     "build": "concurrently \"yarn build:react\" \"yarn build:functions\" \"yarn build:tts\"",
     "updateSaveFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/updateSaveFile.ts",
+    "createConfigFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/createConfigFile.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

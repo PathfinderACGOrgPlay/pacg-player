@@ -22,31 +22,31 @@
         "destination": "/index.html"
       },
       {
-        "source": "/f/adventure",
+        "source": "/f/adventure/**",
         "function": "adventure"
       },
       {
-        "source": "/f/adventuresList",
+        "source": "/f/adventuresList/**",
         "function": "adventuresList"
       },
       {
-        "source": "/f/characterList",
+        "source": "/f/characterList/**",
         "function": "characterList"
       },
       {
-        "source": "/f/classDeck",
+        "source": "/f/classDeck/**",
         "function": "classDeck"
       },
       {
-        "source": "/f/classDeckList",
+        "source": "/f/classDeckList/**",
         "function": "classDeckList"
       },
       {
-        "source": "/f/getTTSDeck",
+        "source": "/f/getTTSDeck/**",
         "function": "getTTSDeck"
       },
       {
-        "source": "/f/getTTSDeckByOrgPlayId",
+        "source": "/f/getTTSDeckByOrgPlayId/**",
         "function": "getTTSDeckByOrgPlayId"
       }
     ]
