@@ -37,11 +37,25 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "name",
+          "fieldPath": "systemId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "systemId",
+          "fieldPath": "name",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "wiki_character",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "removed",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
           "order": "ASCENDING"
         }
       ]
