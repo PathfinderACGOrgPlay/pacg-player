@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import { renderToStaticMarkup } from "react-dom/server";
-import React, { createElement } from "react";
+import React from "react";
 import { CharacterSheetRenderer } from "../../../src/components/Characters/Sheet/CharacterSheet";
 import * as admin from "firebase-admin";
 import { Character } from "../../../src/firestore/wiki/character";
@@ -8,7 +8,6 @@ import { Character } from "../../../src/firestore/wiki/character";
 import nodeHtmlToImage from "node-html-to-image";
 import { ServerStyleSheets, ThemeProvider } from "@material-ui/core/styles";
 import { createMuiTheme, CssBaseline } from "@material-ui/core";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 const firestore = admin.firestore();
 
 export const createCharacterImage = functions.https.onRequest(
@@ -25,18 +24,6 @@ export const createCharacterImage = functions.https.onRequest(
       .get()
       .then((doc) => {
         const character = doc.data() as Character;
-        const elem = createElement(CharacterSheetRenderer, {
-          data: {
-            uid: "",
-            name: "",
-            systemId,
-            deckId,
-            characterId,
-          },
-          character,
-          disabled: true,
-          update: () => {},
-        });
         const sheets = new ServerStyleSheets();
         const markup = renderToStaticMarkup(
           sheets.collect(
