@@ -1,5 +1,4 @@
 import { PlayerCharacter } from "../../../firestore/characters";
-import characters from "../../../oldData/characters.json";
 import { makeStyles } from "@material-ui/core/styles";
 
 export const roleResetValues: Partial<PlayerCharacter> = {
@@ -22,8 +21,6 @@ export const resetValues: Partial<PlayerCharacter> = {
   deckList: {},
   ...roleResetValues,
 };
-
-export type CharacterType = typeof characters.Agna["Ranger Class Deck"];
 
 export const useCommonStyles = makeStyles((theme) => ({
   fill: {

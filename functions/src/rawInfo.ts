@@ -1,19 +1,6 @@
 import * as functions from "firebase-functions";
-import * as characters from "../../src/oldData/characters.json";
 import * as classDecks from "../../src/oldData/classDecks.json";
 import * as adventures from "../../src/oldData/adventures.json";
-
-export const characterList = functions.https.onRequest((request, response) => {
-  const reqDeck = decodeURI(request.path.substr(1));
-  return response.status(200).send(
-    Object.keys(characters).reduce((acc, v) => {
-      if ((characters as any)[v][reqDeck]) {
-        acc[v] = (characters as any)[v][reqDeck];
-      }
-      return acc;
-    }, {} as any)
-  );
-});
 
 export const classDeckList = functions.https.onRequest((request, response) => {
   return response
