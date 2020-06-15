@@ -30,9 +30,9 @@ function getDeck(
 }
 
 export const classDeck = functions.https.onRequest((request, response) => {
-  return getDeck(request, response, classDecks);
+  getDeck(request, response, classDecks);
 });
 
 export const adventure = functions.https.onRequest((request, response) => {
-  return getDeck(request, response, adventures);
+  getDeck(request, response, adventures);
 });
