@@ -23,3 +23,5 @@
 
 ttsBuild/amalg.lua
 luaCache
+/dbUtil/serviceAccountKey.json
+/dbUtil/wiki.json
