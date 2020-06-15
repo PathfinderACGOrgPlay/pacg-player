@@ -10,27 +10,32 @@ import { useCollection } from "react-firebase-hooks/firestore";
 
 export let db: firestore.Firestore;
 
-export const initFirebase = fetch("/__/firebase/init.json")
-  .then((response) => response.json())
-  .then((v) => {
-    const app = firebase.initializeApp(v);
+export const initFirebase = process.env.FIREBASE_FUNCTIONS
+  ? Promise.resolve()
+  : // @ts-ignore
+    fetch("/__/firebase/init.json")
+      // @ts-ignore
+      .then((response) => response.json())
+      // @ts-ignore
+      .then((v) => {
+        const app = firebase.initializeApp(v);
 
-    if (v.measurementId) {
-      firebase.analytics();
-    }
-    firebase.performance();
-    db = firestore(app);
-    if (process.env.NODE_ENV !== "production") {
-      db.settings({
-        host: "localhost:8080",
-        ssl: false,
+        if (v.measurementId) {
+          firebase.analytics();
+        }
+        firebase.performance();
+        db = firestore(app);
+        if (process.env.NODE_ENV !== "production") {
+          db.settings({
+            host: "localhost:8080",
+            ssl: false,
+          });
+        }
+
+        if (process.env.NODE_ENV !== "development") {
+          firebase.firestore().enablePersistence();
+        }
       });
-    }
-
-    if (process.env.NODE_ENV !== "development") {
-      firebase.firestore().enablePersistence();
-    }
-  });
 
 let updatingUser = false;
 

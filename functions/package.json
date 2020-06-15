@@ -17,7 +17,8 @@
     "@google-cloud/firestore": "^3.8.4",
     "firebase-admin": "^8.10.0",
     "firebase-functions": "^3.6.1",
-    "jsondiffpatch": "^0.4.1"
+    "jsondiffpatch": "^0.4.1",
+    "node-html-to-image": "^2.1.1"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.2.0",

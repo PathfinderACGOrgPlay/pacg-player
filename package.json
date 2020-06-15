@@ -31,17 +31,20 @@
   },
   "scripts": {
     "postinstall": "cd functions && yarn",
-    "start": "concurrently \"yarn start:react\" \"yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
+    "start": "concurrently \"yarn start:react\" \"yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\" \"yarn start:wiki\"",
     "start:functions": "cd functions && tsc --project tsconfig.json --watch",
     "start:firebase": "firebase emulators:start --only firestore,functions --inspect-functions",
     "start:react": "cross-env BROWSER=none react-scripts start",
     "start:tts": "yarn build:tts && mkdir luaCache || echo && copy \"build\\save.json\" \"%USERPROFILE%\\Documents\\My Games\\Tabletop Simulator\\Saves\\9999.json\" && ts-node --project ttsBuild/tsconfig.json ttsBuild/watchTTS.ts",
+    "start:wiki": "yarn exportWiki && wait-port -o silent localhost:8080 && yarn importWiki",
     "build:react": "react-scripts build && rm -rf build/__",
     "build:functions": "cd functions && yarn build",
     "build:tts": "ts-node --project ttsBuild/tsconfig.json ttsBuild/buildTTS.ts",
     "build": "concurrently \"yarn build:react\" \"yarn build:functions\" \"yarn build:tts\"",
     "updateSaveFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/updateSaveFile.ts",
     "createConfigFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/createConfigFile.ts",
+    "exportWiki": "ts-node --project dbUtil/tsconfig.json dbUtil/exportWiki.ts",
+    "importWiki": "ts-node --project dbUtil/tsconfig.json dbUtil/importWiki.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -61,6 +64,7 @@
     ]
   },
   "devDependencies": {
+    "@firebase/testing": "^0.20.1",
     "@types/luxon": "^1.24.0",
     "@types/react-router-dom": "^5.1.5",
     "bson": "^4.0.4",
@@ -69,6 +73,7 @@
     "firestore-export-import": "^0.6.0",
     "prettier": "^2.0.5",
     "ts-node": "^8.10.2",
-    "ttstk-channels": "^0.2.2"
+    "ttstk-channels": "^0.2.2",
+    "wait-port": "^0.2.9"
   }
 }
