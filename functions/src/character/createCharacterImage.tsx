@@ -46,6 +46,7 @@ export const createCharacterImage = functions.https.onRequest(
                 character={character}
                 disabled
                 update={() => {}}
+                noDisableRoles
               />
             </ThemeProvider>
           )
