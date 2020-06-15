@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import deepEqual from "deep-equals";
 
-export function useDebounceUpdate<T, U, V = T>(
+export function useDebounceUpdate<T, U, V = T, W = any>(
   value: T,
-  onChange: (val: U) => T,
+  onChange: (val: U, val2: W) => T,
   onTimeout: (val: T) => void,
   timeout?: number,
   valueKey?: string,
@@ -26,8 +26,8 @@ export function useDebounceUpdate<T, U, V = T>(
 
   return {
     [valueKey || "value"]: inputValue,
-    onChange: (val: U) => {
-      const newVal = onChange(val);
+    onChange: (val: U, val2: W) => {
+      const newVal = onChange(val, val2);
       changeInputValue(newVal);
       changeUpdating(true);
       clearTimeout(timeoutHolder.timeout);

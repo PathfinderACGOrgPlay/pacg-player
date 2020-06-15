@@ -48,6 +48,10 @@
       {
         "source": "/f/getTTSDeckByOrgPlayId/**",
         "function": "getTTSDeckByOrgPlayId"
+      },
+      {
+        "source": "/f/createCharacterImage/**",
+        "function": "createCharacterImage"
       }
     ]
   },

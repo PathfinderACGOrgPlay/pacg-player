@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardBody: {
     flex: "1 0 auto",
-    minHeight: 250,
+    minHeight: 160,
   },
 }));
 
@@ -73,8 +73,11 @@ function CardDisplay({
           <EditIcon />
         </IconButton>
         <Typography gutterBottom variant="h5">
+          {card.count ? `(${card.count}) ` : null}
           {card.name}
         </Typography>
+        <Typography>{card.subDeck}</Typography>
+        <Typography>{card.type}</Typography>
       </CardContent>
     </Card>
   );

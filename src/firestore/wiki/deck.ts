@@ -2,7 +2,6 @@ import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 import { firestore } from "firebase/app";
 import { useCallback, useState } from "react";
-import { PlayerCharacter } from "../characters";
 
 const collection = (systemId: string) =>
   systemId
@@ -11,6 +10,7 @@ const collection = (systemId: string) =>
 
 export interface Deck {
   name: string;
+  subDecks: string[];
   removed: boolean;
 }
 
@@ -52,7 +52,7 @@ export function useUpdateDeck(
 
 export function useDeck(systemId: string, id: string) {
   return useDocument(id ? collection(systemId)?.doc(id) : null) as [
-    firestore.DocumentSnapshot<PlayerCharacter> | undefined,
+    firestore.DocumentSnapshot<Deck> | undefined,
     boolean,
     Error | undefined
   ];

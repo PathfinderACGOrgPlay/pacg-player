@@ -1,4 +1,4 @@
-import { useCollection } from "react-firebase-hooks/firestore";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 import { firestore } from "firebase/app";
 import { useCallback, useState } from "react";
@@ -7,6 +7,8 @@ const collection = () => db?.collection("wiki");
 
 export interface CardSystem {
   name: string;
+  cardTypes?: string[];
+  traits?: string[];
   removed: boolean;
 }
 
@@ -18,6 +20,14 @@ export function useCardSystems(deleted?: boolean) {
     )?.orderBy("name")
   ) as [
     firestore.QuerySnapshot<CardSystem> | undefined,
+    boolean,
+    Error | undefined
+  ];
+}
+
+export function useCardSystem(systemId: string) {
+  return useDocument(systemId ? collection()?.doc(systemId) : null) as [
+    firestore.DocumentSnapshot<CardSystem> | undefined,
     boolean,
     Error | undefined
   ];

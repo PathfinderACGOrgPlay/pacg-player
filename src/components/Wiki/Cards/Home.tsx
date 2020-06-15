@@ -32,39 +32,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CharacterCard({
-  id,
-  character,
-  systemId,
-  deckId,
-}: {
-  id: string;
-  character: Character;
-  systemId: string;
-  deckId: string;
-}) {
-  const [deck, , error] = useDeck(systemId, deckId);
-  const styles = useStyles();
-  const history = useHistory();
-
-  return (
-    <Card
-      className={styles.card}
-      onClick={() =>
-        history.push(`/wiki/characters/${systemId}/${deckId}/${id}`)
-      }
-    >
-      <CardMedia className={styles.image} image={character.image} title="" />
-      <CardContent>
-        <ErrorDisplay label="Failed to load deck" error={error} />
-        <Typography variant="h5">{character.name}</Typography>
-        <Typography variant="h6">{deck?.data()?.name}</Typography>
-        <Typography>{character.traits.join(" ")}</Typography>
-      </CardContent>
-    </Card>
-  );
-}
-
 export function Home() {
   const [systemId, setSystemId] = useState("");
   const [decks, loading, error] = useDecks(systemId);

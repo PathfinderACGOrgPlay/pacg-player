@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useMemo, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { Card, useCard, useUpdateCard } from "../../../firestore/wiki/card";
 import {
@@ -6,17 +6,12 @@ import {
   Container,
   TextField,
   Button,
-  Tab,
   Grid,
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
-  Input,
   InputAdornment,
   IconButton,
-  FormHelperText,
-  CardContent,
 } from "@material-ui/core";
 import { ErrorDisplay } from "../../Common/ErrorDisplay";
 import { useDebounceUpdate } from "../../Common/useDebounceUpdate";
@@ -24,6 +19,13 @@ import { Link as RouterLink } from "react-router-dom";
 import { selectLoadingComponent } from "../../Common/selectLoadingComponent";
 import { makeStyles } from "@material-ui/core/styles";
 import PublishIcon from "@material-ui/icons/Publish";
+import { Autocomplete, createFilterOptions } from "@material-ui/lab";
+import {
+  useCardSystem,
+  useUpdateCardSystem,
+} from "../../../firestore/wiki/card-systems";
+import { AutoInsertDropdown } from "../Common/AutoInsertDropdown";
+import { useDeck, useUpdateDeck } from "../../../firestore/wiki/deck";
 
 const useStyles = makeStyles((theme) => ({
   cardImage: {
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(3),
   },
   body: {
-    flex: "1 0 auto",
+    flex: "1 1 auto",
   },
   container: {
     display: "flex",
@@ -47,9 +49,15 @@ export function CardEdit({
   const [card, loading, error] = useCard(systemId, deckId, cardId);
   const [updateCard, updateError] = useUpdateCard(systemId, deckId, cardId);
   const [uploadError, setUploadError] = useState<Error | null>(null);
-  const typesLoading = true;
-  const adventuresLoading = true;
-  const traitsLoading = true;
+  const [system, systemLoading, systemError] = useCardSystem(systemId);
+  const [deck, deckLoading, deckError] = useDeck(systemId, deckId);
+  const [updateSystem, updateSystemError] = useUpdateCardSystem(systemId);
+  const [updateDeck, updateDeckError] = useUpdateDeck(systemId, deckId);
+  const systemData = system?.data();
+  const deckData = deck?.data();
+  const cardTypes = (systemData?.cardTypes || []).filter((v) => v);
+  const traits = (systemData?.traits || []).filter((v) => v);
+  const subDecks = (deckData?.subDecks || []).filter((v) => v);
 
   function update(values: Partial<Card>) {
     if (data) {
@@ -66,8 +74,18 @@ export function CardEdit({
     <Container>
       <br />
       <ErrorDisplay label="Failed to load card" error={error} />
+      <ErrorDisplay label="Failed to load card system" error={systemError} />
+      <ErrorDisplay label="Failed to load deck" error={deckError} />
       <ErrorDisplay label="Failed to update card" error={updateError} />
       <ErrorDisplay label="Failed to upload image" error={uploadError} />
+      <ErrorDisplay
+        label="Failed to update dropdown options"
+        error={updateSystemError}
+      />
+      <ErrorDisplay
+        label="Failed to update dropdown options"
+        error={updateDeckError}
+      />
       {loading ? <CircularProgress /> : null}
       <div className={styles.container}>
         {data?.image ? (
@@ -88,48 +106,40 @@ export function CardEdit({
               />
             </Grid>
             <Grid item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel id="adventure-label">Adventure / Level</InputLabel>
-                <Select
-                  labelId="adventure-label"
-                  id="adventure-select"
-                  {...useDebounceUpdate(
-                    data?.adventure || "",
-                    (e: ChangeEvent<{ name?: string; value: unknown }>) =>
-                      e.target.value as string,
-                    (adventure) => update({ adventure })
-                  )}
-                  IconComponent={selectLoadingComponent(adventuresLoading)}
-                >
-                  {/*systems?.docs.map((v) => (
-                <MenuItem value={v.id} key={v.id}>
-                  {v.data().name}
-                </MenuItem>
-              ))*/}
-                </Select>
-              </FormControl>
+              <AutoInsertDropdown
+                id="level-select"
+                options={subDecks}
+                label="Adventure / Level"
+                value={data?.subDeck || ""}
+                onChange={(subDeck: string) => update({ subDeck })}
+                onAddOption={(type: string) => {
+                  if (deckData) {
+                    updateDeck({
+                      ...deckData,
+                      subDecks: [...subDecks, type].sort(),
+                    });
+                  }
+                }}
+                loading={deckLoading}
+              />
             </Grid>
             <Grid item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel id="type-label">Card Type</InputLabel>
-                <Select
-                  labelId="type-label"
-                  id="type-select"
-                  {...useDebounceUpdate(
-                    data?.type || "",
-                    (e: ChangeEvent<{ name?: string; value: unknown }>) =>
-                      e.target.value as string,
-                    (type) => update({ type })
-                  )}
-                  IconComponent={selectLoadingComponent(typesLoading)}
-                >
-                  {/*systems?.docs.map((v) => (
-                <MenuItem value={v.id} key={v.id}>
-                  {v.data().name}
-                </MenuItem>
-              ))*/}
-                </Select>
-              </FormControl>
+              <AutoInsertDropdown
+                id="type-select"
+                options={cardTypes}
+                label="Card Type"
+                value={data?.type || ""}
+                onChange={(type: string) => update({ type })}
+                onAddOption={(type: string) => {
+                  if (systemData) {
+                    updateSystem({
+                      ...systemData,
+                      cardTypes: [...cardTypes, type].sort(),
+                    });
+                  }
+                }}
+                loading={systemLoading}
+              />
             </Grid>
             <Grid item xs={6}>
               <TextField
@@ -145,30 +155,23 @@ export function CardEdit({
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="traits-label">Traits</InputLabel>
-                <Select
-                  labelId="traits-label"
-                  id="traits-select"
-                  multiple
-                  {...useDebounceUpdate(
-                    data?.traits || [],
-                    (e: ChangeEvent<{ name?: string; value: unknown }>) =>
-                      e.target.value as string[],
-                    (traits) => update({ traits }),
-                    undefined,
-                    undefined,
-                    data?.traits
-                  )}
-                  IconComponent={selectLoadingComponent(traitsLoading)}
-                >
-                  {/*systems?.docs.map((v) => (
-                <MenuItem value={v.id} key={v.id}>
-                  {v.data().name}
-                </MenuItem>
-              ))*/}
-                </Select>
-              </FormControl>
+              <AutoInsertDropdown
+                id="traits-select"
+                options={traits}
+                label="Traits"
+                multiple
+                value={data?.traits || []}
+                onChange={(traits: string[]) => update({ traits })}
+                onAddOption={(type: string) => {
+                  if (systemData) {
+                    updateSystem({
+                      ...systemData,
+                      traits: [...traits, type].sort(),
+                    });
+                  }
+                }}
+                loading={systemLoading}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -226,6 +229,19 @@ export function CardEdit({
                     </InputAdornment>
                   ),
                 }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="powers"
+                fullWidth
+                multiline
+                label="Powers"
+                {...useDebounceUpdate(
+                  data?.powers || "",
+                  (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
+                  (powers) => update({ powers })
+                )}
               />
             </Grid>
           </Grid>

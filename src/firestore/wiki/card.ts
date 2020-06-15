@@ -16,11 +16,12 @@ const collection = (systemId: string, deckId: string) =>
 export interface Card {
   removed: boolean;
   name: string;
-  adventure?: string;
+  subDeck?: string;
   type?: string;
   count?: number;
   traits?: string[];
   image?: string;
+  powers?: string;
 }
 
 export function useCards(systemId: string, deckId: string, deleted?: boolean) {
