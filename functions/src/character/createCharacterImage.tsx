@@ -14,7 +14,7 @@ export const createCharacterImage = functions.https.onRequest(
   (request, response) => {
     const [, systemId, deckId, characterId] = request.path.split("/");
     console.log(request.query);
-    firestore
+    return firestore
       .collection("wiki")
       .doc(systemId)
       .collection("deck")
@@ -45,7 +45,10 @@ export const createCharacterImage = functions.https.onRequest(
                 }}
                 character={character}
                 disabled
-                update={() => {}}
+                noDisableRoles
+                update={() => {
+                  // NOOP
+                }}
               />
             </ThemeProvider>
           )

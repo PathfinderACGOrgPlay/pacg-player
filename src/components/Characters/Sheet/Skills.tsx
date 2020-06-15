@@ -4,8 +4,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useCommonStyles } from "./common";
 import { PlayerCharacter } from "../../../firestore/characters";
-import { useCharacter } from "../../../firestore/wiki/character";
-import { ErrorDisplay } from "../../Common/ErrorDisplay";
+import { Character } from "../../../firestore/wiki/character";
 
 const useStyles = makeStyles((theme) => ({
   subskill: {
@@ -17,23 +16,15 @@ export function Skills({
   data,
   disabled,
   update,
+  character,
 }: {
   data: PlayerCharacter;
   disabled: boolean;
   update(data: Partial<PlayerCharacter>): void;
+  character: Character;
 }) {
   const styles = useStyles();
   const commonStyles = useCommonStyles();
-  const [characterRecord, , charError] = useCharacter(
-    data.systemId || "",
-    data.deckId || "",
-    data.characterId || ""
-  );
-  const character = characterRecord?.data();
-
-  if (!character) {
-    return <ErrorDisplay label="Failed to load character" error={charError} />;
-  }
 
   return (
     <>

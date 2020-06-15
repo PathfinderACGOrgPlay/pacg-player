@@ -2,6 +2,7 @@
   "name": "pacg-player",
   "version": "0.1.0",
   "private": true,
+  "workspaces": ["functions"],
   "dependencies": {
     "@date-io/luxon": "^1.0.0",
     "@material-ui/core": "^4.10.0",
@@ -30,7 +31,6 @@
     "typescript": "^3.9.3"
   },
   "scripts": {
-    "postinstall": "cd functions && yarn",
     "start": "concurrently \"yarn start:react\" \"yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\" \"yarn start:wiki\"",
     "start:functions": "cd functions && tsc --project tsconfig.json --watch",
     "start:firebase": "firebase emulators:start --only firestore,functions --inspect-functions",

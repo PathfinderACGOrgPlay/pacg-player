@@ -62,11 +62,13 @@ export function CharacterSheetRenderer({
   character,
   disabled,
   update,
+  noDisableRoles,
 }: {
   data: PlayerCharacter;
   character: Character;
   disabled: boolean;
   update(data: Partial<PlayerCharacter>): void;
+  noDisableRoles?: boolean;
 }) {
   const commonStyles = useCommonStyles();
   const styles = useStyles();
@@ -85,7 +87,12 @@ export function CharacterSheetRenderer({
         />
         <br />
         <br />
-        <Skills data={data} disabled={disabled} update={update} />
+        <Skills
+          data={data}
+          disabled={disabled}
+          update={update}
+          character={character}
+        />
       </Grid>
       <Grid item lg={5}>
         <Typography className={commonStyles.center}>Powers</Typography>
@@ -142,7 +149,7 @@ export function CharacterSheetRenderer({
       <Grid item lg={6}>
         <Role
           role={character.roles[0]}
-          disabled={disabled || data.role !== 0}
+          disabled={(disabled || data.role !== 0) && !noDisableRoles}
           deck={data}
           update={update}
         />
@@ -150,7 +157,7 @@ export function CharacterSheetRenderer({
       <Grid item lg={6}>
         <Role
           role={character.roles[1]}
-          disabled={disabled || data.role !== 1}
+          disabled={(disabled || data.role !== 1) && !noDisableRoles}
           deck={data}
           update={update}
         />
