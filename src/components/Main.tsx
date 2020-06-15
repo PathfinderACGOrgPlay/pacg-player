@@ -158,6 +158,14 @@ export function Main() {
             >
               Characters
             </MenuItem>
+            <MenuItem
+              color="textPrimary"
+              href="#"
+              component={RouterLink}
+              to="/wiki/cards"
+            >
+              Cards
+            </MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
