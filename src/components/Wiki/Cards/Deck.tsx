@@ -12,7 +12,6 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Link,
 } from "@material-ui/core";
 import {
   Card as CardType,
@@ -35,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     float: "right",
   },
   cardImage: {
-    width: 200,
+    width: 114,
     backgroundSize: "contain",
   },
   cardRoot: {

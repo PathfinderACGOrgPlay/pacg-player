@@ -1,36 +1,10 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Grid,
-  Link,
-  CircularProgress,
-  Card,
-  CardContent,
-  Typography,
-  CardMedia,
-} from "@material-ui/core";
+import { Container, Grid, Link, CircularProgress } from "@material-ui/core";
 import { SystemDropdown } from "../Common/SystemDropdown";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
-import { DeckDropdown } from "../Common/DeckDropdown";
-import { CharacterDropdown } from "../Common/CharacterDropdown";
-import { Character, useCharacters } from "../../../firestore/wiki/character";
 import { ErrorDisplay } from "../../Common/ErrorDisplay";
-import { useDeck, useDecks } from "../../../firestore/wiki/deck";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles((theme) => ({
-  image: {
-    float: "left",
-    width: 100,
-    height: 96,
-    backgroundSize: "contain",
-    marginTop: theme.spacing(1),
-  },
-  card: {
-    cursor: "pointer",
-  },
-}));
+import { useDecks } from "../../../firestore/wiki/deck";
 
 export function Home() {
   const [systemId, setSystemId] = useState("");

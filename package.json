@@ -48,6 +48,7 @@
     "createConfigFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/createConfigFile.ts",
     "exportWiki": "ts-node --project dbUtil/tsconfig.json dbUtil/exportWiki.ts",
     "importWiki": "ts-node --project dbUtil/tsconfig.json dbUtil/importWiki.ts",
+    "importOldCards": "ts-node --project dbUtil/tsconfig.json dbUtil/importOldCards.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -77,6 +78,7 @@
     "prettier": "^2.0.5",
     "ts-node": "^8.10.2",
     "ttstk-channels": "^0.2.2",
-    "wait-port": "^0.2.9"
+    "wait-port": "^0.2.9",
+    "jimp": "^0.13.0"
   }
 }

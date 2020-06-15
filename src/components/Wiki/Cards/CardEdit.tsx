@@ -7,19 +7,14 @@ import {
   TextField,
   Button,
   Grid,
-  FormControl,
-  InputLabel,
-  Select,
   InputAdornment,
   IconButton,
 } from "@material-ui/core";
 import { ErrorDisplay } from "../../Common/ErrorDisplay";
 import { useDebounceUpdate } from "../../Common/useDebounceUpdate";
 import { Link as RouterLink } from "react-router-dom";
-import { selectLoadingComponent } from "../../Common/selectLoadingComponent";
 import { makeStyles } from "@material-ui/core/styles";
 import PublishIcon from "@material-ui/icons/Publish";
-import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 import {
   useCardSystem,
   useUpdateCardSystem,
@@ -89,7 +84,7 @@ export function CardEdit({
       {loading ? <CircularProgress /> : null}
       <div className={styles.container}>
         {data?.image ? (
-          <img src={data?.image} className={styles.cardImage} />
+          <img src={data?.image} className={styles.cardImage} alt="" />
         ) : null}
         <div className={styles.body}>
           <Grid container spacing={3}>
