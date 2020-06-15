@@ -5,13 +5,15 @@ import * as adventures from "../../src/oldData/adventures.json";
 export const classDeckList = functions.https.onRequest((request, response) => {
   return response
     .status(200)
-    .send(Object.keys(classDecks).filter((v) => v !== "default"));
+    .send(Object.keys(classDecks).filter((v) => v !== "default"))
+    .end();
 });
 
 export const adventuresList = functions.https.onRequest((request, response) => {
   return response
     .status(200)
-    .send(Object.keys(adventures).filter((v) => v !== "default"));
+    .send(Object.keys(adventures).filter((v) => v !== "default"))
+    .end();
 });
 
 function getDeck(
@@ -21,9 +23,12 @@ function getDeck(
 ) {
   const reqDeck = decodeURI(request.path.substr(1));
   if (Object.keys(deck).indexOf(reqDeck) !== -1) {
-    return response.status(200).send(deck[reqDeck]);
+    return response.status(200).send(deck[reqDeck]).end();
   } else {
-    return response.status(404).send({ error: "Unable to retrieve the deck" });
+    return response
+      .status(404)
+      .send({ error: "Unable to retrieve the deck" })
+      .end();
   }
 }
 
