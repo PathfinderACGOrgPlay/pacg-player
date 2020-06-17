@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardImage: {
     width: 114,
+    minWidth: 114,
     backgroundSize: "contain",
   },
   cardRoot: {
@@ -72,7 +73,7 @@ function CardDisplay({
           <EditIcon />
         </IconButton>
         <Typography gutterBottom variant="h5">
-          {card.count ? `(${card.count}) ` : null}
+          {card.count && card.count !== 1 ? `(${card.count}) ` : null}
           {card.name}
         </Typography>
         <Typography>{card.subDeck}</Typography>

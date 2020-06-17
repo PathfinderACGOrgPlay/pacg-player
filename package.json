@@ -48,7 +48,7 @@
     "createConfigFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/createConfigFile.ts",
     "exportWiki": "ts-node --project dbUtil/tsconfig.json dbUtil/exportWiki.ts",
     "importWiki": "ts-node --project dbUtil/tsconfig.json dbUtil/importWiki.ts",
-    "importOldCards": "ts-node --project dbUtil/tsconfig.json dbUtil/importOldCards.ts",
+    "importOldCards": "set TS_NODE_PROJECT=dbUtil/tsconfig.json&& node -r ts-node/register --max-old-space-size=10240 dbUtil/importOldCards.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
