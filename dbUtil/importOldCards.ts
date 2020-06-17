@@ -59,6 +59,10 @@ const types = [
   "Player Reference",
   "Story Bane List",
   "Cohort",
+  "Supporter",
+  "Story Bane Roster",
+  "Troop",
+  "Mythic Path",
 ];
 
 function getNextCard(
