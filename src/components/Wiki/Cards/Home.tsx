@@ -28,7 +28,7 @@ export function Home() {
       <ErrorDisplay label="Failed to load decks" error={error} />
       <Grid container spacing={3}>
         {decks?.docs.map((v) => (
-          <Grid item xs={6}>
+          <Grid item xs={6} lg={3}>
             <Link component={RouterLink} to={`/wiki/cards/${systemId}/${v.id}`}>
               {v.data().name}
             </Link>

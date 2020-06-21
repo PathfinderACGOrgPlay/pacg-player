@@ -23,6 +23,4 @@
 
 ttsBuild/amalg.lua
 luaCache
-/dbUtil/serviceAccountKey.json
-/dbUtil/wiki.json
-/dbUtil/prod-serviceAccountKey.json
+/firebase-export/firebase-export
