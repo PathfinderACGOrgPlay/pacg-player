@@ -7,7 +7,7 @@ To get started developing with this project you will first need the following:
 1. [Yarn](https://yarnpkg.com/)
 1. (Optional) [Table Top Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/)
 
-Once you have all that installed open a terminal in this project and run `yarn`. When that completes run yarn start to start the web server.
+Once you have all that installed open a terminal in this project and run `yarn`. When that completes run `yarn start` to start the web server.
 
 For TTS development you should now have a save file with no title or picture in TTS with the save ID 9999. When you load that save the development server will connect to TTS.
 
