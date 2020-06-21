@@ -31,7 +31,7 @@ const serviceAccount = require("./serviceAccountKey.json");
 
 firestoreService.initializeApp(
   serviceAccount,
-  "https://test-pacs-player-site.firebaseio.com"
+  "https://adventurecard-game.firebaseio.com"
 );
 
 const types = [
@@ -63,6 +63,7 @@ const types = [
   "Story Bane Roster",
   "Troop",
   "Mythic Path",
+  "Armoe",
 ];
 
 function getNextCard(
@@ -85,6 +86,9 @@ function getNextCard(
   let type = traits.find((v) => types.indexOf(v) !== -1) || "";
   if (type === "Villian") {
     type = "Villian";
+  }
+  if (type === "Armoe") {
+    type = "Armor";
   }
   if (!type && traits.length) {
     throw new Error(`Type Not Found: ${traits.join(",")}`);
@@ -162,7 +166,7 @@ function getCards(oldJson: any, deck: string): Promise<Card[]> {
   }
   return getNextAdventure(oldJson, deck, Object.keys(oldJson.Decks));
 }
-const bucket = admin.storage().bucket("gs://test-pacs-player-site.appspot.com");
+const bucket = admin.storage().bucket("gs://adventurecard-game.appspot.com");
 function importNextDeck(decks: DocumentReference<Deck>[]) {
   if (decks.length === 0) {
     return {};
@@ -176,12 +180,6 @@ function importNextDeck(decks: DocumentReference<Deck>[]) {
     .then(([doc, cards]) => {
       const data = doc.data();
       let name = data.name;
-      if (cards.length) {
-        console.log(
-          `${new Date().toISOString()} ${name} ${ref.path} has cards, skipping`
-        );
-        return importNextDeck(decks);
-      }
       let oldJson = {};
       if (name === "Goblins Burn! Class Deck") {
         name = "Goblin's Burn! Deck";
@@ -198,6 +196,15 @@ function importNextDeck(decks: DocumentReference<Deck>[]) {
       } else if (classDecks[name]) {
         oldJson = classDecks[name];
         delete classDecks[name];
+      }
+      if (cards.length) {
+        console.log(
+          `${new Date().toISOString()} ${name} ${ref.path} has cards, skipping`
+        );
+        return importNextDeck(decks);
+      }
+      if (!oldJson) {
+        return importNextDeck(decks);
       }
       console.log(
         `${new Date().toISOString()} Building cards for ${name} ${ref.path}`
@@ -226,13 +233,15 @@ function importNextDeck(decks: DocumentReference<Deck>[]) {
           ).then(() => {
             console.log(`${new Date().toISOString()} ${name} ${ref.path} Done`);
           });
+        } else {
+          console.log(
+            `${new Date().toISOString()} no cards found for ${name} ${ref.path}`
+          );
         }
       });
     })
     .then(() => importNextDeck(decks));
 }
-
-//importNextDeck(wikiId, decks, Object.keys(decks));
 
 admin
   .firestore()
@@ -244,24 +253,10 @@ admin
       arr.pop();
     }
     return importNextDeck(arr);
+  })
+  .then(() => {
+    console.log(Object.keys(classDecks), Object.keys(adventures));
   });
-// .then((v) => {
-//   return Promise.all(v.map((w) => w.collection("card").listDocuments()));
-// })
-// .then((v) => {
-//   return Promise.all(
-//     v.map((w) =>
-//       Promise.all(
-//         w.map((x) => Promise.all([w.delete(),
-//           x
-//             .collection("audit")
-//             .listDocuments()
-//             .then((v) => Promise.all(v.map((w) => w.delete())))
-//         ]))
-//       )
-//     )
-//   );
-// });
 
 process.on("unhandledRejection", (up) => {
   throw up;

@@ -5,6 +5,7 @@ To get started developing with this project you will first need the following:
 1. Windows (If someone wants to set things up on linux / macOS feel free to submit a pr)
 1. [Node 10](https://nodejs.org/dist/latest-v10.x/)
 1. [Yarn](https://yarnpkg.com/)
+1. [GCloud SDK](https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe) You don't need to run gcloud init
 1. (Optional) [Table Top Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/)
 
 Once you have all that installed open a terminal in this project and run `yarn`. When that completes run yarn start to start the web server.
