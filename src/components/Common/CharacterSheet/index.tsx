@@ -7,8 +7,6 @@ import {
   CircularProgress,
   Container,
   Typography,
-  Button,
-  ButtonGroup,
   Link,
   TextField,
   Tabs,
@@ -198,6 +196,7 @@ export function CharacterSheet({
               <img
                 src={characterData.image}
                 className={characterStyles.headerImage}
+                alt=""
               />
             ) : null}
             {wikiEdit ? (
@@ -223,12 +222,14 @@ export function CharacterSheet({
               <img
                 src={require("./PacgLogo.png")}
                 className={characterStyles.logo}
+                alt=""
               />
               <br />
               {/* TODO: Make this part of the deck data */}
               <img
                 src={require("./AlchemistClassDeck.png")}
                 className={characterStyles.logo}
+                alt=""
               />
             </div>
           </div>

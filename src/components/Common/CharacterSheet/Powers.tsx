@@ -86,10 +86,7 @@ export function Powers({
   const characterStyles = useCharacterStyles();
   const styles = useStyles();
 
-  const [powersText, upConvert] = useMemo(
-    () => upConvertPowers(powers?.powers),
-    [powers]
-  );
+  const [powersText] = useMemo(() => upConvertPowers(powers?.powers), [powers]);
 
   return (
     <>

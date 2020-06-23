@@ -1,13 +1,7 @@
 import { CharacterSheet } from "../../Common/CharacterSheet";
 import React from "react";
-import { PlayerCharacter } from "../../../firestore/characters";
 import { RouteComponentProps } from "react-router";
 import { Container } from "@material-ui/core";
-
-const dummyPc: PlayerCharacter = {
-  uid: "",
-  name: "",
-};
 
 export function Character({
   match: {
