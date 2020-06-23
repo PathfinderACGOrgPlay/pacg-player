@@ -1,4 +1,4 @@
-import { CharacterSheet } from "../../Characters/Sheet/CharacterSheet";
+import { CharacterSheet } from "../../Common/CharacterSheet";
 import React from "react";
 import { PlayerCharacter } from "../../../firestore/characters";
 import { RouteComponentProps } from "react-router";
@@ -17,9 +17,10 @@ export function Character({
   return (
     <Container>
       <CharacterSheet
-        data={{ ...dummyPc, systemId, deckId, characterId: id }}
-        disabled
-        update={() => {}}
+        wikiMode
+        systemId={systemId}
+        deckId={deckId}
+        characterId={id}
       />
     </Container>
   );
