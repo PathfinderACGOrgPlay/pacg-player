@@ -26,7 +26,7 @@ export function Role({
   return (
     <div className={disabled ? styles.disabledRole : undefined}>
       <Powers
-        powers={role.powers}
+        powers={role.powers as { optional: boolean; texts: string[] }[]}
         powerCheckboxesValues={disabled ? [] : deck.rolePowers}
         updatePowerCheckboxes={(values) =>
           disabled ? null : update({ rolePowers: values })

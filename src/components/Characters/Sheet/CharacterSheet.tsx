@@ -97,7 +97,9 @@ export function CharacterSheetRenderer({
       <Grid item lg={5}>
         <Typography className={commonStyles.center}>Powers</Typography>
         <Powers
-          powers={character.base.powers}
+          powers={
+            character.base.powers as { optional: boolean; texts: string[] }[]
+          }
           powerCheckboxesValues={data.powers}
           updatePowerCheckboxes={(values) => update({ powers: values })}
           proficiencies={character.base.proficiencies}
