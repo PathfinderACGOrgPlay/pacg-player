@@ -73,7 +73,7 @@ const useContainerStyles = makeStyles((theme) => ({
 
 const useStyles = makeStyles((theme) => ({
   descriptionText: {
-    width: "calc(100% - 170px)",
+    width: "100%",
     display: "inline-block",
   },
   powersContent: {
@@ -165,6 +165,7 @@ export function CharacterSheet({
 
   return (
     <Container>
+      <br />
       {wikiMode ? (
         <Link
           className={characterStyles.mainEdit}
@@ -192,6 +193,19 @@ export function CharacterSheet({
               )}
               <Typography>{characterData?.traits.join(" ")}</Typography>
             </div>
+            {/* TODO: Make this part of the system data */}
+            <img
+              src={require("./PacgLogo.png")}
+              className={characterStyles.logo}
+              alt=""
+            />
+            <br />
+            {/* TODO: Make this part of the deck data */}
+            <img
+              src={require("./AlchemistClassDeck.png")}
+              className={characterStyles.logo}
+              alt=""
+            />
             {characterData?.image ? (
               <img
                 src={characterData.image}
@@ -217,21 +231,6 @@ export function CharacterSheet({
                 {characterData?.description}
               </div>
             )}
-            <div className={characterStyles.logoWrap}>
-              {/* TODO: Make this part of the system data */}
-              <img
-                src={require("./PacgLogo.png")}
-                className={characterStyles.logo}
-                alt=""
-              />
-              <br />
-              {/* TODO: Make this part of the deck data */}
-              <img
-                src={require("./AlchemistClassDeck.png")}
-                className={characterStyles.logo}
-                alt=""
-              />
-            </div>
           </div>
           <div className={containerStyles.skills}>
             <Typography className={characterStyles.listHeader}>
