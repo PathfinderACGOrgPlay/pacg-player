@@ -11,6 +11,8 @@ import {
   ButtonGroup,
   Link,
   TextField,
+  Tabs,
+  Tab,
 } from "@material-ui/core";
 import { ErrorDisplay } from "../ErrorDisplay";
 import { makeStyles } from "@material-ui/core/styles";
@@ -53,16 +55,20 @@ const useContainerStyles = makeStyles((theme) => ({
     gridRowEnd: 3,
   },
   powers: {
+    gridColumnStart: 1,
+    gridColumnEnd: 4,
+    gridRowStart: 3,
+    gridRowEnd: 4,
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+  },
+  cards: {
+    whiteSpace: "nowrap",
     gridColumnStart: 3,
     gridColumnEnd: 4,
     gridRowStart: 2,
-    gridRowEnd: 4,
-  },
-  cards: {
-    gridColumnStart: 1,
-    gridColumnEnd: 3,
-    gridRowStart: 3,
-    gridRowEnd: 4,
+    gridRowEnd: 3,
     width: "100%",
   },
 }));
@@ -71,6 +77,10 @@ const useStyles = makeStyles((theme) => ({
   descriptionText: {
     width: "calc(100% - 170px)",
     display: "inline-block",
+  },
+  powersContent: {
+    flexGrow: 1,
+    flexShrink: 1,
   },
 }));
 
@@ -262,39 +272,39 @@ export function CharacterSheet({
               null}
           </div>
           <div className={containerStyles.powers}>
-            <div className={characterStyles.listItem}>
-              <ButtonGroup variant="contained">
-                <Button
+            <div>
+              <Tabs orientation="vertical" value={selectedPowers}>
+                <Tab
                   disabled={!allowCharacterEdit && !wikiMode}
                   onClick={() => setSelectedPowers(-1)}
-                  color={selectedPowers === -1 ? "primary" : undefined}
-                >
-                  Base
-                </Button>
+                  value={-1}
+                  label="Base"
+                />
                 {characterData?.roles.map((v, idx) => (
-                  <Button
+                  <Tab
                     disabled={!allowCharacterEdit && !wikiMode}
                     onClick={() => setSelectedPowers(idx)}
-                    color={selectedPowers === idx ? "primary" : undefined}
                     key={idx}
-                  >
-                    {v.name}
-                  </Button>
+                    value={idx}
+                    label={v.name}
+                  />
                 ))}
-              </ButtonGroup>
+              </Tabs>
             </div>
-            <Typography className={characterStyles.listHeader}>
-              Powers
-            </Typography>
-            <Powers
-              powers={
-                selectedPowers === -1
-                  ? characterData?.base
-                  : characterData?.roles[selectedPowers]
-              }
-              allowCharacterEdit={allowCharacterEdit}
-              wikiMode={wikiMode}
-            />
+            <div className={styles.powersContent}>
+              <Typography className={characterStyles.listHeader}>
+                Powers
+              </Typography>
+              <Powers
+                powers={
+                  selectedPowers === -1
+                    ? characterData?.base
+                    : characterData?.roles[selectedPowers]
+                }
+                allowCharacterEdit={allowCharacterEdit}
+                wikiMode={wikiMode}
+              />
+            </div>
           </div>
           <div className={containerStyles.cards}>
             <Typography className={characterStyles.listHeader}>
