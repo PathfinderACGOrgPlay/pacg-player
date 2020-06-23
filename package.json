@@ -75,10 +75,10 @@
     "concurrently": "^5.2.0",
     "cross-env": "^7.0.2",
     "firestore-export-import": "^0.6.0",
+    "jimp": "^0.13.0",
     "prettier": "^2.0.5",
     "ts-node": "^8.10.2",
     "ttstk-channels": "^0.2.2",
-    "wait-port": "^0.2.9",
-    "jimp": "^0.13.0"
+    "wait-port": "^0.2.9"
   }
 }
