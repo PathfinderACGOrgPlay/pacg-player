@@ -22,8 +22,24 @@ interface Skill {
   skills: { [key: string]: number };
 }
 
+export interface OldPower {
+  optional: boolean;
+  texts: string[];
+}
+
+export interface PowerText {
+  optional: boolean;
+  text: string;
+  id: string;
+}
+
+export interface Power {
+  texts: PowerText[];
+  id: string;
+}
+
 export interface Powers {
-  powers: { optional: boolean; texts: string[] }[];
+  powers: OldPower[] | Power[];
   handSize: {
     base: number;
     add: number;
@@ -36,6 +52,7 @@ export interface Powers {
 
 export interface Character {
   name: string;
+  description?: string;
   removed: boolean;
   image: string;
   traits: string[];
@@ -46,9 +63,64 @@ export interface Character {
     [key: string]: {
       base: number;
       add: number;
+      order?: number;
     };
   };
+  favoredCardType?: string;
   extraCardsText: { [key: string]: string };
+}
+
+function randomString(length: number, chars: string) {
+  var result = "";
+  for (var i = length; i > 0; --i)
+    result += chars[Math.floor(Math.random() * chars.length)];
+  return result;
+}
+
+export function makeId() {
+  return randomString(
+    5,
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  );
+}
+
+function isPowerArr(powers: OldPower[] | Power[]): powers is Power[] {
+  return !powers.length || !!(powers[0] as Power).id;
+}
+
+export function upConvertPowers(
+  powers: OldPower[] | Power[] | undefined
+): [Power[] | undefined, boolean] {
+  if (!powers || isPowerArr(powers)) {
+    return [powers, false];
+  } else {
+    return [
+      powers.map((v) => ({
+        id: makeId(),
+        texts: v.texts.reduce((acc, w, i) => {
+          if (i === 0) {
+            acc.push({
+              text: w.replace(/\($/, ""),
+              optional: v.optional,
+              id: makeId(),
+            });
+          } else {
+            const [left, right] = w.split(")");
+            acc.push({ text: left, optional: true, id: makeId() });
+            if (right) {
+              acc.push({
+                text: right.replace(/\($/, ""),
+                optional: false,
+                id: makeId(),
+              });
+            }
+          }
+          return acc;
+        }, [] as PowerText[]),
+      })),
+      true,
+    ];
+  }
 }
 
 export function useCharacters(
