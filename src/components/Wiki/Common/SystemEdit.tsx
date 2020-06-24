@@ -25,6 +25,7 @@ import {
   useUpdateDeck,
 } from "../../../firestore/wiki/deck";
 import { removeRecoverAdornment } from "./removeRecoverAdornment";
+import {UploadField} from "../../Common/UploadField";
 
 const useStyles = makeStyles((theme) => ({
   removedSwitch: {
@@ -83,21 +84,32 @@ function System({
     <Card>
       <CardContent>
         <ErrorDisplay error={updateError} label="Failed to update system" />
-        <TextField
-          fullWidth
-          id={`name-${id}`}
-          label="System Name"
-          {...useDebounceUpdate(
-            system.name,
-            (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
-            (name) => update({ ...system, name })
-          )}
-          InputProps={{
-            endAdornment: removeRecoverAdornment(system.removed, () =>
-              update({ ...system, removed: !system.removed })
-            ),
-          }}
-        />
+          <TextField
+              fullWidth
+              id={`name-${id}`}
+              label="System Name"
+              {...useDebounceUpdate(
+                  system.name,
+                  (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
+                  (name) => update({ ...system, name })
+              )}
+              InputProps={{
+                  endAdornment: removeRecoverAdornment(system.removed, () =>
+                      update({ ...system, removed: !system.removed })
+                  ),
+              }}
+          />
+          <UploadField
+              fullWidth
+              id={`logo-${id}`}
+              label="System Logo"
+              potentialFilePath={`/system/logo/${id}`}
+              {...useDebounceUpdate(
+                  system.logo,
+                  (logo: string) => logo,
+                  (logo) => update({ ...system, logo })
+              )}
+          />
 
         <Typography variant="h5">
           Decks
