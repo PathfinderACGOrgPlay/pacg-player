@@ -34,9 +34,9 @@
     "typescript": "^3.9.3"
   },
   "scripts": {
-    "start": "concurrently \"yarn start:react\" \"yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
+    "start": "concurrently \"yarn start:react\" \"mkdir -p build && yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
     "start:functions": "cd functions && tsc --project tsconfig.json --watch",
-    "start:firebase": "(if not exist firebase-export/firebase-export (yarn downloadWiki)) && firebase emulators:start --only firestore,functions --inspect-functions --import ./firebase-export",
+    "start:firebase": "yarn downloadWiki && firebase emulators:start --only firestore,functions --inspect-functions --import ./firebase-export",
     "start:react": "cross-env BROWSER=none react-scripts start",
     "start:tts": "yarn build:tts && mkdir luaCache || echo && copy \"build\\save.json\" \"%USERPROFILE%\\Documents\\My Games\\Tabletop Simulator\\Saves\\9999.json\" && ts-node --project ttsBuild/tsconfig.json ttsBuild/watchTTS.ts",
     "build:react": "react-scripts build && rm -rf build/__",
