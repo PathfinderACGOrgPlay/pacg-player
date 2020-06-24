@@ -19,6 +19,7 @@ Module.prototype.require = function reallyNeedRequire(name: string) {
       "firebase/analytics",
       "firebase/auth",
       "firebase/firestore",
+      "firebase/storage",
     ].indexOf(name) !== -1
   ) {
     return {};
