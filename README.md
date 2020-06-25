@@ -13,7 +13,7 @@ Once you have all that installed open a terminal in this project and run `yarn`.
 
 For TTS development you should now have a save file with no title or picture in TTS with the save ID 9999. When you load that save the development server will connect to TTS.
 
-For Web developmentb you only need to open a browser and visit http://localhost:3000/
+For Web development you only need to open a browser and visit http://localhost:3000/
 
 Both pieces will automatically update/reload when you save changes to the appropriate files
 
