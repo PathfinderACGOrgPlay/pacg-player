@@ -61,6 +61,17 @@ function DeckField({
           ),
         }}
       />
+        <UploadField
+            fullWidth
+            id={`logo-${systemId}-${deckId}`}
+            label="System Logo"
+            potentialFilePath={`/system/${systemId}/deck/logo/${deckId}`}
+            {...useDebounceUpdate(
+                deck.logo,
+                (logo: string) => logo,
+                (logo) => update({ ...deck, logo })
+            )}
+        />
     </>
   );
 }

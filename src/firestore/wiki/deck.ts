@@ -10,6 +10,7 @@ const collection = (systemId: string) =>
 
 export interface Deck {
   name: string;
+  logo?: string;
   subDecks: string[];
   removed: boolean;
 }

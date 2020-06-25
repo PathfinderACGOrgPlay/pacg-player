@@ -8,18 +8,23 @@ import {
   Container,
   Typography,
   Link,
-  TextField,
   Tabs,
   Tab,
 } from "@material-ui/core";
 import { ErrorDisplay } from "../ErrorDisplay";
 import { makeStyles } from "@material-ui/core/styles";
-import { Checkboxes } from "./Checkboxes";
 import { Powers } from "./Powers";
 import { useCharacterStyles } from "./common";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { useDebounceUpdate } from "../useDebounceUpdate";
+import { useCardSystem } from "../../../firestore/wiki/card-systems";
+import { useDeck } from "../../../firestore/wiki/deck";
+import { UploadField } from "../UploadField";
+import { CardsList } from "./CardsList";
+import { WikiEditTextField } from "./WikiEditTextField";
+import { WikiEditAutoInsertDropdown } from "./WikiEditAutoInsertDropdown";
+import { Skills } from "./Skills";
 
 const useContainerStyles = makeStyles((theme) => ({
   container: {
@@ -82,21 +87,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const defaultOrder: { [key: string]: number } = {
-  Weapon: 0,
-  Spell: 1,
-  Armor: 2,
-  Item: 3,
-  Ally: 4,
-  Blessing: 5,
-  Strength: 0,
-  Dexterity: 1,
-  Constitution: 2,
-  Intelligence: 3,
-  Wisdom: 4,
-  Charisma: 5,
-};
-
 export function CharacterSheet({
   wikiMode,
   allowCharacterEdit,
@@ -110,6 +100,10 @@ export function CharacterSheet({
   deckId: string;
   characterId: string;
 }) {
+  const [system, , systemError] = useCardSystem(systemId);
+  const systemData = system?.data();
+  const [deck, , deckError] = useDeck(systemId, deckId);
+  const deckData = deck?.data();
   const [character, loading, error] = useCharacter(
     systemId,
     deckId,
@@ -127,26 +121,6 @@ export function CharacterSheet({
     characterId
   );
 
-  const descriptionFields = useDebounceUpdate(
-    characterData?.description || "",
-    (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
-    (description) =>
-      characterData &&
-      updateCharacter({
-        ...characterData,
-        description,
-      })
-  );
-  const nameFields = useDebounceUpdate(
-    characterData?.name || "",
-    (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
-    (name) =>
-      characterData &&
-      updateCharacter({
-        ...characterData,
-        name,
-      })
-  );
   const imageFields = useDebounceUpdate(
     characterData?.image || "",
     (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
@@ -157,11 +131,6 @@ export function CharacterSheet({
         image,
       })
   );
-
-  if (characterData?.extraCardsText.FavoredCardType) {
-    characterData.favoredCardType =
-      characterData?.extraCardsText.FavoredCardType;
-  }
 
   return (
     <Container>
@@ -179,169 +148,143 @@ export function CharacterSheet({
         </Link>
       ) : null}
       <ErrorDisplay label="Failed to load character" error={error} />
+      <ErrorDisplay label="Failed to load system" error={systemError} />
+      <ErrorDisplay label="Failed to load deck" error={deckError} />
       <ErrorDisplay label="Failed to update character" error={updateError} />
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <div className={containerStyles.container}>
-          <div className={containerStyles.header}>
-            <div className={characterStyles.headerHighlight}>
-              {wikiEdit ? (
-                <TextField label="Name" {...nameFields} fullWidth />
-              ) : (
-                <Typography>{characterData?.name}</Typography>
+      {loading ? <CircularProgress /> : null}
+      <div
+        style={{ display: loading ? "none" : undefined }}
+        className={containerStyles.container}
+      >
+        <div className={containerStyles.header}>
+          <div className={characterStyles.headerHighlight}>
+            <WikiEditTextField
+              wikiEdit={wikiEdit}
+              label="Name"
+              {...useDebounceUpdate(
+                characterData?.name || "",
+                (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
+                (name) =>
+                  characterData &&
+                  updateCharacter({
+                    ...characterData,
+                    name,
+                  })
               )}
-              <Typography>{characterData?.traits.join(" ")}</Typography>
-            </div>
-            {/* TODO: Make this part of the system data */}
-            <img
-              src={require("./PacgLogo.png")}
-              className={characterStyles.logo}
-              alt=""
+              fullWidth
             />
-            <br />
-            {/* TODO: Make this part of the deck data */}
-            <img
-              src={require("./AlchemistClassDeck.png")}
-              className={characterStyles.logo}
-              alt=""
+            <WikiEditAutoInsertDropdown
+              wikiEdit={wikiEdit}
+              id="traits"
+              options={characterData?.traits || []}
+              onAddOption={() => {}}
+              label="Traits"
+              value={characterData?.traits || []}
+              onChange={(traits: string[]) =>
+                characterData &&
+                updateCharacter({
+                  ...characterData,
+                  traits,
+                })
+              }
+              fullWidth
+              multiple
             />
-            {characterData?.image ? (
+          </div>
+          {systemData?.logo ? (
+            <>
               <img
-                src={characterData.image}
-                className={characterStyles.headerImage}
+                src={systemData.logo}
+                className={characterStyles.logo}
                 alt=""
               />
-            ) : null}
-            {wikiEdit ? (
-              <TextField label="Image" {...imageFields} fullWidth />
-            ) : null}
-          </div>
-          <div className={containerStyles.description}>
-            {wikiEdit ? (
-              <TextField
-                label="Description"
-                {...descriptionFields}
-                multiline
-                fullWidth
-                className={styles.descriptionText}
-              />
-            ) : (
-              <div className={styles.descriptionText}>
-                {characterData?.description}
-              </div>
+              <br />
+            </>
+          ) : null}
+          {deckData?.logo ? (
+            <img src={deckData.logo} className={characterStyles.logo} alt="" />
+          ) : null}
+          {characterData?.image ? (
+            <img
+              src={characterData.image}
+              className={characterStyles.headerImage}
+              alt=""
+            />
+          ) : null}
+          {wikiEdit ? (
+            <UploadField label="Image" {...imageFields} fullWidth />
+          ) : null}
+        </div>
+        <div className={containerStyles.description}>
+          <WikiEditTextField
+            label="Description"
+            {...useDebounceUpdate(
+              characterData?.description || "",
+              (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
+              (description) =>
+                characterData &&
+                updateCharacter({
+                  ...characterData,
+                  description,
+                })
             )}
-          </div>
-          <div className={containerStyles.skills}>
-            <Typography className={characterStyles.listHeader}>
-              Skills
-            </Typography>
-            {(characterData?.skills &&
-              Object.keys(characterData.skills)
-                .sort(
-                  (a, b) =>
-                    (characterData.skills[a].order ?? defaultOrder[a] ?? 99) -
-                    (characterData.skills[b].order ?? defaultOrder[b] ?? 99)
-                )
-                .map((v) => (
-                  <div key={v} className={characterStyles.listItem}>
-                    <Typography className={characterStyles.listName}>
-                      {v}
-                      {Object.keys(characterData.skills[v].skills)
-                        .sort()
-                        .map((w) => (
-                          <Typography
-                            key={`${v}-${w}`}
-                            className={characterStyles.skillsExtra}
-                          >
-                            {w}: +{characterData.skills[v].skills[w]}
-                          </Typography>
-                        ))}
-                    </Typography>
-                    <Typography className={characterStyles.skillsBase}>
-                      {characterData.skills[v].die}
-                    </Typography>
-                    <Checkboxes
-                      count={characterData.skills[v].feats}
-                      prefix="+"
-                      base={1}
-                      disabled={!allowCharacterEdit}
-                    />
-                  </div>
-                ))) ||
-              null}
-          </div>
-          <div className={containerStyles.powers}>
-            <div>
-              <Tabs orientation="vertical" value={selectedPowers}>
+            multiline
+            fullWidth
+            className={styles.descriptionText}
+          />
+        </div>
+        <div className={containerStyles.skills}>
+          <Skills
+            allowCharacterEdit={allowCharacterEdit}
+            wikiEdit={wikiEdit}
+            characterData={characterData}
+            updateCharacter={updateCharacter}
+          />
+        </div>
+        <div className={containerStyles.powers}>
+          <div>
+            <Tabs orientation="vertical" value={selectedPowers}>
+              <Tab
+                disabled={!allowCharacterEdit && !wikiMode}
+                onClick={() => setSelectedPowers(-1)}
+                value={-1}
+                label="Base"
+              />
+              {characterData?.roles.map((v, idx) => (
                 <Tab
                   disabled={!allowCharacterEdit && !wikiMode}
-                  onClick={() => setSelectedPowers(-1)}
-                  value={-1}
-                  label="Base"
+                  onClick={() => setSelectedPowers(idx)}
+                  key={idx}
+                  value={idx}
+                  label={v.name}
                 />
-                {characterData?.roles.map((v, idx) => (
-                  <Tab
-                    disabled={!allowCharacterEdit && !wikiMode}
-                    onClick={() => setSelectedPowers(idx)}
-                    key={idx}
-                    value={idx}
-                    label={v.name}
-                  />
-                ))}
-              </Tabs>
-            </div>
-            <div className={styles.powersContent}>
-              <Typography className={characterStyles.listHeader}>
-                Powers
-              </Typography>
-              <Powers
-                powers={
-                  selectedPowers === -1
-                    ? characterData?.base
-                    : characterData?.roles[selectedPowers]
-                }
-                allowCharacterEdit={allowCharacterEdit}
-                wikiMode={wikiMode}
-              />
-            </div>
+              ))}
+            </Tabs>
           </div>
-          <div className={containerStyles.cards}>
+          <div className={styles.powersContent}>
             <Typography className={characterStyles.listHeader}>
-              Cards List
-              <div className={characterStyles.favoredCardType}>
-                Favored Card Type: {characterData?.favoredCardType}
-              </div>
+              Powers
             </Typography>
-            {(characterData?.cardsList &&
-              Object.keys(characterData.cardsList)
-                .sort(
-                  (a, b) =>
-                    (characterData.cardsList[a].order ??
-                      defaultOrder[a] ??
-                      99) -
-                    (characterData.cardsList[b].order ?? defaultOrder[b] ?? 99)
-                )
-                .map((v) => (
-                  <div key={v} className={characterStyles.listItem}>
-                    <Typography className={characterStyles.listName}>
-                      {v}
-                    </Typography>
-                    <Typography className={characterStyles.listBase}>
-                      {characterData.cardsList[v].base || "-"}
-                    </Typography>
-                    <Checkboxes
-                      count={characterData.cardsList[v].add}
-                      prefix=""
-                      base={characterData.cardsList[v].base + 1}
-                      disabled={!allowCharacterEdit}
-                    />
-                  </div>
-                ))) ||
-              null}
+            <Powers
+              powers={
+                selectedPowers === -1
+                  ? characterData?.base
+                  : characterData?.roles[selectedPowers]
+              }
+              allowCharacterEdit={allowCharacterEdit}
+              wikiMode={wikiMode}
+            />
           </div>
         </div>
-      )}
+        <div className={containerStyles.cards}>
+          <CardsList
+            allowCharacterEdit={allowCharacterEdit}
+            wikiEdit={wikiEdit}
+            characterData={characterData}
+            updateCharacter={updateCharacter}
+          />
+        </div>
+      </div>
     </Container>
   );
 }
