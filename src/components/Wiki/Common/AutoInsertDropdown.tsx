@@ -5,6 +5,18 @@ import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 
 const filter = createFilterOptions<string>();
 
+export interface AutoInsertDropdownProps {
+  id: string;
+  options: string[];
+  label: string;
+  value: string | string[];
+  onChange(newValue: string | string[]): void;
+  onAddOption(newValue: string): void;
+  multiple?: boolean;
+  loading?: boolean;
+  fullWidth?: boolean;
+}
+
 export function AutoInsertDropdown({
   id,
   options,
@@ -14,16 +26,8 @@ export function AutoInsertDropdown({
   onChange,
   value,
   loading,
-}: {
-  id: string;
-  options: string[];
-  label: string;
-  value: string | string[];
-  onChange(newValue: string | string[]): void;
-  onAddOption(newValue: string): void;
-  multiple?: boolean;
-  loading?: boolean;
-}) {
+                                     fullWidth
+}: AutoInsertDropdownProps) {
   return (
     <Autocomplete
       id={id}
@@ -54,6 +58,7 @@ export function AutoInsertDropdown({
       multiple={multiple}
       renderInput={(params) => <TextField {...params} label={label} />}
       value={value}
+      fullWidth={fullWidth}
       onChange={(e, newValue) => {
         let val: string | string[];
         if (multiple) {

@@ -15,9 +15,9 @@ const collection = (systemId: string, deckId: string) =>
         .collection("wiki_character")
     : undefined;
 
-interface Skill {
+export interface Skill {
   die: string;
-  order: number;
+  order?: number;
   feats: number;
   skills: { [key: string]: number };
 }
@@ -50,6 +50,12 @@ export interface Powers {
   }[];
 }
 
+export interface CardListRow {
+  base: number;
+  add: number;
+  order?: number;
+}
+
 export interface Character {
   name: string;
   description?: string;
@@ -60,11 +66,7 @@ export interface Character {
   base: Powers;
   roles: (Powers & { name: string })[];
   cardsList: {
-    [key: string]: {
-      base: number;
-      add: number;
-      order?: number;
-    };
+    [key: string]: CardListRow;
   };
   favoredCardType?: string;
   extraCardsText: { [key: string]: string };

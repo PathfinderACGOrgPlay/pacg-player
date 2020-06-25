@@ -21,6 +21,7 @@ import {
 } from "../../../firestore/wiki/card-systems";
 import { AutoInsertDropdown } from "../Common/AutoInsertDropdown";
 import { useDeck, useUpdateDeck } from "../../../firestore/wiki/deck";
+import {UploadField} from "../../Common/UploadField";
 
 const useStyles = makeStyles((theme) => ({
   cardImage: {
@@ -43,7 +44,6 @@ export function CardEdit({
   const styles = useStyles();
   const [card, loading, error] = useCard(systemId, deckId, cardId);
   const [updateCard, updateError] = useUpdateCard(systemId, deckId, cardId);
-  const [uploadError, setUploadError] = useState<Error | null>(null);
   const [system, systemLoading, systemError] = useCardSystem(systemId);
   const [deck, deckLoading, deckError] = useDeck(systemId, deckId);
   const [updateSystem, updateSystemError] = useUpdateCardSystem(systemId);
@@ -72,7 +72,6 @@ export function CardEdit({
       <ErrorDisplay label="Failed to load card system" error={systemError} />
       <ErrorDisplay label="Failed to load deck" error={deckError} />
       <ErrorDisplay label="Failed to update card" error={updateError} />
-      <ErrorDisplay label="Failed to upload image" error={uploadError} />
       <ErrorDisplay
         label="Failed to update dropdown options"
         error={updateSystemError}
@@ -169,7 +168,7 @@ export function CardEdit({
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
+              <UploadField
                 id="image"
                 fullWidth
                 label="Image"
@@ -178,52 +177,6 @@ export function CardEdit({
                   (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
                   (image) => update({ image })
                 )}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        title="Upload"
-                        onClick={() => {
-                          const input = document.createElement("input");
-                          input.type = "file";
-
-                          input.onchange = (e) => {
-                            // @ts-ignore
-                            const file = e.target.files[0];
-                            if (!file) {
-                              setUploadError(new Error("Unknown"));
-                              return;
-                            } else if (file.size > 1000000) {
-                              setUploadError(
-                                new Error(
-                                  "Please make sure your image is less than 1MB in size"
-                                )
-                              );
-                              return;
-                            }
-                            setUploadError(null);
-                            const reader = new FileReader();
-                            reader.addEventListener(
-                              "load",
-                              function () {
-                                update({
-                                  image: this.result?.toString() || "",
-                                });
-                              },
-                              false
-                            );
-
-                            reader.readAsDataURL(file);
-                          };
-
-                          input.click();
-                        }}
-                      >
-                        <PublishIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
               />
             </Grid>
             <Grid item xs={12}>
