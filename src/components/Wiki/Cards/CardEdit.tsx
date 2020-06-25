@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 import { RouteComponentProps } from "react-router";
 import { Card, useCard, useUpdateCard } from "../../../firestore/wiki/card";
 import {
@@ -7,21 +7,18 @@ import {
   TextField,
   Button,
   Grid,
-  InputAdornment,
-  IconButton,
 } from "@material-ui/core";
 import { ErrorDisplay } from "../../Common/ErrorDisplay";
 import { useDebounceUpdate } from "../../Common/useDebounceUpdate";
 import { Link as RouterLink } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import PublishIcon from "@material-ui/icons/Publish";
 import {
   useCardSystem,
   useUpdateCardSystem,
 } from "../../../firestore/wiki/card-systems";
 import { AutoInsertDropdown } from "../Common/AutoInsertDropdown";
 import { useDeck, useUpdateDeck } from "../../../firestore/wiki/deck";
-import {UploadField} from "../../Common/UploadField";
+import { UploadField } from "../../Common/UploadField";
 
 const useStyles = makeStyles((theme) => ({
   cardImage: {
