@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core";
 import { ErrorDisplay } from "../ErrorDisplay";
 import { makeStyles } from "@material-ui/core/styles";
-import { Checkboxes } from "./Checkboxes";
 import { Powers } from "./Powers";
 import { useCharacterStyles } from "./common";
 import LockIcon from "@material-ui/icons/Lock";
@@ -87,15 +86,6 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: 1,
   },
 }));
-
-const defaultOrder: { [key: string]: number } = {
-  Strength: 0,
-  Dexterity: 1,
-  Constitution: 2,
-  Intelligence: 3,
-  Wisdom: 4,
-  Charisma: 5,
-};
 
 export function CharacterSheet({
   wikiMode,

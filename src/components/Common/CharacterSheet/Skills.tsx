@@ -1,88 +1,21 @@
-import React, { useState, MouseEvent, ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
 import {
-  CardListRow,
   Character,
   Skill,
-  useCharacter,
-  useUpdateCharacter,
 } from "../../../firestore/wiki/character";
 import {
-  CircularProgress,
-  Container,
   Typography,
-  Link,
-  Tabs,
-  Tab,
   ButtonGroup,
   IconButton,
 } from "@material-ui/core";
-import { ErrorDisplay } from "../ErrorDisplay";
 import { makeStyles } from "@material-ui/core/styles";
 import { Checkboxes } from "./Checkboxes";
-import { Powers } from "./Powers";
 import { useCharacterStyles } from "./common";
-import LockIcon from "@material-ui/icons/Lock";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { useDebounceUpdate } from "../useDebounceUpdate";
-import { useCardSystem } from "../../../firestore/wiki/card-systems";
-import { useDeck } from "../../../firestore/wiki/deck";
-import { UploadField } from "../UploadField";
-import { CardsList } from "./CardsList";
 import { WikiEditTextField } from "./WikiEditTextField";
-import { WikiEditAutoInsertDropdown } from "./WikiEditAutoInsertDropdown";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/Delete";
-
-const useContainerStyles = makeStyles((theme) => ({
-  container: {
-    display: "grid",
-    gridTemplateColumns: "auto auto auto",
-    gridTemplateRows: "auto auto auto",
-    gap: "1em 1em",
-    maxWidth: "100%",
-  },
-  header: {
-    gridColumnStart: 1,
-    gridColumnEnd: 2,
-    gridRowStart: 1,
-    gridRowEnd: 3,
-    textAlign: "center",
-  },
-  description: {
-    gridColumnStart: 2,
-    gridColumnEnd: 4,
-    gridRowStart: 1,
-    gridRowEnd: 2,
-  },
-  skills: {
-    whiteSpace: "nowrap",
-    display: "flex",
-    flexDirection: "column",
-    width: "min-content",
-    gridColumnStart: 2,
-    gridColumnEnd: 3,
-    gridRowStart: 2,
-    gridRowEnd: 3,
-  },
-  powers: {
-    gridColumnStart: 1,
-    gridColumnEnd: 4,
-    gridRowStart: 3,
-    gridRowEnd: 4,
-    display: "flex",
-    flexDirection: "row",
-    width: "100%",
-  },
-  cards: {
-    whiteSpace: "nowrap",
-    gridColumnStart: 3,
-    gridColumnEnd: 4,
-    gridRowStart: 2,
-    gridRowEnd: 3,
-    width: "100%",
-  },
-}));
 
 const useStyles = makeStyles((theme) => ({
   die: {
