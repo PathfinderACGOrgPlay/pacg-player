@@ -1,13 +1,13 @@
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Character,
+  makeId,
   Power,
   Powers,
   PowerText,
   upConvertPowers,
-  useUpdateCharacter,
 } from "../../../firestore/wiki/character";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   ButtonGroup,
   Chip,
@@ -111,7 +111,7 @@ function PowerTextEdit({
         reorder(draggedId, text.id);
         setTimeout(() => {
           data.lastMoveId = "";
-        }, 1000);
+        }, 2000);
       }
     },
   });
@@ -197,17 +197,19 @@ function PowerList({
   hover,
   setHover,
   reorder,
+  addText,
 }: {
   power: Power;
   hover: string | null;
   setHover(id: string | null): void;
   reorder(powerId: string, from: string, to: string): void;
+  addText(powerId: string): void;
 }) {
   const characterStyles = useCharacterStyles();
   const [, drop] = useDrop({ accept: power.id });
 
   return (
-    <div ref={drop} className={characterStyles.listItem} key={power.id}>
+    <div ref={drop} className={characterStyles.listItem}>
       {power.texts.map((w, i) => (
         <PowerTextEdit
           powerId={power.id}
@@ -220,6 +222,13 @@ function PowerList({
           reorder={(from, to) => reorder(power.id, from, to)}
         />
       ))}
+      <IconButton size="small">
+        <AddIcon
+          fontSize="small"
+          fontSizeAdjust={-1}
+          onClick={() => addText(power.id)}
+        />
+      </IconButton>
     </div>
   );
 }
@@ -232,6 +241,7 @@ function PowerDisplay({
   hover,
   setHover,
   reorder,
+  addText,
 }: {
   width: string;
   upconvert?: boolean;
@@ -240,6 +250,7 @@ function PowerDisplay({
   hover: string | null;
   setHover(id: string | null): void;
   reorder(powerId: string, from: string, to: string): void;
+  addText(powerId: string): void;
 }) {
   const styles = useStyles();
   const characterStyles = useCharacterStyles();
@@ -333,6 +344,7 @@ function PowerDisplay({
           hover={hover}
           setHover={setHover}
           reorder={reorder}
+          addText={addText}
         />
       ))}
     </div>
@@ -362,6 +374,35 @@ function reorderPowers<T extends Powers<Power[]>>(
         return {
           ...v,
           texts: result,
+        };
+      } else {
+        return v;
+      }
+    }),
+  };
+}
+
+function addText<T extends Powers<Power[]>>(
+  roleOrBase: T,
+  powerId: string,
+  fromBase: boolean,
+  id: string
+): T {
+  return {
+    ...roleOrBase,
+    powers: roleOrBase.powers.map((v) => {
+      if (v.id === powerId) {
+        return {
+          ...v,
+          texts: [
+            ...v.texts,
+            {
+              optional: false,
+              text: "New Text",
+              fromBase,
+              id,
+            },
+          ],
         };
       } else {
         return v;
@@ -417,6 +458,14 @@ export function PowersEditDialog({
                 roles: roles.map((v) => reorderPowers(v, powerId, from, to)),
               });
             }}
+            addText={(powerId: string) => {
+              const id = makeId();
+              updateCharacter({
+                ...character,
+                base: addText(base, powerId, false, id),
+                roles: roles.map((v) => addText(v, powerId, true, id)),
+              });
+            }}
           />
           {roles.map((role) => (
             <PowerDisplay
@@ -432,6 +481,19 @@ export function PowersEditDialog({
                   roles: roles.map((v) => {
                     if (v === role) {
                       return reorderPowers(role, powerId, from, to);
+                    } else {
+                      return v;
+                    }
+                  }),
+                });
+              }}
+              addText={(powerId: string) => {
+                updateCharacter({
+                  ...character,
+                  base,
+                  roles: roles.map((v) => {
+                    if (v === role) {
+                      return addText(role, powerId, false, makeId());
                     } else {
                       return v;
                     }

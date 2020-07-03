@@ -26,7 +26,6 @@ import { CardsList } from "./CardsList";
 import { WikiEditTextField } from "./WikiEditTextField";
 import { WikiEditAutoInsertDropdown } from "./WikiEditAutoInsertDropdown";
 import { Skills } from "./Skills";
-import { PowersEditDialog } from "./PowersEditDialog";
 
 const useContainerStyles = makeStyles((theme) => ({
   container: {
