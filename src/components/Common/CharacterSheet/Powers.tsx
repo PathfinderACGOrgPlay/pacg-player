@@ -49,7 +49,6 @@ export function Powers({
   powers,
   allowCharacterEdit,
   wikiMode,
-  character,
   characterRaw,
   converted,
   updateCharacter,
@@ -57,7 +56,6 @@ export function Powers({
   powers: PowersType<Power[]> | undefined;
   allowCharacterEdit: boolean | undefined;
   wikiMode: boolean | undefined;
-  character: Character<Power[]> | undefined;
   characterRaw: Character | undefined;
   converted: boolean;
   updateCharacter(character: Character): void;

@@ -277,7 +277,6 @@ export function CharacterSheet({
               }
               allowCharacterEdit={allowCharacterEdit}
               wikiMode={wikiMode}
-              character={characterData}
               characterRaw={characterRawData}
               converted={characterData?.upconvert || false}
               updateCharacter={updateCharacter}
