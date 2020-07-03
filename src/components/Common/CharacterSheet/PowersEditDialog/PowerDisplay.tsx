@@ -40,12 +40,14 @@ function PowerList({
   reorder,
   addText,
   updateText,
+  removeText,
 }: {
   power: Power;
   hover: string | null;
   setHover(id: string | null): void;
   reorder(powerId: string, from: string, to: string): void;
   updateText(powerId: string, text: PowerText): void;
+  removeText(powerId: string, textId: string): void;
   addText(powerId: string): void;
 }) {
   const characterStyles = useCharacterStyles();
@@ -63,6 +65,7 @@ function PowerList({
           nextText={power.texts[i + 1]}
           index={i}
           onChange={(text) => updateText(power.id, text)}
+          onDelete={(textId) => removeText(power.id, textId)}
           reorder={(from, to) => reorder(power.id, from, to)}
         />
       ))}
@@ -87,6 +90,7 @@ export function PowerDisplay({
   reorder,
   addText,
   updateText,
+  removeText,
 }: {
   width: string;
   upconvert?: boolean;
@@ -97,6 +101,7 @@ export function PowerDisplay({
   reorder(powerId: string, from: string, to: string): void;
   addText(powerId: string): void;
   updateText(powerId: string, text: PowerText): void;
+  removeText(powerId: string, textId: string): void;
 }) {
   const styles = useStyles();
   const characterStyles = useCharacterStyles();
@@ -191,6 +196,7 @@ export function PowerDisplay({
           setHover={setHover}
           reorder={reorder}
           addText={addText}
+          removeText={removeText}
           updateText={updateText}
         />
       ))}

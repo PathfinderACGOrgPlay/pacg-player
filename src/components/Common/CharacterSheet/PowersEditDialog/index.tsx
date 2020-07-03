@@ -114,6 +114,26 @@ function updateText<T extends Powers<Power[]>>(
   };
 }
 
+function removeText<T extends Powers<Power[]>>(
+  roleOrBase: T,
+  powerId: string,
+  textId: string
+): T {
+  return {
+    ...roleOrBase,
+    powers: roleOrBase.powers.map((v) => {
+      if (v.id === powerId) {
+        return {
+          ...v,
+          texts: v.texts.filter((v) => v.id !== textId),
+        };
+      } else {
+        return v;
+      }
+    }),
+  };
+}
+
 export function PowersEditDialog({
   character,
   onClose,
@@ -173,7 +193,16 @@ export function PowersEditDialog({
               updateCharacter({
                 ...character,
                 base: updateText(base, powerId, text),
-                roles: roles.map((v) => updateText(v, powerId, text)),
+                roles: roles.map((v) =>
+                  updateText(v, powerId, { ...text, fromBase: true })
+                ),
+              });
+            }}
+            removeText={(powerId, textId) => {
+              updateCharacter({
+                ...character,
+                base: removeText(base, powerId, textId),
+                roles: roles.map((v) => removeText(v, powerId, textId)),
               });
             }}
           />
@@ -217,6 +246,19 @@ export function PowersEditDialog({
                   roles: roles.map((v) => {
                     if (v === role) {
                       return updateText(role, powerId, text);
+                    } else {
+                      return v;
+                    }
+                  }),
+                });
+              }}
+              removeText={(powerId, textId) => {
+                updateCharacter({
+                  ...character,
+                  base,
+                  roles: roles.map((v) => {
+                    if (v === role) {
+                      return removeText(role, powerId, textId);
                     } else {
                       return v;
                     }

@@ -1,11 +1,18 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { DragPreviewImage, useDrag, useDrop } from "react-dnd";
-import { Input } from "@material-ui/core";
+import {
+  ButtonGroup,
+  IconButton,
+  Input,
+  InputAdornment,
+} from "@material-ui/core";
 import { PowerText } from "../../../../firestore/wiki/character";
 import { usePowerStyles } from "../usePowerStyles";
 import { CheckOrLabel } from "../CheckOrLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDebounceUpdate } from "../../useDebounceUpdate";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 interface Item {
   type: string;
@@ -33,6 +40,8 @@ const transparentPixel =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=";
 
 function InnerComponent({
+  editId,
+  setEditId,
   powerId,
   text,
   index,
@@ -40,7 +49,10 @@ function InnerComponent({
   setHover,
   onChange,
   reorder,
+  onDelete,
 }: {
+  editId: string;
+  setEditId(id: string): void;
   powerId: string;
   text: PowerText;
   index: number;
@@ -48,8 +60,9 @@ function InnerComponent({
   setHover(id: string | null): void;
   onChange(text: PowerText): void;
   reorder(from: string, to: string): void;
+  onDelete(id: string | null): void;
 }) {
-  const [editMode, setEditMode] = useState(false);
+  const ref = useRef<HTMLInputElement>(null);
 
   const [, drop] = useDrop({
     accept: powerId,
@@ -64,7 +77,7 @@ function InnerComponent({
       }
     },
   });
-  const [data] = useState({ lastMoveId: "" });
+  const [data] = useState({ lastMoveId: "", resetTimeout: "" as any });
   const styles = useStyles();
   const [{ isDragging }, drag, preview] = useDrag({
     item: { type: powerId, id: text.id, originalIndex: index },
@@ -98,15 +111,47 @@ function InnerComponent({
     .filter((v) => v)
     .join(" ");
 
-  if (editMode) {
+  if (editId === text.id) {
     return (
       <div key={text.id}>
         <Input
+          inputRef={ref}
           autoFocus
           multiline
           fullWidth
           {...inputProps}
-          onBlur={() => setEditMode(false)}
+          onBlur={() =>
+            (data.resetTimeout = setTimeout(() => setEditId(""), 100))
+          }
+          endAdornment={
+            <InputAdornment position="end">
+              <ButtonGroup size="small">
+                <IconButton
+                  title="Checkbox"
+                  size="small"
+                  onClick={() => {
+                    clearTimeout(data.resetTimeout);
+                    ref.current?.focus();
+                    onChange({
+                      ...text,
+                      optional: !text.optional,
+                    });
+                  }}
+                >
+                  <CheckBoxIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  title="Remove"
+                  size="small"
+                  onClick={() => {
+                    onDelete(text.id);
+                  }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </ButtonGroup>
+            </InputAdornment>
+          }
         />
       </div>
     );
@@ -122,7 +167,7 @@ function InnerComponent({
         }}
         onDoubleClick={() => {
           if (!text.fromBase) {
-            setEditMode(true);
+            setEditId(text.id);
           }
         }}
         ref={(node: HTMLElement) => {
@@ -144,6 +189,7 @@ export function PowerTextEdit({
   hover,
   setHover,
   onChange,
+  onDelete,
   reorder,
 }: {
   powerId: string;
@@ -154,8 +200,10 @@ export function PowerTextEdit({
   setHover(id: string | null): void;
   onChange(text: PowerText): void;
   reorder(from: string, to: string): void;
+  onDelete(id: string): void;
 }) {
   const powerStyles = usePowerStyles();
+  const [editId, setEditId] = useState("");
 
   return (
     <CheckOrLabel
@@ -174,23 +222,15 @@ export function PowerTextEdit({
         .join(" ")}
       optional={text.optional}
       text={
-        text.optional && index !== 0 ? (
-          <>
+        <>
+          {text.optional && index !== 0 ? (
             <div className={powerStyles.leftParen}>(</div>
-            <InnerComponent
-              onChange={onChange}
-              reorder={reorder}
-              setHover={setHover}
-              text={text}
-              hover={hover}
-              index={index}
-              powerId={powerId}
-            />
-            )
-          </>
-        ) : (
+          ) : null}
           <InnerComponent
+            editId={editId}
+            setEditId={setEditId}
             onChange={onChange}
+            onDelete={onDelete}
             reorder={reorder}
             setHover={setHover}
             text={text}
@@ -198,7 +238,8 @@ export function PowerTextEdit({
             index={index}
             powerId={powerId}
           />
-        )
+          {text.optional && index !== 0 ? ")" : null}
+        </>
       }
       name={`power-${text.id}`}
       allowCharacterEdit={false}
