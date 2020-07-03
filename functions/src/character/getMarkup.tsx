@@ -51,7 +51,7 @@ export function getMarkup(
           <div style={{ paddingLeft: "1em", paddingRight: "1em" }}>
             <CharacterSheetRenderer
               wikiMode={false}
-              allowCharacterEdit={false}
+              allowCharacterEdit={true}
               characterRawData={character}
               deckData={deck}
               systemData={system}
