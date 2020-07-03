@@ -1,28 +1,20 @@
 import { Dialog, IconButton, Typography, Chip, Slide } from "@material-ui/core";
-import { Checkboxes } from "./Checkboxes";
+import { Checkboxes } from "../Checkboxes";
 import React, { useState } from "react";
-import { useCharacterStyles } from "./common";
-import {
+import { useCharacterStyles } from "../common";
+import type {
   Character,
   Power,
   Powers as PowersType,
-} from "../../../firestore/wiki/character";
+} from "../../../../firestore/wiki/character";
 import { makeStyles } from "@material-ui/core/styles";
 import EditIcon from "@material-ui/icons/Edit";
 import { PowersEditDialog } from "./PowersEditDialog";
-import { CheckOrLabel } from "./CheckOrLabel";
+import { CheckOrLabel } from "../CheckOrLabel";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { usePowerStyles } from "./usePowerStyles";
 
 export const useStyles = makeStyles((theme) => ({
-  checkName: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    marginLeft: 0,
-    marginRight: 0,
-    width: "10em",
-    display: "inline-block",
-  },
   leftParen: {
     display: "inline-block",
     marginLeft: -27,

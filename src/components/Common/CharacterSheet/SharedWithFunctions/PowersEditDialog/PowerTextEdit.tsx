@@ -6,11 +6,11 @@ import {
   Input,
   InputAdornment,
 } from "@material-ui/core";
-import { PowerText } from "../../../../firestore/wiki/character";
+import type { PowerText } from "../../../../../firestore/wiki/character";
 import { usePowerStyles } from "../usePowerStyles";
-import { CheckOrLabel } from "../CheckOrLabel";
+import { CheckOrLabel } from "../../CheckOrLabel";
 import { makeStyles } from "@material-ui/core/styles";
-import { useDebounceUpdate } from "../../useDebounceUpdate";
+import { useDebounceUpdate } from "../../../useDebounceUpdate";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import DeleteIcon from "@material-ui/icons/Delete";
 
