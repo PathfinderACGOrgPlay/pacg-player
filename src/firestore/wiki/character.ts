@@ -2,6 +2,7 @@ import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 import { firestore } from "firebase/app";
 import { useCallback, useState } from "react";
+import deepEqual from "deep-equals";
 
 const collectionGroup = (systemId: string) =>
   db?.collectionGroup("wiki_character").where("systemId", "==", systemId);
@@ -31,15 +32,17 @@ export interface PowerText {
   optional: boolean;
   text: string;
   id: string;
+  fromBase: boolean;
 }
 
 export interface Power {
   texts: PowerText[];
   id: string;
+  fromBase: boolean;
 }
 
-export interface Powers {
-  powers: OldPower[] | Power[];
+export interface Powers<TPower = OldPower[] | Power[]> {
+  powers: TPower;
   handSize: {
     base: number;
     add: number;
@@ -56,15 +59,15 @@ export interface CardListRow {
   order?: number;
 }
 
-export interface Character {
+export interface Character<TPower = OldPower[] | Power[]> {
   name: string;
   description?: string;
   removed: boolean;
   image: string;
   traits: string[];
   skills: { [key: string]: Skill };
-  base: Powers;
-  roles: (Powers & { name: string })[];
+  base: Powers<TPower>;
+  roles: (Powers<TPower> & { name: string })[];
   cardsList: {
     [key: string]: CardListRow;
   };
@@ -86,42 +89,158 @@ export function makeId() {
   );
 }
 
-function isPowerArr(powers: OldPower[] | Power[]): powers is Power[] {
-  return !powers.length || !!(powers[0] as Power).id;
+function isPowerCharacer(char: Character): char is Character<Power[]> {
+  return !char.base.powers.length || !!(char.base.powers[0] as Power).id;
+}
+
+function toRaw(powers: PowerText[]): string {
+  return powers.reduce(
+    (acc, v) => (acc + (v.optional ? `(${v.text})` : v.text)).trim(),
+    ""
+  );
+}
+
+export function upConvertPowersList(powers: OldPower[]): Power[] {
+  return powers.map((v) => ({
+    id: makeId(),
+    texts: v.texts.reduce((acc, w, i) => {
+      w = w.replace(/[|]/g, "");
+      if (i === 0) {
+        acc.push({
+          text: w.replace(/\(?$/, "").trim(),
+          optional: v.optional,
+          id: makeId(),
+          fromBase: false,
+        });
+      } else {
+        const [left, right] = w.split(")");
+        acc.push({ text: left, optional: true, id: makeId(), fromBase: false });
+        if (right) {
+          acc.push({
+            text: right.replace(/\($/, "").trim(),
+            optional: false,
+            id: makeId(),
+            fromBase: false,
+          });
+        }
+      }
+      return acc;
+    }, [] as PowerText[]),
+    fromBase: false,
+  }));
 }
 
 export function upConvertPowers(
-  powers: OldPower[] | Power[] | undefined
-): [Power[] | undefined, boolean] {
-  if (!powers || isPowerArr(powers)) {
-    return [powers, false];
+  char: Character,
+  edit?: boolean
+): Character<Power[]> & { upconvert: boolean } {
+  if (isPowerCharacer(char)) {
+    return { ...char, upconvert: false };
   } else {
-    return [
-      powers.map((v) => ({
-        id: makeId(),
-        texts: v.texts.reduce((acc, w, i) => {
-          if (i === 0) {
-            acc.push({
-              text: w.replace(/\($/, ""),
-              optional: v.optional,
-              id: makeId(),
-            });
-          } else {
-            const [left, right] = w.split(")");
-            acc.push({ text: left, optional: true, id: makeId() });
-            if (right) {
-              acc.push({
-                text: right.replace(/\($/, ""),
-                optional: false,
-                id: makeId(),
-              });
+    const { base, roles, ...rest } = char;
+
+    const basePowers = upConvertPowersList(base.powers as OldPower[]);
+    const rolePowers = roles.map((v) =>
+      upConvertPowersList(v.powers as OldPower[])
+    );
+
+    const rawBasePowers = basePowers.map((v) => toRaw(v.texts));
+    const roleBasePowers = rawBasePowers.map((base) =>
+      rolePowers.map((role) =>
+        role.find((x) => {
+          const matchingText: PowerText[] = [];
+          x.texts.forEach((txt) => {
+            const newRaw = toRaw([...matchingText, txt]);
+            if (newRaw.length <= base.length && base.startsWith(newRaw)) {
+              matchingText.push(txt);
             }
+          });
+          return base === toRaw(matchingText);
+        })
+      )
+    );
+    basePowers.forEach((base, i) => {
+      const role = roleBasePowers[i].map((v, j) => {
+        if (!v) {
+          if (edit) {
+            rolePowers[j].push(base);
           }
-          return acc;
-        }, [] as PowerText[]),
-      })),
-      true,
-    ];
+          return base;
+        } else {
+          v.id = base.id;
+          v.fromBase = true;
+          return v;
+        }
+      });
+      base.texts.forEach((baseText, i) => {
+        const baseRaw = toRaw([baseText]);
+        const roleTexts = role.map((v) => {
+          const matchingText: PowerText[] = [];
+          v.texts.forEach((txt) => {
+            const newRaw = toRaw([...matchingText, txt]);
+            if (newRaw.length <= baseRaw.length && baseRaw.startsWith(newRaw)) {
+              matchingText.push(txt);
+            }
+          });
+          return matchingText;
+        });
+        if (roleTexts.find((v) => v.length !== 1)) {
+          if (
+            baseText.optional ||
+            roleTexts.find((v) => v.find((w) => w.optional))
+          ) {
+            throw new Error("TODO: Optional Split Found");
+          }
+          const options = [
+            [baseText.text],
+            ...roleTexts.map((v) => v.map((w) => w.text)),
+          ].filter((v, i, arr) => arr.findIndex((w) => deepEqual(w, v)) === i);
+          if (options.length !== 2) {
+            throw new Error("TODO: Multi Option Converge Found");
+          }
+          const resultOpts = (options[0].length > options[1].length
+            ? options[0]
+            : options[1]
+          ).map(
+            (v): PowerText => ({
+              text: v,
+              optional: false,
+              id: makeId(),
+              fromBase: true,
+            })
+          );
+          base.texts.splice(
+            i,
+            1,
+            ...resultOpts.map((x) => ({ ...x, fromBase: false }))
+          );
+          role.forEach((v, j) => {
+            if (v !== base) {
+              v.texts.splice(
+                v.texts.indexOf(roleTexts[j][0]),
+                roleTexts[j].length + 1,
+                ...resultOpts
+              );
+            }
+          });
+        } else {
+          roleTexts.forEach((v) => {
+            v[0].id = baseText.id;
+            v[0].fromBase = true;
+          });
+        }
+      });
+    });
+
+    return {
+      ...rest,
+      base: {
+        ...base,
+        powers: basePowers,
+      },
+      roles: roles.map((v, i) => ({ ...v, powers: rolePowers[i] })),
+      upconvert: true,
+    };
   }
 }
 

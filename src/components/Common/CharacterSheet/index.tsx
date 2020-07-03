@@ -1,5 +1,6 @@
 import React, { useState, MouseEvent, ChangeEvent } from "react";
 import {
+  upConvertPowers,
   useCharacter,
   useUpdateCharacter,
 } from "../../../firestore/wiki/character";
@@ -7,9 +8,9 @@ import {
   CircularProgress,
   Container,
   Typography,
-  Link,
   Tabs,
   Tab,
+  IconButton,
 } from "@material-ui/core";
 import { ErrorDisplay } from "../ErrorDisplay";
 import { makeStyles } from "@material-ui/core/styles";
@@ -65,6 +66,7 @@ const useContainerStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     width: "100%",
+    position: "relative",
   },
   cards: {
     whiteSpace: "nowrap",
@@ -109,7 +111,7 @@ export function CharacterSheet({
     deckId,
     characterId
   );
-  const characterData = character?.data();
+  const characterRawData = character?.data();
   const characterStyles = useCharacterStyles();
   const containerStyles = useContainerStyles();
   const styles = useStyles();
@@ -120,6 +122,8 @@ export function CharacterSheet({
     deckId,
     characterId
   );
+
+  const characterData = characterRawData && upConvertPowers(characterRawData);
 
   const imageFields = useDebounceUpdate(
     characterData?.image || "",
@@ -136,7 +140,7 @@ export function CharacterSheet({
     <Container>
       <br />
       {wikiMode ? (
-        <Link
+        <IconButton
           className={characterStyles.mainEdit}
           href="#"
           onClick={(e: MouseEvent) => {
@@ -145,7 +149,7 @@ export function CharacterSheet({
           }}
         >
           {wikiEdit ? <LockOpenIcon /> : <LockIcon />}
-        </Link>
+        </IconButton>
       ) : null}
       <ErrorDisplay label="Failed to load character" error={error} />
       <ErrorDisplay label="Failed to load system" error={systemError} />
@@ -273,6 +277,9 @@ export function CharacterSheet({
               }
               allowCharacterEdit={allowCharacterEdit}
               wikiMode={wikiMode}
+              character={characterData}
+              characterRaw={characterRawData}
+              converted={characterData?.upconvert || false}
             />
           </div>
         </div>
