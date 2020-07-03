@@ -52,6 +52,7 @@ export function Powers({
   character,
   characterRaw,
   converted,
+  updateCharacter,
 }: {
   powers: PowersType<Power[]> | undefined;
   allowCharacterEdit: boolean | undefined;
@@ -59,6 +60,7 @@ export function Powers({
   character: Character<Power[]> | undefined;
   characterRaw: Character | undefined;
   converted: boolean;
+  updateCharacter(character: Character): void;
 }) {
   const characterStyles = useCharacterStyles();
   const styles = useStyles();
@@ -87,6 +89,7 @@ export function Powers({
               <PowersEditDialog
                 onClose={() => setEditModal(false)}
                 character={characterRaw}
+                updateCharacter={updateCharacter}
               />
             ) : null}
           </Dialog>
@@ -114,7 +117,7 @@ export function Powers({
         <Typography className={characterStyles.listName} component="span">
           Proficient With
         </Typography>
-        {powers?.proficiencies.map((v) => (
+        {powers?.proficiencies?.map((v) => (
           <CheckOrLabel
             key={v.name}
             optional={v.optional}

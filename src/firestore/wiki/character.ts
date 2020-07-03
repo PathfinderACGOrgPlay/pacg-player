@@ -47,10 +47,12 @@ export interface Powers<TPower = OldPower[] | Power[]> {
     base: number;
     add: number;
   };
-  proficiencies: {
-    name: string;
-    optional: boolean;
-  }[];
+  proficiencies:
+    | {
+        name: string;
+        optional: boolean;
+      }[]
+    | undefined;
 }
 
 export interface CardListRow {
@@ -163,7 +165,19 @@ export function upConvertPowers(
       const role = roleBasePowers[i].map((v, j) => {
         if (!v) {
           if (edit) {
-            rolePowers[j].push(base);
+            rolePowers[j].push({
+              id: base.id,
+              fromBase: true,
+              texts: base.texts.map(
+                (v): PowerText => ({
+                  id: v.id,
+                  text: v.text,
+                  optional: v.optional,
+                  fromBase: true,
+                })
+              ),
+            });
+            return rolePowers[j][rolePowers[j].length - 1];
           }
           return base;
         } else {
@@ -185,26 +199,29 @@ export function upConvertPowers(
           return matchingText;
         });
         if (roleTexts.find((v) => v.length !== 1)) {
-          if (
-            baseText.optional ||
-            roleTexts.find((v) => v.find((w) => w.optional))
-          ) {
-            throw new Error("TODO: Optional Split Found");
-          }
           const options = [
             [baseText.text],
             ...roleTexts.map((v) => v.map((w) => w.text)),
           ].filter((v, i, arr) => arr.findIndex((w) => deepEqual(w, v)) === i);
-          if (options.length !== 2) {
+          if (
+            options.length > 1 &&
+            (baseText.optional ||
+              roleTexts.find((v) => v.find((w) => w.optional)))
+          ) {
+            console.log(baseText, options);
+            throw new Error("TODO: Optional Split Found");
+          }
+          if (options.length > 2) {
+            console.log(options);
             throw new Error("TODO: Multi Option Converge Found");
           }
-          const resultOpts = (options[0].length > options[1].length
+          const resultOpts = (options[0].length > (options[1]?.length || 0)
             ? options[0]
             : options[1]
           ).map(
             (v): PowerText => ({
               text: v,
-              optional: false,
+              optional: baseText.optional,
               id: makeId(),
               fromBase: true,
             })
@@ -215,13 +232,11 @@ export function upConvertPowers(
             ...resultOpts.map((x) => ({ ...x, fromBase: false }))
           );
           role.forEach((v, j) => {
-            if (v !== base) {
-              v.texts.splice(
-                v.texts.indexOf(roleTexts[j][0]),
-                roleTexts[j].length + 1,
-                ...resultOpts
-              );
-            }
+            v.texts.splice(
+              v.texts.indexOf(roleTexts[j][0]),
+              roleTexts[j].length + 1,
+              ...resultOpts
+            );
           });
         } else {
           roleTexts.forEach((v) => {
