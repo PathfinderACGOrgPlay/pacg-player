@@ -19,7 +19,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "axios": "^0.19.2",
-    "deep-equals": "^0.0.2",
+    "deep-equal": "^2.0.3",
     "firebase": "^7.14.6",
     "firebase-tools": "^8.4.1",
     "luabundle": "^1.6.0",
@@ -70,6 +70,7 @@
   },
   "devDependencies": {
     "@firebase/testing": "^0.20.1",
+    "@types/deep-equal": "^1.0.1",
     "@types/luxon": "^1.24.0",
     "@types/react-router-dom": "^5.1.5",
     "bson": "^4.0.4",

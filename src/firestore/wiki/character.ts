@@ -2,7 +2,7 @@ import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 import { firestore } from "firebase/app";
 import { useCallback, useState } from "react";
-import deepEqual from "deep-equals";
+import deepEqual from "deep-equal";
 
 const collectionGroup = (systemId: string) =>
   db?.collectionGroup("wiki_character").where("systemId", "==", systemId);

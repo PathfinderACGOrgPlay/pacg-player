@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import deepEqual from "deep-equals";
+import deepEqual from "deep-equal";
 
 export function useDebounceUpdate<T, U, V = T, W = any>(
   value: T,
