@@ -28,7 +28,7 @@ export function Powers({
   powers: { optional: boolean; texts: string[] }[];
   powerCheckboxesValues?: boolean[][];
   updatePowerCheckboxes(values: boolean[][]): void;
-  proficiencies: { name: string; optional: boolean }[];
+  proficiencies: { name: string; optional: boolean }[] | undefined;
   proficienciesValues?: { [key: string]: boolean };
   updateProficienciesValues(values: { [key: string]: boolean }): void;
   handSize: { base: number; add: number };

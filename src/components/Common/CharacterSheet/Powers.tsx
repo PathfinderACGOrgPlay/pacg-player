@@ -1,18 +1,20 @@
-import { Checkbox, FormControlLabel, Typography } from "@material-ui/core";
+import { Dialog, IconButton, Typography, Chip, Slide } from "@material-ui/core";
 import { Checkboxes } from "./Checkboxes";
-import React, { ReactNode, useMemo } from "react";
+import React, { useState } from "react";
 import { useCharacterStyles } from "./common";
 import {
+  Character,
+  Power,
   Powers as PowersType,
-  upConvertPowers,
 } from "../../../firestore/wiki/character";
 import { makeStyles } from "@material-ui/core/styles";
+import EditIcon from "@material-ui/icons/Edit";
+import { PowersEditDialog } from "./PowersEditDialog";
+import { CheckOrLabel } from "./CheckOrLabel";
+import { TransitionProps } from "@material-ui/core/transitions";
+import { usePowerStyles } from "./usePowerStyles";
 
 export const useStyles = makeStyles((theme) => ({
-  powerMargin: {
-    marginLeft: 3,
-    marginRight: 0,
-  },
   checkName: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
@@ -21,75 +23,82 @@ export const useStyles = makeStyles((theme) => ({
     width: "10em",
     display: "inline-block",
   },
-  powerText: {
-    display: "inline",
-    position: "relative",
-
-    "& .MuiFormControlLabel-label": {
-      color: theme.palette.text.primary,
-    },
-
-    "& .MuiIconButton-root": {
-      padding: 0,
-    },
-  },
   leftParen: {
     display: "inline-block",
     marginLeft: -27,
     marginRight: 21,
   },
+  editIcon: {
+    position: "absolute",
+    right: -48,
+    top: -12,
+  },
+  convertWarning: {
+    textAlign: "center",
+  },
 }));
 
-function CheckOrLabel({
-  optional,
-  text,
-  name,
-  allowCharacterEdit,
-  className,
-}: {
-  optional: boolean;
-  text: ReactNode;
-  name: string;
-  allowCharacterEdit: boolean | undefined;
-  className?: string;
-}) {
-  const styles = useStyles();
-
-  return optional ? (
-    <FormControlLabel
-      className={className}
-      control={
-        <Checkbox
-          checked={false}
-          onChange={() => {}}
-          name={name}
-          disabled={!allowCharacterEdit}
-        />
-      }
-      label={text}
-    />
-  ) : (
-    <Typography className={`${className || ""} ${styles.checkName}`}>
-      {text}
-    </Typography>
-  );
-}
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children?: React.ReactElement },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export function Powers({
   powers,
   allowCharacterEdit,
+  wikiMode,
+  characterRaw,
+  converted,
+  updateCharacter,
 }: {
-  powers: PowersType | undefined;
+  powers: PowersType<Power[]> | undefined;
   allowCharacterEdit: boolean | undefined;
   wikiMode: boolean | undefined;
+  characterRaw: Character | undefined;
+  converted: boolean;
+  updateCharacter(character: Character): void;
 }) {
   const characterStyles = useCharacterStyles();
   const styles = useStyles();
-
-  const [powersText] = useMemo(() => upConvertPowers(powers?.powers), [powers]);
+  const powerStyles = usePowerStyles();
+  const [editModal, setEditModal] = useState(false);
 
   return (
     <>
+      {converted ? (
+        <div className={styles.convertWarning}>
+          <Chip
+            color="secondary"
+            label="These powers were converted from a previous version and the roles may not be properly linked"
+          />
+        </div>
+      ) : null}
+      {wikiMode ? (
+        <>
+          <Dialog
+            fullScreen
+            open={editModal}
+            onClose={() => setEditModal(false)}
+            TransitionComponent={Transition}
+          >
+            {editModal && characterRaw ? (
+              <PowersEditDialog
+                onClose={() => setEditModal(false)}
+                character={characterRaw}
+                updateCharacter={updateCharacter}
+              />
+            ) : null}
+          </Dialog>
+          <IconButton
+            className={styles.editIcon}
+            onClick={() => setEditModal(true)}
+          >
+            <EditIcon />
+          </IconButton>
+        </>
+      ) : null}
       <div className={characterStyles.listItem}>
         <Typography className={characterStyles.listName}>Hand Size</Typography>
         <Typography className={characterStyles.listBase}>
@@ -106,7 +115,7 @@ export function Powers({
         <Typography className={characterStyles.listName} component="span">
           Proficient With
         </Typography>
-        {powers?.proficiencies.map((v) => (
+        {powers?.proficiencies?.map((v) => (
           <CheckOrLabel
             key={v.name}
             optional={v.optional}
@@ -116,17 +125,23 @@ export function Powers({
           />
         ))}
       </div>
-      {powersText?.map((v) => (
+      {powers?.powers.map((v) => (
         <div className={characterStyles.listItem} key={v.id}>
           {v.texts.map((w, i) => (
             <CheckOrLabel
-              className={`${styles.powerText} ${styles.powerMargin}`}
+              className={`${powerStyles.powerText} ${
+                w.optional ? powerStyles.powerOptional : ""
+              } ${
+                v.texts[i + 1]?.text[0].match(/[A-Za-z]/)
+                  ? powerStyles.nextNotOptional
+                  : ""
+              }`}
               key={w.id}
               optional={w.optional}
               text={
                 w.optional && i !== 0 ? (
                   <>
-                    <div className={styles.leftParen}>(</div>
+                    <div className={powerStyles.leftParen}>(</div>
                     {w.text})
                   </>
                 ) : (
