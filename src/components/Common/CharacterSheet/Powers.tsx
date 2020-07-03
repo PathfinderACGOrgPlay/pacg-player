@@ -132,7 +132,7 @@ export function Powers({
               className={`${powerStyles.powerText} ${
                 w.optional ? powerStyles.powerOptional : ""
               } ${
-                v.texts[i + 1]?.text[0].match(/[A-Za-z]/)
+                v.texts[i + 1]?.text[0]?.match(/[A-Za-z]/)
                   ? powerStyles.nextNotOptional
                   : ""
               }`}

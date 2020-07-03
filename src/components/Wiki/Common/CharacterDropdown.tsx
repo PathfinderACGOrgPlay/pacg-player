@@ -45,7 +45,7 @@ export function CharacterDropdown({
         <Select
           labelId="character-label"
           id="character-select"
-          value={value}
+          value={loading ? "" : value}
           onChange={(e) => setValue(e.target.value as string)}
           IconComponent={selectLoadingComponent(loading)}
         >

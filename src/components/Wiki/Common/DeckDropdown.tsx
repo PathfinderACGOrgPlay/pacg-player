@@ -37,7 +37,7 @@ export function DeckDropdown({
         <Select
           labelId="deck-label"
           id="deck-select"
-          value={value}
+          value={loading ? "" : value}
           onChange={(e) => setValue(e.target.value as string)}
           IconComponent={selectLoadingComponent(loading)}
         >
