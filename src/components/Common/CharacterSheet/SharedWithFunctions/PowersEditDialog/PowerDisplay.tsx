@@ -1,5 +1,9 @@
-import { Power, Powers, PowerText } from "../../../../firestore/wiki/character";
-import { useCharacterStyles } from "../common";
+import type {
+  Power,
+  Powers,
+  PowerText,
+} from "../../../../../firestore/wiki/character";
+import { useCharacterStyles } from "../../common";
 import { useDrop } from "react-dnd";
 import { PowerTextEdit } from "./PowerTextEdit";
 import {
@@ -12,9 +16,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { Checkboxes } from "../Checkboxes";
+import { Checkboxes } from "../../Checkboxes";
 import RemoveIcon from "@material-ui/icons/Remove";
-import { CheckOrLabel } from "../CheckOrLabel";
+import { CheckOrLabel } from "../../CheckOrLabel";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import DeleteIcon from "@material-ui/icons/Delete";
 import React from "react";

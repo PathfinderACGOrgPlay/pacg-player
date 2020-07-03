@@ -5,12 +5,12 @@ import {
   PlayerCharacter,
   useAccountCharacter,
   useUpdateAccountCharacter,
-} from "../../../firestore/characters";
-import { resetValues } from "./common";
-import { CharacterSheet } from "./CharacterSheet";
-import { useUser } from "../../../firebase";
-import { DeckDropdown } from "../../Wiki/Common/DeckDropdown";
-import { CharacterDropdown } from "../../Wiki/Common/CharacterDropdown";
+} from "../../firestore/characters";
+import { useUser } from "../../firebase";
+import { DeckDropdown } from "../Wiki/Common/DeckDropdown";
+import { CharacterDropdown } from "../Wiki/Common/CharacterDropdown";
+import { CharacterSheet } from "../Common/CharacterSheet";
+import { SystemDropdown } from "../Wiki/Common/SystemDropdown";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -39,12 +39,28 @@ export function Sheet({
     }
   }
 
+  if (!data) {
+    return null;
+  }
   return (
     <>
       <br />
       {updateError ? <div>{updateError}</div> : null}
       <Grid container spacing={3}>
-        <Grid item lg={6}>
+        <Grid item lg={4}>
+          <FormControl className={styles.fill}>
+            <InputLabel id="character-deck-label">System</InputLabel>
+            <SystemDropdown
+              value={data?.systemId || ""}
+              setValue={(value) =>
+                update({
+                  systemId: value,
+                })
+              }
+            />
+          </FormControl>
+        </Grid>
+        <Grid item lg={4}>
           <FormControl className={styles.fill}>
             <InputLabel id="character-deck-label">Deck</InputLabel>
             <DeckDropdown
@@ -53,13 +69,12 @@ export function Sheet({
               setValue={(value) =>
                 update({
                   deckId: value,
-                  ...resetValues,
                 })
               }
             />
           </FormControl>
         </Grid>
-        <Grid item lg={6}>
+        <Grid item lg={4}>
           <FormControl className={styles.fill}>
             <InputLabel id="character-deck-label">Character</InputLabel>
             <CharacterDropdown
@@ -69,15 +84,19 @@ export function Sheet({
               setValue={(value) =>
                 update({
                   characterId: value,
-                  ...resetValues,
                 })
               }
             />
           </FormControl>
         </Grid>
       </Grid>
-      {data && data.characterId && data.deckId ? (
-        <CharacterSheet data={data} update={update} disabled={disabled} />
+      {data && data.systemId && data.characterId && data.deckId ? (
+        <CharacterSheet
+          systemId={data.systemId}
+          deckId={data.deckId}
+          characterId={data.characterId}
+          allowCharacterEdit={!disabled}
+        />
       ) : null}
     </>
   );

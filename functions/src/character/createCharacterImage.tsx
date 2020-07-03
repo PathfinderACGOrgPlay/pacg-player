@@ -1,29 +1,42 @@
 import * as functions from "firebase-functions";
 import { renderToStaticMarkup } from "react-dom/server";
 import React from "react";
-import { CharacterSheetRenderer } from "../../../src/components/Characters/Sheet/CharacterSheet";
 import * as admin from "firebase-admin";
-import { Character } from "../../../src/firestore/wiki/character";
+import type { Character } from "../../../src/firestore/wiki/character";
 // @ts-ignore
 import nodeHtmlToImage from "node-html-to-image";
 import { ServerStyleSheets, ThemeProvider } from "@material-ui/core/styles";
 import { createMuiTheme, CssBaseline } from "@material-ui/core";
+import type { Deck } from "../../../src/firestore/wiki/deck";
+import type { CardSystem } from "../../../src/firestore/wiki/card-systems";
+import { CharacterSheetRenderer } from "../../../src/components/Common/CharacterSheet/SharedWithFunctions/CharacterSheetRenderer";
 const firestore = admin.firestore();
 
 export const createCharacterImage = functions.https.onRequest(
   (request, response) => {
     const [, systemId, deckId, characterId] = request.path.split("/");
-    console.log(request.query);
-    return firestore
-      .collection("wiki")
-      .doc(systemId)
-      .collection("deck")
-      .doc(deckId)
-      .collection("wiki_character")
-      .doc(characterId)
-      .get()
-      .then((doc) => {
-        const character = doc.data() as Character;
+    return Promise.all([
+      firestore.collection("wiki").doc(systemId).get(),
+      firestore
+        .collection("wiki")
+        .doc(systemId)
+        .collection("deck")
+        .doc(deckId)
+        .get(),
+      firestore
+        .collection("wiki")
+        .doc(systemId)
+        .collection("deck")
+        .doc(deckId)
+        .collection("wiki_character")
+        .doc(characterId)
+        .get(),
+    ])
+      .then(([systemDoc, deckDoc, characterDoc]) => {
+        const system = systemDoc.data() as CardSystem;
+        const deck = deckDoc.data() as Deck;
+        const character = characterDoc.data() as Character;
+        console.log("Data Fetched");
         const sheets = new ServerStyleSheets();
         const markup = renderToStaticMarkup(
           sheets.collect(
@@ -35,21 +48,21 @@ export const createCharacterImage = functions.https.onRequest(
               })}
             >
               <CssBaseline />
-              <CharacterSheetRenderer
-                data={{
-                  uid: "",
-                  name: "",
-                  systemId,
-                  deckId,
-                  characterId,
-                }}
-                character={character}
-                disabled
-                noDisableRoles
-                update={() => {
-                  // NOOP
-                }}
-              />
+              <div style={{ paddingLeft: "1em", paddingRight: "1em" }}>
+                <CharacterSheetRenderer
+                  wikiMode={false}
+                  allowCharacterEdit={false}
+                  characterRawData={character}
+                  deckData={deck}
+                  systemData={system}
+                  loading={false}
+                  error={undefined}
+                  deckError={undefined}
+                  systemError={undefined}
+                  updateCharacter={() => {}}
+                  updateError={undefined}
+                />
+              </div>
             </ThemeProvider>
           )
         );
@@ -65,8 +78,8 @@ export const createCharacterImage = functions.https.onRequest(
           transparent: false,
           puppeteerArgs: {
             defaultViewport: {
-              width: 1920,
-              height: 1080,
+              width: 1280,
+              height: 1280,
             },
           },
         });

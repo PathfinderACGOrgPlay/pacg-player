@@ -1,18 +1,11 @@
 import React, { ChangeEvent } from "react";
-import {
-  Character,
-  Skill,
-} from "../../../firestore/wiki/character";
-import {
-  Typography,
-  ButtonGroup,
-  IconButton,
-} from "@material-ui/core";
+import type { Character, Skill } from "../../../../firestore/wiki/character";
+import { Typography, ButtonGroup, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Checkboxes } from "./Checkboxes";
-import { useCharacterStyles } from "./common";
-import { useDebounceUpdate } from "../useDebounceUpdate";
-import { WikiEditTextField } from "./WikiEditTextField";
+import { Checkboxes } from "../Checkboxes";
+import { useCharacterStyles } from "../common";
+import { useDebounceUpdate } from "../../useDebounceUpdate";
+import { WikiEditTextField } from "../WikiEditTextField";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -181,21 +174,24 @@ function SkillsLine({
             </Typography>
           ))}
         {wikiEdit ? (
-          <>{Object.keys(row.skills).length ? null : <br />}<IconButton
-            onClick={() => {
-              if (row) {
-                update({
-                  ...row,
-                  skills: {
-                    ...row.skills,
-                    Skill: 0,
-                  },
-                });
-              }
-            }}
-          >
-            <AddIcon />
-          </IconButton></>
+          <>
+            {Object.keys(row.skills).length ? null : <br />}
+            <IconButton
+              onClick={() => {
+                if (row) {
+                  update({
+                    ...row,
+                    skills: {
+                      ...row.skills,
+                      Skill: 0,
+                    },
+                  });
+                }
+              }}
+            >
+              <AddIcon />
+            </IconButton>
+          </>
         ) : null}
       </WikiEditTextField>
       <WikiEditTextField

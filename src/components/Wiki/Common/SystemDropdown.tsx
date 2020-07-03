@@ -34,7 +34,7 @@ export function SystemDropdown({
         <Select
           labelId="system-label"
           id="system-select"
-          value={value}
+          value={loading ? "" : value}
           onChange={(e) => setValue(e.target.value as string)}
           IconComponent={selectLoadingComponent(loading)}
         >

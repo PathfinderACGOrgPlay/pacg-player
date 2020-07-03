@@ -17,12 +17,12 @@ import {
 import { useUser } from "../../firebase";
 import { Link as RouterLink } from "react-router-dom";
 import { useRouteMatch } from "react-router-dom";
-import { Sheet } from "./Sheet";
 import { Cards } from "./Cards";
 import { Substitutions } from "./Substitutions";
 import { Settings } from "./Settings";
 import { Chronicles } from "./Chronicles";
 import { useDebounceUpdate } from "../Common/useDebounceUpdate";
+import { Sheet } from "./Sheet";
 
 const useStyles = makeStyles((theme) => ({
   fill: {

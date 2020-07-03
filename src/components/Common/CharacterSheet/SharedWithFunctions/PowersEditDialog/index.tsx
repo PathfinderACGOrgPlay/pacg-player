@@ -1,12 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
-import {
+import type {
   Character,
-  makeId,
   Power,
   Powers,
   PowerText,
-  upConvertPowers,
-} from "../../../../firestore/wiki/character";
+} from "../../../../../firestore/wiki/character";
 import React, { useMemo, useState } from "react";
 import {
   DialogContent,
@@ -17,6 +15,8 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { PowerDisplay } from "./PowerDisplay";
+import { upConvertPowers } from "../upConvertPowers";
+import { makeId } from "../../../../../makeId";
 
 const useStyles = makeStyles((theme) => ({
   content: {

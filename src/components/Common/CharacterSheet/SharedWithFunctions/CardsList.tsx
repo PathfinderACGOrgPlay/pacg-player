@@ -1,14 +1,17 @@
 import React, { ChangeEvent } from "react";
-import { CardListRow, Character } from "../../../firestore/wiki/character";
+import type {
+  CardListRow,
+  Character,
+} from "../../../../firestore/wiki/character";
 import { Typography, ButtonGroup, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Checkboxes } from "./Checkboxes";
-import { useCharacterStyles } from "./common";
+import { Checkboxes } from "../Checkboxes";
+import { useCharacterStyles } from "../common";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { useDebounceUpdate } from "../useDebounceUpdate";
-import { WikiEditTextField } from "./WikiEditTextField";
+import { useDebounceUpdate } from "../../useDebounceUpdate";
+import { WikiEditTextField } from "../WikiEditTextField";
 
 const useStyles = makeStyles((theme) => ({
   favoredCardType: {
