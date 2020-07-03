@@ -91,6 +91,7 @@ function CardsLine({
       <Checkboxes
         count={row.add}
         prefix=""
+        namePrefix={`Cards-${name}`}
         base={row.base + 1}
         disabled={!allowCharacterEdit}
       />

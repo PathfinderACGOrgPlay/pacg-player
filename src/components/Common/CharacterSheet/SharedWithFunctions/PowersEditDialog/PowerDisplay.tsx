@@ -128,6 +128,7 @@ export function PowerDisplay({
         </Typography>
         <Checkboxes
           count={powers.handSize.add || 0}
+          namePrefix="handSize"
           prefix=""
           base={(powers.handSize.base || 0) + 1}
           disabled={true}

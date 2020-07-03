@@ -6,6 +6,7 @@ export function Checkboxes({
   update,
   values,
   prefix,
+  namePrefix,
   base,
   disabled,
 }: {
@@ -13,6 +14,7 @@ export function Checkboxes({
   update?(idx: number, value: boolean): void;
   values?: boolean[];
   prefix: string;
+  namePrefix?: string;
   base: number;
   disabled?: boolean;
 }) {
@@ -26,7 +28,7 @@ export function Checkboxes({
           <Checkbox
             checked={values[i] || false}
             onChange={() => update && update(i, !!values && !values[i])}
-            name={`${prefix}-${i}-${base}`}
+            name={`${namePrefix || prefix}-${i}`}
             disabled={
               disabled ||
               (i > 0 && !values[i - 1]) ||

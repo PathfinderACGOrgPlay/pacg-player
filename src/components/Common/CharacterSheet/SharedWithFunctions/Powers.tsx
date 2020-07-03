@@ -99,6 +99,7 @@ export function Powers({
         <Checkboxes
           count={powers?.handSize.add || 0}
           prefix=""
+          namePrefix="handSize"
           base={(powers?.handSize.base || 0) + 1}
           disabled={!allowCharacterEdit}
         />

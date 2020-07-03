@@ -21,14 +21,16 @@
     "firebase-functions": "^3.6.1",
     "jsondiffpatch": "^0.4.1",
     "node-html-to-image": "^2.1.1",
-    "source-map-support": "^0.5.19"
+    "source-map-support": "^0.5.19",
+    "puppeteer": "^2.0.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.2.0",
     "ts-loader": "^7.0.5",
     "typescript": "^3.8.0",
     "webpack-cli": "^3.3.12",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-node-externals": "^1.7.2",
+    "@types/puppeteer": "^1.20.2"
   },
   "private": true
 }

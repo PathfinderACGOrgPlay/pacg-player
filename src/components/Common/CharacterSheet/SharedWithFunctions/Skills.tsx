@@ -209,6 +209,7 @@ function SkillsLine({
       />
       <Checkboxes
         count={row.feats}
+        namePrefix={`skill-${name}`}
         prefix=""
         base={row.feats + 1}
         disabled={!allowCharacterEdit}
