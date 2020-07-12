@@ -13,6 +13,7 @@ import { PowersEditDialog } from "./PowersEditDialog";
 import { CheckOrLabel } from "../CheckOrLabel";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { usePowerStyles } from "./usePowerStyles";
+import { PlayerCharacter } from "../../../../firestore/characters";
 
 export const useStyles = makeStyles((theme) => ({
   leftParen: {
@@ -44,6 +45,8 @@ export function Powers({
   characterRaw,
   converted,
   updateCharacter,
+  playerCharacterData,
+  updatePlayerCharacterData,
 }: {
   powers: PowersType<Power[]> | undefined;
   allowCharacterEdit: boolean | undefined;
@@ -51,6 +54,8 @@ export function Powers({
   characterRaw: Character | undefined;
   converted: boolean;
   updateCharacter(character: Character): void;
+  playerCharacterData?: PlayerCharacter;
+  updatePlayerCharacterData?(val: PlayerCharacter): void;
 }) {
   const characterStyles = useCharacterStyles();
   const styles = useStyles();
@@ -102,6 +107,16 @@ export function Powers({
           namePrefix="handSize"
           base={(powers?.handSize.base || 0) + 1}
           disabled={!allowCharacterEdit}
+          playerValue={playerCharacterData?.handSize}
+          updatePlayerValue={
+            playerCharacterData &&
+            updatePlayerCharacterData &&
+            ((handSize) =>
+              updatePlayerCharacterData({
+                ...playerCharacterData,
+                handSize,
+              }))
+          }
         />
       </div>
       <div className={characterStyles.listItem}>

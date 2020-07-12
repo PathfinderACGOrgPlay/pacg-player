@@ -9,6 +9,7 @@ import { WikiEditTextField } from "../WikiEditTextField";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { PlayerCharacter } from "../../../../firestore/characters";
 
 const useStyles = makeStyles((theme) => ({
   die: {
@@ -107,6 +108,8 @@ function SkillsLine({
   updateName,
   remove,
   allowCharacterEdit,
+  playerSkills,
+  updatePlayerSkills,
 }: {
   name: string;
   wikiEdit: boolean | undefined;
@@ -115,6 +118,8 @@ function SkillsLine({
   updateName(name: string): void;
   remove(): void;
   allowCharacterEdit: boolean | undefined;
+  playerSkills: number | undefined;
+  updatePlayerSkills?(skills: number): void;
 }) {
   const characterStyles = useCharacterStyles();
   const styles = useStyles();
@@ -210,9 +215,11 @@ function SkillsLine({
       <Checkboxes
         count={row.feats}
         namePrefix={`skill-${name}`}
-        prefix=""
-        base={row.feats + 1}
+        prefix="+"
+        base={1}
         disabled={!allowCharacterEdit}
+        playerValue={playerSkills}
+        updatePlayerValue={updatePlayerSkills}
       />
       {wikiEdit ? (
         <>
@@ -251,11 +258,15 @@ export function Skills({
   wikiEdit,
   characterData,
   updateCharacter,
+  playerCharacterData,
+  updatePlayerCharacterData,
 }: {
   allowCharacterEdit: boolean | undefined;
   wikiEdit: boolean;
   characterData: Character | undefined;
   updateCharacter(character: Character): void;
+  playerCharacterData?: PlayerCharacter;
+  updatePlayerCharacterData?(val: PlayerCharacter): void;
 }) {
   const characterStyles = useCharacterStyles();
 
@@ -311,6 +322,19 @@ export function Skills({
                   updateCharacter(update);
                 }
               }}
+              playerSkills={playerCharacterData?.skills?.[v]}
+              updatePlayerSkills={
+                updatePlayerCharacterData &&
+                playerCharacterData &&
+                ((newData) =>
+                  updatePlayerCharacterData({
+                    ...playerCharacterData,
+                    skills: {
+                      ...playerCharacterData.skills,
+                      [v]: newData,
+                    },
+                  }))
+              }
             />
           ))) ||
         null}

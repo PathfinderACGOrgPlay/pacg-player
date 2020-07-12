@@ -12,6 +12,7 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useDebounceUpdate } from "../../useDebounceUpdate";
 import { WikiEditTextField } from "../WikiEditTextField";
+import { PlayerCharacter } from "../../../../firestore/characters";
 
 const useStyles = makeStyles((theme) => ({
   favoredCardType: {
@@ -44,6 +45,8 @@ function CardsLine({
   updateName,
   remove,
   allowCharacterEdit,
+  playerCards,
+  updatePlayerCards,
 }: {
   name: string;
   wikiEdit: boolean | undefined;
@@ -52,6 +55,8 @@ function CardsLine({
   updateName(name: string): void;
   remove(): void;
   allowCharacterEdit: boolean | undefined;
+  playerCards: number | undefined;
+  updatePlayerCards?(cards: number): void;
 }) {
   const characterStyles = useCharacterStyles();
   return (
@@ -94,6 +99,8 @@ function CardsLine({
         namePrefix={`Cards-${name}`}
         base={row.base + 1}
         disabled={!allowCharacterEdit}
+        playerValue={playerCards}
+        updatePlayerValue={updatePlayerCards}
       />
       {wikiEdit ? (
         <>
@@ -130,11 +137,15 @@ export function CardsList({
   wikiEdit,
   characterData,
   updateCharacter,
+  playerCharacterData,
+  updatePlayerCharacterData,
 }: {
   allowCharacterEdit: boolean | undefined;
   wikiEdit: boolean;
   characterData: Character | undefined;
   updateCharacter(character: Character): void;
+  playerCharacterData?: PlayerCharacter;
+  updatePlayerCharacterData?(val: PlayerCharacter): void;
 }) {
   const characterStyles = useCharacterStyles();
   const styles = useStyles();
@@ -222,6 +233,19 @@ export function CardsList({
                   updateCharacter(update);
                 }
               }}
+              playerCards={playerCharacterData?.cards?.[v]}
+              updatePlayerCards={
+                updatePlayerCharacterData &&
+                playerCharacterData &&
+                ((newData) =>
+                  updatePlayerCharacterData({
+                    ...playerCharacterData,
+                    cards: {
+                      ...playerCharacterData.cards,
+                      [v]: newData,
+                    },
+                  }))
+              }
             />
           ))) ||
         null}

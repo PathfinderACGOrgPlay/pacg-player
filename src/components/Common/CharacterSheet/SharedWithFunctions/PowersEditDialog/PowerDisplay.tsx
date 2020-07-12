@@ -132,6 +132,8 @@ export function PowerDisplay({
           prefix=""
           base={(powers.handSize.base || 0) + 1}
           disabled={true}
+          playerValue={undefined}
+          updatePlayerValue={undefined}
         />
         <ButtonGroup className={characterStyles.listButtons}>
           <IconButton size="small">

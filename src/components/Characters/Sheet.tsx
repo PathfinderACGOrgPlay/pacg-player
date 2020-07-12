@@ -96,6 +96,8 @@ export function Sheet({
           deckId={data.deckId}
           characterId={data.characterId}
           allowCharacterEdit={!disabled}
+          characterData={data}
+          updateCharacterData={(v) => updateAccountCharacter(v)}
         />
       ) : null}
     </>
