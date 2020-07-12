@@ -31,6 +31,10 @@ export interface PlayerCharacter {
   };
   cardsThree?: Card[];
   chronicleOrder?: string[];
+  skills?: { [key: string]: number };
+  cards?: { [key: string]: number };
+  powers?: { [key: string]: boolean };
+  handSize?: number;
 }
 
 export function useAccountCharacters() {

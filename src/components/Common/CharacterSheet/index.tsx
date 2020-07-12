@@ -8,6 +8,7 @@ import { useDeck } from "../../../firestore/wiki/deck";
 import { CharacterSheetRenderer } from "./SharedWithFunctions/CharacterSheetRenderer";
 import { UploadField } from "../UploadField";
 import { Container } from "@material-ui/core";
+import { PlayerCharacter } from "../../../firestore/characters";
 
 export function CharacterSheet({
   wikiMode,
@@ -15,12 +16,16 @@ export function CharacterSheet({
   systemId,
   deckId,
   characterId,
+  characterData,
+  updateCharacterData,
 }: {
   wikiMode?: boolean;
   allowCharacterEdit?: boolean;
   systemId: string;
   deckId: string;
   characterId: string;
+  characterData?: PlayerCharacter;
+  updateCharacterData?(val: PlayerCharacter): void;
 }) {
   const [system, , systemError] = useCardSystem(systemId);
   const systemData = system?.data();
@@ -55,6 +60,8 @@ export function CharacterSheet({
         updateCharacter={updateCharacter}
         updateError={updateError}
         UploadField={UploadField}
+        playerCharacterData={characterData}
+        updatePlayerCharacterData={updateCharacterData}
       />
     </Container>
   );

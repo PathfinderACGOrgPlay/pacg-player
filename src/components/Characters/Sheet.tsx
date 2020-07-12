@@ -96,6 +96,11 @@ export function Sheet({
           deckId={data.deckId}
           characterId={data.characterId}
           allowCharacterEdit={!disabled}
+          characterData={data}
+          updateCharacterData={(v) => {
+            console.log(v);
+            return updateAccountCharacter(v);
+          }}
         />
       ) : null}
     </>

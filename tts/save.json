@@ -1,7 +1,7 @@
 {
     "SaveName": "Pathfinder Adventure Card Game",
     "GameMode": "Pathfinder Adventure Card Game",
-    "Date": "6/3/2020 6:44:32 PM",
+    "Date": "7/3/2020 4:28:11 PM",
     "Gravity": 0.5,
     "PlayArea": 0.5,
     "GameType": "",
@@ -88,9 +88,9 @@
                     "rotX": 0,
                     "rotY": 90,
                     "rotZ": 0,
-                    "scaleX": 11.7386026,
+                    "scaleX": 11.7407732,
                     "scaleY": 7,
-                    "scaleZ": 4.0797596
+                    "scaleZ": 4.080897
                 }
             },
             {
@@ -116,9 +116,9 @@
                     "rotX": 0,
                     "rotY": 270,
                     "rotZ": 0,
-                    "scaleX": 11.7383814,
+                    "scaleX": 11.7405519,
                     "scaleY": 7,
-                    "scaleZ": 4.079687
+                    "scaleZ": 4.08082438
                 }
             }
         ]
@@ -732,9 +732,9 @@
                 "posX": -4.80039072,
                 "posY": 88.98239,
                 "posZ": -45.19678,
-                "rotX": 0.0168726537,
+                "rotX": 0.0168726575,
                 "rotY": 179.999451,
-                "rotZ": 0.07987695,
+                "rotZ": 0.07987694,
                 "scaleX": 1.87838769,
                 "scaleY": 1,
                 "scaleZ": 1.87838769
@@ -796,7 +796,7 @@
                 "posX": 2.384933,
                 "posY": 98.05715,
                 "posZ": -47.70175,
-                "rotX": 0.01686364,
+                "rotX": 0.0168636441,
                 "rotY": 180.0039,
                 "rotZ": 0.07987743,
                 "scaleX": 1.31007314,
@@ -853,6 +853,56 @@
                 }
             ],
             "GUID": "05cce1"
+        },
+        {
+            "Name": "Custom_Tile",
+            "Transform": {
+                "posX": 1.34557188,
+                "posY": 1.48894918,
+                "posZ": 31.636837,
+                "rotX": 0.0168703627,
+                "rotY": 180.000824,
+                "rotZ": 0.07987682,
+                "scaleX": 12.0420551,
+                "scaleY": 1,
+                "scaleZ": 12.0420551
+            },
+            "Nickname": "Adowyn",
+            "Description": "",
+            "GMNotes": "",
+            "ColorDiffuse": {
+                "r": 1,
+                "g": 1,
+                "b": 1
+            },
+            "Locked": false,
+            "Grid": true,
+            "Snap": true,
+            "IgnoreFoW": false,
+            "MeasureMovement": false,
+            "DragSelectable": true,
+            "Autoraise": true,
+            "Sticky": true,
+            "Tooltip": true,
+            "GridProjection": false,
+            "HideWhenFaceDown": false,
+            "Hands": false,
+            "CustomImage": {
+                "ImageURL": "http://localhost:5001/test-pacs-player-site/us-central1/createCharacterImage/Vm2bdLJuAnw8SRxYB0A5/42mhF5ae6mPzgovHt3Vr/nPWuQyMK0Q8v8vdg4DAm",
+                "ImageSecondaryURL": "http://localhost:5001/test-pacs-player-site/us-central1/createCharacterImage/Vm2bdLJuAnw8SRxYB0A5/42mhF5ae6mPzgovHt3Vr/nPWuQyMK0Q8v8vdg4DAm",
+                "ImageScalar": 1,
+                "WidthScale": 0,
+                "CustomTile": {
+                    "Type": 0,
+                    "Thickness": 0.1,
+                    "Stackable": false,
+                    "Stretch": true
+                }
+            },
+            "LuaScript": "",
+            "LuaScriptState": "",
+            "XmlUI": "",
+            "GUID": "f3a1c4"
         }
     ],
     "LuaScript": "",

@@ -22,6 +22,7 @@ import { Powers } from "./Powers";
 import { CardsList } from "./CardsList";
 import { makeStyles } from "@material-ui/core/styles";
 import { upConvertPowers } from "./upConvertPowers";
+import { PlayerCharacter } from "../../../../firestore/characters";
 
 const useContainerStyles = makeStyles((theme) => ({
   container: {
@@ -98,6 +99,8 @@ export function CharacterSheetRenderer({
   updateCharacter,
   updateError,
   UploadField,
+  playerCharacterData,
+  updatePlayerCharacterData,
 }: {
   wikiMode?: boolean;
   allowCharacterEdit?: boolean;
@@ -111,6 +114,8 @@ export function CharacterSheetRenderer({
   updateCharacter(character: Character): void;
   updateError: Error | undefined;
   UploadField?: typeof UploadFieldType;
+  playerCharacterData?: PlayerCharacter;
+  updatePlayerCharacterData?(val: PlayerCharacter): void;
 }) {
   const characterStyles = useCharacterStyles();
   const containerStyles = useContainerStyles();
@@ -191,18 +196,20 @@ export function CharacterSheetRenderer({
             />
           </div>
           {systemData?.logo ? (
-            <>
-              <img
-                src={systemData.logo}
-                className={characterStyles.logo}
-                alt=""
-              />
-              <br />
-            </>
-          ) : null}
+            <img
+              src={systemData.logo}
+              className={characterStyles.logo}
+              alt=""
+            />
+          ) : (
+            systemData?.name
+          )}
+          <br />
           {deckData?.logo ? (
             <img src={deckData.logo} className={characterStyles.logo} alt="" />
-          ) : null}
+          ) : (
+            deckData?.name
+          )}
           {characterData?.image ? (
             <img
               src={characterData.image}
@@ -238,6 +245,8 @@ export function CharacterSheetRenderer({
             wikiEdit={wikiEdit}
             characterData={characterData}
             updateCharacter={updateCharacter}
+            playerCharacterData={playerCharacterData}
+            updatePlayerCharacterData={updatePlayerCharacterData}
           />
         </div>
         <div className={containerStyles.powers}>
@@ -275,6 +284,8 @@ export function CharacterSheetRenderer({
               characterRaw={characterRawData}
               converted={characterData?.upconvert || false}
               updateCharacter={updateCharacter}
+              playerCharacterData={playerCharacterData}
+              updatePlayerCharacterData={updatePlayerCharacterData}
             />
           </div>
         </div>
@@ -284,6 +295,8 @@ export function CharacterSheetRenderer({
             wikiEdit={wikiEdit}
             characterData={characterData}
             updateCharacter={updateCharacter}
+            playerCharacterData={playerCharacterData}
+            updatePlayerCharacterData={updatePlayerCharacterData}
           />
         </div>
       </div>
