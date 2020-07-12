@@ -7,7 +7,7 @@ const chokidar = require("chokidar");
 
 const client = new TabletopSimulatorClient();
 // @ts-ignore
-client.REMOTE_DOMAIN = "172.24.0.1";
+client.REMOTE_DOMAIN = "172.23.0.1";
 const service = new TabletopSimulatorService();
 // @ts-ignore
 const origHandle = service.HandleMessage;

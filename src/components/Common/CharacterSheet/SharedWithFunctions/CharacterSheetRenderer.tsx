@@ -191,18 +191,20 @@ export function CharacterSheetRenderer({
             />
           </div>
           {systemData?.logo ? (
-            <>
-              <img
-                src={systemData.logo}
-                className={characterStyles.logo}
-                alt=""
-              />
-              <br />
-            </>
-          ) : null}
+            <img
+              src={systemData.logo}
+              className={characterStyles.logo}
+              alt=""
+            />
+          ) : (
+            systemData?.name
+          )}
+          <br />
           {deckData?.logo ? (
             <img src={deckData.logo} className={characterStyles.logo} alt="" />
-          ) : null}
+          ) : (
+            deckData?.name
+          )}
           {characterData?.image ? (
             <img
               src={characterData.image}

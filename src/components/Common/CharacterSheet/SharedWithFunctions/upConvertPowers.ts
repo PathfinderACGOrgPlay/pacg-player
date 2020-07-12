@@ -107,31 +107,38 @@ export function upConvertPowers(
         const roleTexts = role.map((v) => {
           const matchingText: PowerText[] = [];
           v.texts.forEach((txt) => {
-            const newRaw = toRaw([...matchingText, txt]);
-            if (newRaw.length <= baseRaw.length && baseRaw.startsWith(newRaw)) {
-              matchingText.push(txt);
+            if (txt.text) {
+              const newRaw = toRaw([...matchingText, txt]);
+              if (
+                newRaw.length <= baseRaw.length &&
+                baseRaw.startsWith(newRaw)
+              ) {
+                matchingText.push(txt);
+              }
             }
           });
           return matchingText;
         });
         if (roleTexts.find((v) => v.length !== 1)) {
-          const options = [
+          let options = [
             [baseText.text],
             ...roleTexts.map((v) => v.map((w) => w.text)),
-          ].filter((v, i, arr) => arr.findIndex((w) => deepEqual(w, v)) === i);
+          ]
+            .map((v) => v.filter((w) => w))
+            .filter((v, i, arr) => arr.findIndex((w) => deepEqual(w, v)) === i);
           if (
             options.length > 1 &&
             (baseText.optional ||
               roleTexts.find((v) => v.find((w) => w.optional)))
           ) {
-            console.log(baseText, options);
+            console.log(baseText, roleTexts, options);
             throw new Error("TODO: Optional Split Found");
           }
           if (options.length > 2) {
             console.log(options);
             throw new Error("TODO: Multi Option Converge Found");
           }
-          const resultOpts = (options[0].length > (options[1]?.length || 0)
+          const resultOpts = (options[0].length > (options[1]?.length || -1)
             ? options[0]
             : options[1]
           ).map(
