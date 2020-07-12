@@ -1,7 +1,9 @@
 local CharacterSheet = {}
 
 function CharacterSheet.init(data)
-    addCheckboxes(data.guid, data.character.checkboxes, {})
+    local saveData = JSON.decode(data.save_state)
+    print(data.guid)
+    addCheckboxes(data.guid, saveData.checkboxes, {})
 end
 
 function shallowCopy(t)
@@ -33,8 +35,6 @@ function addCheckboxes(guid, data, path)
                     z = 0.2,
                 }
             })
-            print(JSON.encode_pretty(newPath))
-            print(JSON.encode_pretty(v))
         end
     end
 end
