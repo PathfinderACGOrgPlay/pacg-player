@@ -97,7 +97,10 @@ export function Sheet({
           characterId={data.characterId}
           allowCharacterEdit={!disabled}
           characterData={data}
-          updateCharacterData={(v) => updateAccountCharacter(v)}
+          updateCharacterData={(v) => {
+            console.log(v);
+            return updateAccountCharacter(v);
+          }}
         />
       ) : null}
     </>

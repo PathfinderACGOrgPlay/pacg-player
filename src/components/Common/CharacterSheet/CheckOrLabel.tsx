@@ -19,12 +19,16 @@ export function CheckOrLabel({
   name,
   allowCharacterEdit,
   className,
+  checked,
+  setChecked,
 }: {
   optional: boolean;
   text: ReactNode;
   name: string;
   allowCharacterEdit: boolean | undefined;
   className?: string;
+  checked?: boolean;
+  setChecked?(newValue: boolean): void;
 }) {
   const styles = useStyles();
 
@@ -33,8 +37,8 @@ export function CheckOrLabel({
       className={className}
       control={
         <Checkbox
-          checked={false}
-          onChange={() => {}}
+          checked={checked}
+          onChange={setChecked && (() => setChecked(!checked))}
           name={name}
           disabled={!allowCharacterEdit}
         />

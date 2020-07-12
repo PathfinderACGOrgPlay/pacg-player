@@ -6,6 +6,11 @@ import type {
   PowerText,
 } from "../../../../firestore/wiki/character";
 import { makeId } from "../../../../makeId";
+import crypto from "crypto";
+
+function getHashId(value: string) {
+  return crypto.createHash("sha1").update(value).digest("hex").substr(0, 5);
+}
 
 function upConvertPowersList(powers: OldPower[]): Power[] {
   return powers.map((v) => ({
@@ -13,20 +18,27 @@ function upConvertPowersList(powers: OldPower[]): Power[] {
     texts: v.texts.reduce((acc, w, i) => {
       w = w.replace(/[|]/g, "");
       if (i === 0) {
+        const text = w.replace(/\(?$/, "").trim();
         acc.push({
-          text: w.replace(/\(?$/, "").trim(),
+          text,
           optional: v.optional,
-          id: makeId(),
+          id: getHashId(text),
           fromBase: false,
         });
       } else {
         const [left, right] = w.split(")");
-        acc.push({ text: left, optional: true, id: makeId(), fromBase: false });
+        acc.push({
+          text: left,
+          optional: true,
+          id: getHashId(left),
+          fromBase: false,
+        });
         if (right) {
+          const text = right.replace(/\($/, "").trim();
           acc.push({
-            text: right.replace(/\($/, "").trim(),
+            text,
             optional: false,
-            id: makeId(),
+            id: getHashId(text),
             fromBase: false,
           });
         }

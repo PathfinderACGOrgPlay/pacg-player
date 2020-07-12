@@ -130,6 +130,19 @@ export function Powers({
             text={v.name}
             name={`proficiency-${v}`}
             allowCharacterEdit={allowCharacterEdit}
+            checked={playerCharacterData?.powers?.[v.name]}
+            setChecked={
+              playerCharacterData &&
+              updatePlayerCharacterData &&
+              ((newVal) =>
+                updatePlayerCharacterData({
+                  ...playerCharacterData,
+                  powers: {
+                    ...playerCharacterData.powers,
+                    [v.name]: newVal,
+                  },
+                }))
+            }
           />
         ))}
       </div>
@@ -158,6 +171,19 @@ export function Powers({
               }
               name={`power-${w.id}`}
               allowCharacterEdit={allowCharacterEdit}
+              checked={playerCharacterData?.powers?.[w.id]}
+              setChecked={
+                playerCharacterData &&
+                updatePlayerCharacterData &&
+                ((v) =>
+                  updatePlayerCharacterData({
+                    ...playerCharacterData,
+                    powers: {
+                      ...playerCharacterData.powers,
+                      [w.id]: v,
+                    },
+                  }))
+              }
             />
           ))}
         </div>
