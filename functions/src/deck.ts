@@ -3,8 +3,6 @@ import * as functions from "firebase-functions";
 import { PlayerCharacter } from "../../src/firestore/characters";
 import { Character } from "../../src/firestore/wiki/character";
 import { Deck } from "../../src/firestore/wiki/deck";
-import puppeteer from "puppeteer";
-import { getMarkup } from "./character/getMarkup";
 import { getCheckboxesRoles } from "./util";
 
 const firestore = admin.firestore();
