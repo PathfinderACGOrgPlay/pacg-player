@@ -3,8 +3,11 @@ local CharacterSheet = require("common/CharacterSheet")
 
 gameCore.run();
 
-function initCharacterSheet(arg)
+function CharacterSheet_init(arg)
     CharacterSheet.init(arg)
+end
+function CharacterSheet_removeButtons(arg)
+    CharacterSheet.removeButtons(arg)
 end
 
 function noop()

@@ -35,6 +35,7 @@ export interface PlayerCharacter {
   cards?: { [key: string]: number };
   powers?: { [key: string]: boolean };
   handSize?: number;
+  role?: number;
 }
 
 export function useAccountCharacters() {

@@ -6,10 +6,12 @@ export function WikiEditTextField({
   wikiEdit,
   className,
   text,
+  typographyComponent,
   children,
   ...rest
 }: TextFieldProps & {
   text?: string;
+  typographyComponent?: React.ElementType;
   wikiEdit: boolean | undefined;
   children?: ReactNode | ReactNodeArray;
 }) {
@@ -23,7 +25,7 @@ export function WikiEditTextField({
       <TextField className={className} {...rest} />
     )
   ) : (
-    <Typography className={className}>
+    <Typography className={className} component={typographyComponent as any}>
       {text || (rest.value as string)}
       {children}
     </Typography>

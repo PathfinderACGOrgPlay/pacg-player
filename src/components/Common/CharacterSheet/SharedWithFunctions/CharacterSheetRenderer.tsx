@@ -2,7 +2,7 @@ import type { Character } from "../../../../firestore/wiki/character";
 import type { Deck } from "../../../../firestore/wiki/deck";
 import type { CardSystem } from "../../../../firestore/wiki/card-systems";
 import { useCharacterStyles } from "../common";
-import React, { ChangeEvent, MouseEvent, useState } from "react";
+import React, { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import { useDebounceUpdate } from "../../useDebounceUpdate";
 import {
   CircularProgress,
@@ -49,7 +49,7 @@ const useContainerStyles = makeStyles((theme) => ({
     whiteSpace: "nowrap",
     display: "flex",
     flexDirection: "column",
-    width: "min-content",
+    width: "100%",
     gridColumnStart: 2,
     gridColumnEnd: 3,
     gridRowStart: 2,
@@ -101,6 +101,7 @@ export function CharacterSheetRenderer({
   UploadField,
   playerCharacterData,
   updatePlayerCharacterData,
+  role,
 }: {
   wikiMode?: boolean;
   allowCharacterEdit?: boolean;
@@ -116,13 +117,23 @@ export function CharacterSheetRenderer({
   UploadField?: typeof UploadFieldType;
   playerCharacterData?: PlayerCharacter;
   updatePlayerCharacterData?(val: PlayerCharacter): void;
+  role?: number;
 }) {
   const characterStyles = useCharacterStyles();
   const containerStyles = useContainerStyles();
 
   const styles = useStyles();
-  const [selectedPowers, setSelectedPowers] = useState(-1);
+  const [selectedPowers, setSelectedPowers] = useState(role ?? -1);
   const [wikiEdit, setWikiEdit] = useState(false);
+
+  useEffect(() => {
+    if (
+      playerCharacterData &&
+      (playerCharacterData.role ?? -1) !== selectedPowers
+    ) {
+      setSelectedPowers(playerCharacterData.role ?? -1);
+    }
+  }, [playerCharacterData, selectedPowers]);
 
   const characterData = characterRawData && upConvertPowers(characterRawData);
 
@@ -254,16 +265,30 @@ export function CharacterSheetRenderer({
             <Tabs orientation="vertical" value={selectedPowers}>
               <Tab
                 disabled={!allowCharacterEdit && !wikiMode}
-                onClick={() => setSelectedPowers(-1)}
+                onClick={() => {
+                  setSelectedPowers(-1);
+                  updatePlayerCharacterData?.({
+                    ...playerCharacterData!,
+                    role: -1,
+                  });
+                }}
                 value={-1}
+                data-value={-1}
                 label="Base"
               />
               {characterData?.roles.map((v, idx) => (
                 <Tab
                   disabled={!allowCharacterEdit && !wikiMode}
-                  onClick={() => setSelectedPowers(idx)}
+                  onClick={() => {
+                    setSelectedPowers(idx);
+                    updatePlayerCharacterData?.({
+                      ...playerCharacterData!,
+                      role: idx,
+                    });
+                  }}
                   key={idx}
                   value={idx}
+                  data-value={idx}
                   label={v.name}
                 />
               ))}

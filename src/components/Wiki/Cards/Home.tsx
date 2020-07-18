@@ -14,7 +14,12 @@ export function Home() {
     <Container>
       <Grid container spacing={1}>
         <Grid item xs={3}>
-          <SystemDropdown fullWidth value={systemId} setValue={setSystemId} />
+          <SystemDropdown
+            id="cards-system"
+            fullWidth
+            value={systemId}
+            setValue={setSystemId}
+          />
         </Grid>
         <Grid item xs={8} />
         <Grid item xs={1}>

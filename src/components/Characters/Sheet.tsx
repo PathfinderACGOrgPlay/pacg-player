@@ -1,5 +1,5 @@
 import React from "react";
-import { FormControl, Grid, InputLabel, makeStyles } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { RouteComponentProps } from "react-router";
 import {
   PlayerCharacter,
@@ -12,19 +12,12 @@ import { CharacterDropdown } from "../Wiki/Common/CharacterDropdown";
 import { CharacterSheet } from "../Common/CharacterSheet";
 import { SystemDropdown } from "../Wiki/Common/SystemDropdown";
 
-const useStyles = makeStyles((theme) => ({
-  fill: {
-    width: "100%",
-  },
-}));
-
 export function Sheet({
   match: {
     params: { id },
   },
 }: RouteComponentProps<{ id: string }>) {
   const [character] = useAccountCharacter(id);
-  const styles = useStyles();
   const data = character?.data();
   const [updateAccountCharacter, updateError] = useUpdateAccountCharacter(id);
   const user = useUser();
@@ -48,46 +41,43 @@ export function Sheet({
       {updateError ? <div>{updateError}</div> : null}
       <Grid container spacing={3}>
         <Grid item lg={4}>
-          <FormControl className={styles.fill}>
-            <InputLabel id="character-deck-label">System</InputLabel>
-            <SystemDropdown
-              value={data?.systemId || ""}
-              setValue={(value) =>
-                update({
-                  systemId: value,
-                })
-              }
-            />
-          </FormControl>
+          <SystemDropdown
+            fullWidth
+            id="player-character-system"
+            value={data?.systemId || ""}
+            setValue={(value) =>
+              update({
+                systemId: value,
+              })
+            }
+          />
         </Grid>
         <Grid item lg={4}>
-          <FormControl className={styles.fill}>
-            <InputLabel id="character-deck-label">Deck</InputLabel>
-            <DeckDropdown
-              systemId={data?.systemId || ""}
-              value={data?.deckId || ""}
-              setValue={(value) =>
-                update({
-                  deckId: value,
-                })
-              }
-            />
-          </FormControl>
+          <DeckDropdown
+            fullWidth
+            systemId={data?.systemId || ""}
+            value={data?.deckId || ""}
+            setValue={(value) =>
+              update({
+                deckId: value,
+              })
+            }
+            id="player-character-deck"
+          />
         </Grid>
         <Grid item lg={4}>
-          <FormControl className={styles.fill}>
-            <InputLabel id="character-deck-label">Character</InputLabel>
-            <CharacterDropdown
-              systemId={data?.systemId || ""}
-              deckId={data?.deckId || ""}
-              value={data?.characterId || ""}
-              setValue={(value) =>
-                update({
-                  characterId: value,
-                })
-              }
-            />
-          </FormControl>
+          <CharacterDropdown
+            fullWidth
+            systemId={data?.systemId || ""}
+            deckId={data?.deckId || ""}
+            value={data?.characterId || ""}
+            setValue={(value) =>
+              update({
+                characterId: value,
+              })
+            }
+            id="player-character-character"
+          />
         </Grid>
       </Grid>
       {data && data.systemId && data.characterId && data.deckId ? (
@@ -97,10 +87,7 @@ export function Sheet({
           characterId={data.characterId}
           allowCharacterEdit={!disabled}
           characterData={data}
-          updateCharacterData={(v) => {
-            console.log(v);
-            return updateAccountCharacter(v);
-          }}
+          updateCharacterData={updateAccountCharacter}
         />
       ) : null}
     </>

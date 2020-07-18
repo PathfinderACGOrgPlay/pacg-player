@@ -75,10 +75,16 @@ export function Home() {
     <Container>
       <Grid container spacing={1}>
         <Grid item xs={3}>
-          <SystemDropdown fullWidth value={systemId} setValue={setSystemId} />
+          <SystemDropdown
+            id="characters-system"
+            fullWidth
+            value={systemId}
+            setValue={setSystemId}
+          />
         </Grid>
         <Grid item xs={3}>
           <DeckDropdown
+            id="characters-deck"
             systemId={systemId}
             fullWidth
             value={deckId}
@@ -87,6 +93,7 @@ export function Home() {
         </Grid>
         <Grid item xs={3}>
           <CharacterDropdown
+            id="characters-character"
             systemId={systemId}
             deckId={deckId}
             fullWidth

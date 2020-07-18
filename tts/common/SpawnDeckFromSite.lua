@@ -54,8 +54,8 @@ function SpawnDeckFromSiteBuildDeck(result)
                 local boxes = {}
                 local pos = self.getPosition()
                 pos.y = pos.y + 5;
-                pos.z = pos.z + 3;
-                pos.x = pos.x + 10;
+                pos.z = pos.z - 2;
+                pos.x = pos.x + 0;
 
                 local results = {}
 
@@ -103,7 +103,11 @@ function SpawnDeckFromSiteBuildDeck(result)
                 end
 
                 if(data.characterData and data.characterData.systemId and data.characterData.deckId and data.characterData.characterId) then
-                    local imageUrl = config.functionsBaseUrl .. "/createCharacterImage/" .. data.characterData.systemId .. "/" .. data.characterData.deckId .. "/" .. data.characterData.characterId
+                    local role = data.characterData.role
+                    if(role == nil or role == -1) then
+                        role = ""
+                    end
+                    local imageUrl = config.functionsBaseUrl .. "/createCharacterImage/" .. data.characterData.systemId .. "/" .. data.characterData.deckId .. "/" .. data.characterData.characterId .. "/" .. role
                     table.insert(results, {
                         Autoraise = true,
                         ColorDiffuse = {
@@ -150,11 +154,33 @@ function SpawnDeckFromSiteBuildDeck(result)
                         },
                         XmlUI = "",
                         LuaScript = [[
+                            local state = ""
                             function onLoad(save_state)
-                                Global.call("initCharacterSheet", {
-                                    guid = self.guid,
-                                    save_state = save_state
+                                state = save_state
+                                Wait.frames(function()
+                                    Global.call("CharacterSheet_init", {
+                                        guid = self.guid,
+                                        save_state = save_state
+                                    })
+                                end, 10)
+                            end
+                            function setState(newState)
+                                state = newState
+                                self.script_state = newState
+                                Global.call("CharacterSheet_removeButtons", {
+                                    guid = self.guid
                                 })
+                                Global.call("CharacterSheet_init", {
+                                    guid = self.guid,
+                                    save_state = newState
+                                })
+                            end
+                            function setStateRaw(newState)
+                                state = newState
+                                self.script_state = newState
+                            end
+                            function onSave()
+                                return state
                             end
                         ]],
                         LuaScriptState = JSON.encode(data)

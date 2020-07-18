@@ -54,6 +54,7 @@ function SubSkill({
   return (
     <>
       <WikiEditTextField
+        typographyComponent="span"
         className={styles.subSkillLabel}
         wikiEdit={wikiEdit}
         {...useDebounceUpdate(
@@ -63,11 +64,13 @@ function SubSkill({
         )}
       />
       <Typography
+        component="span"
         className={`${styles.subSkillLabel} ${wikiEdit ? styles.plusEdit : ""}`}
       >
         : +
       </Typography>
       <WikiEditTextField
+        typographyComponent="span"
         className={styles.subSkillLabel}
         wikiEdit={wikiEdit}
         number
@@ -139,6 +142,7 @@ function SkillsLine({
           .sort()
           .map((w, i) => (
             <Typography
+              component="span"
               key={`${name}-${i}`}
               className={characterStyles.skillsExtra}
             >
