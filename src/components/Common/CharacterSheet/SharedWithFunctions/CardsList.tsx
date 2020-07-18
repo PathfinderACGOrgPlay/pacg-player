@@ -157,7 +157,7 @@ export function CardsList({
 
   return (
     <>
-      <Typography className={characterStyles.listHeader}>
+      <Typography component="div" className={characterStyles.listHeader}>
         Cards List
         <div className={styles.favoredCardType}>
           Favored Card Type:{" "}

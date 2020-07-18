@@ -137,7 +137,10 @@ export function upConvertPowers(
             ...roleTexts.map((v) => v.map((w) => w.text)),
           ]
             .map((v) => v.filter((w) => w))
-            .filter((v, i, arr) => arr.findIndex((w) => deepEqual(w, v)) === i);
+            .filter(
+              (v, i, arr) =>
+                v.length && arr.findIndex((w) => deepEqual(w, v)) === i
+            );
           if (
             options.length > 1 &&
             (baseText.optional ||

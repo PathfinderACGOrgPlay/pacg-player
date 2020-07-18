@@ -5,55 +5,9 @@ import { Character } from "../../src/firestore/wiki/character";
 import { Deck } from "../../src/firestore/wiki/deck";
 import puppeteer from "puppeteer";
 import { getMarkup } from "./character/getMarkup";
+import { getCheckboxesRoles } from "./util";
 
 const firestore = admin.firestore();
-
-function getCheckboxes(systemId: string, deckId: string, characterId: string) {
-  return Promise.all([
-    puppeteer
-      .launch({
-        defaultViewport: {
-          width: 1280,
-          height: 1280,
-        },
-      })
-      .then((browser) => browser.newPage().then((page) => ({ browser, page }))),
-    getMarkup(systemId, deckId, characterId, false),
-  ])
-    .then(([data, html]) => data.page.setContent(html).then(() => data))
-    .then((data) =>
-      data.page
-        .$$eval("input[type=checkbox]", (eles) =>
-          eles.map((v) => {
-            const rect = v.getBoundingClientRect();
-            return [
-              (v as HTMLInputElement).name,
-              rect.x,
-              rect.y,
-              rect.width,
-              rect.height,
-            ];
-          })
-        )
-        .then((result) => ({ ...data, result }))
-    )
-    .then((data) => {
-      return data.browser.close().then(() =>
-        data.result.reduce((acc, v) => {
-          const idx = (v[0] as string).split("-");
-          const ele = idx.reduce((acc2, w) => {
-            if (!acc2[w]) {
-              acc2[w] = {};
-            }
-            return acc2[w];
-          }, acc);
-          ele.x = (v[1] as number) + (v[3] as number) / 2;
-          ele.y = (v[2] as number) + (v[4] as number) / 2;
-          return acc;
-        }, {} as any)
-      );
-    });
-}
 
 // function substituteCards(
 //   box: typeof classDecks["Alchemist Class Deck"],
@@ -134,6 +88,7 @@ function addMetadata(data: PlayerCharacter) {
   let wikiCharacter = Promise.resolve<null | Character>(null);
   let deck = Promise.resolve<null | Deck>(null);
   let checkboxes = Promise.resolve<null | any>(null);
+  let roles = Promise.resolve<null | any>(null);
   if (data.systemId && data.characterId && data.deckId) {
     wikiCharacter = firestore
       .collection("wiki")
@@ -151,13 +106,21 @@ function addMetadata(data: PlayerCharacter) {
       .doc(data.deckId)
       .get()
       .then((v) => v.data() as Deck);
-    checkboxes = getCheckboxes(data.systemId, data.deckId, data.characterId);
+    const chkRole = getCheckboxesRoles(
+      data.systemId,
+      data.deckId,
+      data.characterId,
+      data.role ?? -1
+    );
+    checkboxes = chkRole.then((v) => v.checkboxes);
+    roles = chkRole.then((v) => v.roles);
   }
-  return Promise.all([wikiCharacter, deck, checkboxes]).then(
-    ([wikiCharacter, deck, checkboxes]) => ({
+  return Promise.all([wikiCharacter, deck, checkboxes, roles]).then(
+    ([wikiCharacter, deck, checkboxes, roles]) => ({
       wikiCharacter,
       deck,
       checkboxes,
+      roles,
       characterData: data,
     })
   );

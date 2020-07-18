@@ -29,12 +29,12 @@ export const useCharacterStyles = makeStyles((theme) => ({
     display: "inline-block",
 
     ".MuiTextField-root&": {
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
 
     ".FieldWrapper&": {
-      paddingRight: theme.spacing(1)
-    }
+      paddingRight: theme.spacing(1),
+    },
   },
   listBase: {
     paddingTop: theme.spacing(1),
@@ -67,15 +67,16 @@ export const useCharacterStyles = makeStyles((theme) => ({
     },
   },
   listButtons: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   listSeparator: {
     display: "inline-block",
     marginTop: theme.spacing(1.25),
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   skillsExtra: {
     paddingLeft: theme.spacing(3),
+    display: "block",
   },
   mainEdit: {
     float: "right",

@@ -2,7 +2,7 @@ import { CardSystem } from "../../../src/firestore/wiki/card-systems";
 import { Deck } from "../../../src/firestore/wiki/deck";
 import { Character } from "../../../src/firestore/wiki/character";
 import { ServerStyleSheets, ThemeProvider } from "@material-ui/core/styles";
-import { renderToStaticMarkup } from "react-dom/server";
+import { renderToString } from "react-dom/server";
 import { createMuiTheme, CssBaseline } from "@material-ui/core";
 import { CharacterSheetRenderer } from "../../../src/components/Common/CharacterSheet/SharedWithFunctions/CharacterSheetRenderer";
 import React from "react";
@@ -14,6 +14,7 @@ export function getMarkup(
   systemId: string,
   deckId: string,
   characterId: string,
+  role: number,
   dark: boolean
 ) {
   return Promise.all([
@@ -38,7 +39,7 @@ export function getMarkup(
     const character = characterDoc.data() as Character;
     console.log("Data Fetched");
     const sheets = new ServerStyleSheets();
-    const markup = renderToStaticMarkup(
+    const markup = renderToString(
       sheets.collect(
         <ThemeProvider
           theme={createMuiTheme({
@@ -61,6 +62,7 @@ export function getMarkup(
               systemError={undefined}
               updateCharacter={() => {}}
               updateError={undefined}
+              role={role}
             />
           </div>
         </ThemeProvider>
