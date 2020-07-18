@@ -18,10 +18,14 @@ export interface Card {
   name: string;
   subDeck?: string;
   type?: string;
+  subType?: string; // TODO
+  owner?: string; // TODO
   count?: number;
   traits?: string[];
   image?: string;
+  checks?: ({ skill: string; check: string } | "THEN" | "OR")[]; // TODO
   powers?: string;
+  flavor?: string; // TODO
 }
 
 export function useCards(systemId: string, deckId: string, deleted?: boolean) {

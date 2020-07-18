@@ -31,7 +31,9 @@ export const wikiUpdate = functions.firestore
       .add({
         type: "update",
         date: new Date(),
-        diff: diff.diff(change.before.data(), change.after.data()),
+        diff: JSON.stringify(
+          diff.diff(change.before.data(), change.after.data())
+        ),
       })
       .then(() => change.after);
   });
