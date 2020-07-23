@@ -6,6 +6,8 @@ import fs from "fs";
 const chokidar = require("chokidar");
 
 const client = new TabletopSimulatorClient();
+// @ts-ignore
+client.REMOTE_DOMAIN = "172.23.0.1";
 const service = new TabletopSimulatorService();
 // @ts-ignore
 const origHandle = service.HandleMessage;
@@ -20,6 +22,7 @@ let saving = false;
 service.Open();
 service.on("newgamemessage", setup);
 service.on("returnvaluemessage", (id, value) => {
+  console.log(id, value);
   if (typeof value === "string") {
     let parsed = { isTTSDebug: false };
     try {
@@ -57,6 +60,7 @@ const watch = chokidar.watch([
 ]);
 
 function run() {
+  console.log("Change detected, building");
   buildTTSLua().then((v) => {
     saving = true;
     return client.SaveAndPlayAsync(
@@ -87,6 +91,7 @@ function setup() {
   if (!saving) {
     watch.off("add", run);
     watch.off("change", run);
+    console.log("Sending message");
     client.ExecuteLuaAsync("return Global.script_state");
   } else {
     saving = false;

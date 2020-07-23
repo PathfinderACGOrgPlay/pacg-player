@@ -30,21 +30,12 @@ export interface PlayerCharacter {
     [adventure: string]: { [cards: string]: [string, string] };
   };
   cardsThree?: Card[];
-  Strength?: boolean[];
-  Dexterity?: boolean[];
-  Constitution?: boolean[];
-  Intelligence?: boolean[];
-  Wisdom?: boolean[];
-  Charisma?: boolean[];
-  handSize?: boolean[];
-  proficiencies?: { [label: string]: boolean };
-  powers?: boolean[][];
-  role?: number;
-  deckList?: { [type: string]: boolean[] };
-  roleHandSize?: boolean[];
-  roleProficiencies?: { [label: string]: boolean };
-  rolePowers?: boolean[][];
   chronicleOrder?: string[];
+  skills?: { [key: string]: number };
+  cards?: { [key: string]: number };
+  powers?: { [key: string]: boolean };
+  handSize?: number;
+  role?: number;
 }
 
 export function useAccountCharacters() {

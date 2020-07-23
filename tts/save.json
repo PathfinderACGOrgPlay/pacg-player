@@ -1,7 +1,7 @@
 {
     "SaveName": "Pathfinder Adventure Card Game",
     "GameMode": "Pathfinder Adventure Card Game",
-    "Date": "6/3/2020 6:44:32 PM",
+    "Date": "7/3/2020 4:28:11 PM",
     "Gravity": 0.5,
     "PlayArea": 0.5,
     "GameType": "",
@@ -88,9 +88,9 @@
                     "rotX": 0,
                     "rotY": 90,
                     "rotZ": 0,
-                    "scaleX": 11.7386026,
+                    "scaleX": 11.7407732,
                     "scaleY": 7,
-                    "scaleZ": 4.0797596
+                    "scaleZ": 4.080897
                 }
             },
             {
@@ -116,9 +116,9 @@
                     "rotX": 0,
                     "rotY": 270,
                     "rotZ": 0,
-                    "scaleX": 11.7383814,
+                    "scaleX": 11.7405519,
                     "scaleY": 7,
-                    "scaleZ": 4.079687
+                    "scaleZ": 4.08082438
                 }
             }
         ]
@@ -732,9 +732,9 @@
                 "posX": -4.80039072,
                 "posY": 88.98239,
                 "posZ": -45.19678,
-                "rotX": 0.0168726537,
+                "rotX": 0.0168726575,
                 "rotY": 179.999451,
-                "rotZ": 0.07987695,
+                "rotZ": 0.07987694,
                 "scaleX": 1.87838769,
                 "scaleY": 1,
                 "scaleZ": 1.87838769
@@ -789,70 +789,6 @@
                     }
                 }
             ]
-        },
-        {
-            "Name": "Custom_Tile",
-            "Transform": {
-                "posX": 2.384933,
-                "posY": 98.05715,
-                "posZ": -47.70175,
-                "rotX": 0.01686364,
-                "rotY": 180.0039,
-                "rotZ": 0.07987743,
-                "scaleX": 1.31007314,
-                "scaleY": 1,
-                "scaleZ": 1.31007314
-            },
-            "Nickname": "Chronicle Sheet",
-            "Description": "",
-            "GMNotes": "",
-            "ColorDiffuse": {
-                "r": 1,
-                "g": 1,
-                "b": 1
-            },
-            "Locked": true,
-            "Grid": true,
-            "Snap": true,
-            "IgnoreFoW": false,
-            "MeasureMovement": false,
-            "DragSelectable": true,
-            "Autoraise": true,
-            "Sticky": true,
-            "Tooltip": true,
-            "GridProjection": false,
-            "HideWhenFaceDown": false,
-            "Hands": false,
-            "CustomImage": {
-                "ImageURL": "http://cloud-3.steamusercontent.com/ugc/1021699208974753862/F25B86A77A31B904B481280A0F6B2C9795EC38CC/",
-                "ImageSecondaryURL": "http://cloud-3.steamusercontent.com/ugc/1021699208974753862/F25B86A77A31B904B481280A0F6B2C9795EC38CC/",
-                "ImageScalar": 1,
-                "WidthScale": 0,
-                "CustomTile": {
-                    "Type": 0,
-                    "Thickness": 0.1,
-                    "Stackable": false,
-                    "Stretch": true
-                }
-            },
-            "LuaScript": "",
-            "LuaScriptState": "{\"cardFeat\":\"False\",\"characterName\":\"\",\"class\":\"\",\"coordinatorOp\":\"\",\"date\":\"\",\"eventNumber\":\"\",\"notes\":\"s\",\"playerName\":\"\",\"playNumber\":\"\",\"remaining\":\"\",\"reported\":\"False\",\"reward\":\"False\",\"rewardText\":\"\",\"scenario\":\"\",\"skillFeat\":\"False\",\"tier\":\"\",\"upgrade\":\"\",\"upgrade2\":\"\",\"upgrade3\":\"\",\"used\":\"\",\"xp\":\"\"}",
-            "XmlUI": "",
-            "CustomUIAssets": [
-                {
-                    "Name": "Logo",
-                    "URL": "https://static2.paizo.com/image/content/PathfinderSociety/PFSACG-LandingLogo.png"
-                },
-                {
-                    "Name": "Paste",
-                    "URL": "http://cloud-3.steamusercontent.com/ugc/1021699268804127014/CFF926A940ACCC6B0A2632E12DE5AF296471189C/"
-                },
-                {
-                    "Name": "Spawn",
-                    "URL": "http://cloud-3.steamusercontent.com/ugc/1021699521565637250/93B89C218CCA59E15193BFFC6297389F57F54AD7/"
-                }
-            ],
-            "GUID": "05cce1"
         }
     ],
     "LuaScript": "",

@@ -2,15 +2,17 @@ This is the project for the pathfinder card game site.
 
 # Developing
 To get started developing with this project you will first need the following:
-1. Windows (If someone wants to set things up on linux / macOS feel free to submit a pr)
+1. Linux or [WSL2 on Windows](https://docs.microsoft.com/en-us/windows/wsl/wsl2-index)
 1. [Node 10](https://nodejs.org/dist/latest-v10.x/)
 1. [Yarn](https://yarnpkg.com/)
-1. [GCloud SDK](https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe) You don't need to run gcloud init
+1. [GCloud SDK](https://cloud.google.com/sdk/install) You don't need to run gcloud init
 1. (Optional) [Table Top Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/)
+1. Java 
 
-Once you have all that installed open a terminal in this project and run `yarn`. When that completes run `yarn start` to start the web server.
+Once you have all that installed open a terminal in this project and run `yarn`. When that completes run `yarn start` to start the development server(s).
 
 For TTS development you should now have a save file with no title or picture in TTS with the save ID 9999. When you load that save the development server will connect to TTS.
+Note: For WSL you need to run the following command in an admin cmd `netsh interface portproxy add v4tov4 listenport=39999 listenaddress=0.0.0.0 connectport=39999 connectaddress=127.0.0.1`
 
 For Web development you only need to open a browser and visit http://localhost:3000/
 

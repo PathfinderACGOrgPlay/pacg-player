@@ -1,6 +1,20 @@
 {
   "indexes": [
     {
+      "collectionGroup": "card",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "removed",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "name",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "deck",
       "queryScope": "COLLECTION",
       "fields": [

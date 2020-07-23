@@ -35,6 +35,9 @@ function onload()
         alignment = 1
     })
     loaded = true
+
+    id = "rWW0hTGYq0iFHkE5qu47"
+    Go()
 end
 
 function updateId(object, color, value, selected)

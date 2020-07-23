@@ -1,6 +1,5 @@
 {
   "projects": {
-    "production": "adventurecard-game",
     "test": "test-pacs-player-site"
   }
 }

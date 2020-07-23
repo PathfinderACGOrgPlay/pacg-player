@@ -1,5 +1,5 @@
 import { DependencyList, useEffect, useMemo, useState } from "react";
-import deepEquals from "deep-equals";
+import deepEquals from "deep-equal";
 
 export function useEqualsMemo<T>(
   factory: () => T,
