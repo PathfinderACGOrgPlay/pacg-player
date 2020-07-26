@@ -3,12 +3,14 @@ import "firebase/performance";
 import "firebase/analytics";
 import "firebase/firestore";
 import "firebase/auth";
+import "firebase/storage";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { firestore } from "firebase/app";
 import { useEffect } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 export let db: firestore.Firestore;
+export let storage: firebase.storage.Storage;
 
 export const initFirebase = process.env.FIREBASE_FUNCTIONS
   ? Promise.resolve()
@@ -35,6 +37,7 @@ export const initFirebase = process.env.FIREBASE_FUNCTIONS
         if (process.env.NODE_ENV !== "development") {
           firebase.firestore().enablePersistence();
         }
+        storage = firebase.storage();
       });
 
 let updatingUser = false;

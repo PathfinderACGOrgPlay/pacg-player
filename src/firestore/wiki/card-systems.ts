@@ -7,6 +7,7 @@ const collection = () => db?.collection("wiki");
 
 export interface CardSystem {
   name: string;
+  logo?: string;
   cardTypes?: string[];
   traits?: string[];
   removed: boolean;

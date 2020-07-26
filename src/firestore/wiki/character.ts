@@ -15,9 +15,9 @@ const collection = (systemId: string, deckId: string) =>
         .collection("wiki_character")
     : undefined;
 
-interface Skill {
+export interface Skill {
   die: string;
-  order: number;
+  order?: number;
   feats: number;
   skills: { [key: string]: number };
 }
@@ -31,96 +31,49 @@ export interface PowerText {
   optional: boolean;
   text: string;
   id: string;
+  fromBase: boolean;
 }
 
 export interface Power {
   texts: PowerText[];
   id: string;
+  fromBase: boolean;
 }
 
-export interface Powers {
-  powers: OldPower[] | Power[];
+export interface Powers<TPower = OldPower[] | Power[]> {
+  powers: TPower;
   handSize: {
     base: number;
     add: number;
   };
-  proficiencies: {
-    name: string;
-    optional: boolean;
-  }[];
+  proficiencies:
+    | {
+        name: string;
+        optional: boolean;
+      }[]
+    | undefined;
 }
 
-export interface Character {
+export interface CardListRow {
+  base: number;
+  add: number;
+  order?: number;
+}
+
+export interface Character<TPower = OldPower[] | Power[]> {
   name: string;
   description?: string;
   removed: boolean;
   image: string;
   traits: string[];
   skills: { [key: string]: Skill };
-  base: Powers;
-  roles: (Powers & { name: string })[];
+  base: Powers<TPower>;
+  roles: (Powers<TPower> & { name: string })[];
   cardsList: {
-    [key: string]: {
-      base: number;
-      add: number;
-      order?: number;
-    };
+    [key: string]: CardListRow;
   };
   favoredCardType?: string;
   extraCardsText: { [key: string]: string };
-}
-
-function randomString(length: number, chars: string) {
-  var result = "";
-  for (var i = length; i > 0; --i)
-    result += chars[Math.floor(Math.random() * chars.length)];
-  return result;
-}
-
-export function makeId() {
-  return randomString(
-    5,
-    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-  );
-}
-
-function isPowerArr(powers: OldPower[] | Power[]): powers is Power[] {
-  return !powers.length || !!(powers[0] as Power).id;
-}
-
-export function upConvertPowers(
-  powers: OldPower[] | Power[] | undefined
-): [Power[] | undefined, boolean] {
-  if (!powers || isPowerArr(powers)) {
-    return [powers, false];
-  } else {
-    return [
-      powers.map((v) => ({
-        id: makeId(),
-        texts: v.texts.reduce((acc, w, i) => {
-          if (i === 0) {
-            acc.push({
-              text: w.replace(/\($/, ""),
-              optional: v.optional,
-              id: makeId(),
-            });
-          } else {
-            const [left, right] = w.split(")");
-            acc.push({ text: left, optional: true, id: makeId() });
-            if (right) {
-              acc.push({
-                text: right.replace(/\($/, ""),
-                optional: false,
-                id: makeId(),
-              });
-            }
-          }
-          return acc;
-        }, [] as PowerText[]),
-      })),
-      true,
-    ];
-  }
 }
 
 export function useCharacters(

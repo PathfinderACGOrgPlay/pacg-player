@@ -3,20 +3,22 @@ import { Checkbox, FormControlLabel } from "@material-ui/core";
 
 export function Checkboxes({
   count,
-  update,
-  values,
   prefix,
+  namePrefix,
   base,
   disabled,
+  playerValue,
+  updatePlayerValue,
 }: {
   count: number;
-  update?(idx: number, value: boolean): void;
-  values?: boolean[];
   prefix: string;
+  namePrefix?: string;
   base: number;
   disabled?: boolean;
+  playerValue: number | undefined;
+  updatePlayerValue?(value: number): void;
 }) {
-  values = values || [];
+  playerValue = playerValue ?? -1;
   const result = [];
   for (let i = 0; i < count; i++) {
     result.push(
@@ -24,14 +26,19 @@ export function Checkboxes({
         key={i}
         control={
           <Checkbox
-            checked={values[i] || false}
-            onChange={() => update && update(i, !!values && !values[i])}
-            name={`${prefix}-${i}-${base}`}
-            disabled={
-              disabled ||
-              (i > 0 && !values[i - 1]) ||
-              (i < count - 1 && values[i + 1])
+            checked={playerValue >= i}
+            onChange={
+              updatePlayerValue &&
+              (() => {
+                if (playerValue! >= i) {
+                  updatePlayerValue(i - 1);
+                } else {
+                  updatePlayerValue(i);
+                }
+              })
             }
+            name={`${namePrefix || prefix}-${i}`}
+            disabled={disabled}
           />
         }
         label={`${prefix}${i + base}`}
