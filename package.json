@@ -34,9 +34,13 @@
     "typescript": "^3.9.3"
   },
   "scripts": {
-    "start": "concurrently \"yarn start:react\" \"yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
+    "start": "run-script-os",
+    "start:linux:darwin": "concurrently \"yarn start:react\" \"yarn start:functions\" \"yarn start:firebase\"",
+    "start:win32": "concurrently \"yarn start:react\" \"yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
     "start:functions": "cd functions && tsc --project tsconfig.json --watch",
-    "start:firebase": "(if not exist firebase-export/firebase-export (yarn downloadWiki)) && firebase emulators:start --only firestore,functions --inspect-functions --import ./firebase-export",
+    "start:firebase": "run-script-os",
+    "start:firebase:linux:darwin": "(if [ ! -d firebase-export/firebase-export ]; then yarn downloadWiki; fi) && firebase emulators:start --only firestore,functions --inspect-functions --import ./firebase-export",
+    "start:firebase:win32": "(if not exist firebase-export/firebase-export (yarn downloadWiki)) && firebase emulators:start --only firestore,functions --inspect-functions --import ./firebase-export",
     "start:react": "cross-env BROWSER=none react-scripts start",
     "start:tts": "yarn build:tts && mkdir luaCache || echo && copy \"build\\save.json\" \"%USERPROFILE%\\Documents\\My Games\\Tabletop Simulator\\Saves\\9999.json\" && ts-node --project ttsBuild/tsconfig.json ttsBuild/watchTTS.ts",
     "build:react": "react-scripts build && rm -rf build/__",
@@ -47,7 +51,6 @@
     "createConfigFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/createConfigFile.ts",
     "downloadWiki": "gsutil -m cp -R gs://adventurecard-game.appspot.com/firebase-export ./firebase-export",
     "exportWiki": "gcloud firestore export gs://adventurecard-game.appspot.com/firebase-export --collection-ids=wiki,wiki_character,deck,card",
-    "importOldCards": "set TS_NODE_PROJECT=dbUtil/tsconfig.json&& node -r ts-node/register --max-old-space-size=10240 dbUtil/importOldCards.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
