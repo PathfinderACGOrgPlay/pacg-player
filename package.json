@@ -39,7 +39,7 @@
   "scripts": {
     "start": "run-script-os",
     "start:linux:darwin": "concurrently \"yarn start:react\" \"yarn start:functions\" \"yarn start:firebase\"",
-    "start:win32": "concurrently \"yarn start:react\" \"mkdir -p build && yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
+    "start:win32": "concurrently \"yarn start:react\" \"mkdir build && yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
     "start:functions": "cd functions && yarn build && WATCH=true yarn build",
     "start:firebase": "yarn downloadWiki && firebase emulators:start --only firestore,functions --inspect-functions --import ./firebase-export",
     "start:react": "cross-env BROWSER=none react-scripts start",
