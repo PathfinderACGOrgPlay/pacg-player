@@ -46,6 +46,7 @@ export function CharacterDropdown({
         fullWidth={fullWidth}
         label="Character"
         id={id}
+        select
         value={loading ? "" : value}
         onChange={(e) => setValue(e.target.value as string)}
         SelectProps={{ IconComponent: selectLoadingComponent(loading) }}
