@@ -33,10 +33,13 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "run-script-os": "^1.1.1",
     "typescript": "^3.9.3"
   },
   "scripts": {
-    "start": "concurrently \"yarn start:react\" \"mkdir -p build && yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
+    "start": "run-script-os",
+    "start:linux:darwin": "concurrently \"yarn start:react\" \"yarn start:functions\" \"yarn start:firebase\"",
+    "start:win32": "concurrently \"yarn start:react\" \"mkdir build && yarn start:tts\" \"yarn start:functions\" \"yarn start:firebase\"",
     "start:functions": "cd functions && yarn build && WATCH=true yarn build",
     "start:firebase": "yarn downloadWiki && firebase emulators:start --only firestore,functions --inspect-functions --import ./firebase-export",
     "start:react": "cross-env BROWSER=none react-scripts start",
@@ -50,7 +53,6 @@
     "createConfigFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/createConfigFile.ts",
     "downloadWiki": "gsutil -m cp -R gs://adventurecard-game.appspot.com/firebase-export ./firebase-export",
     "exportWiki": "gcloud firestore export gs://adventurecard-game.appspot.com/firebase-export --collection-ids=wiki,wiki_character,deck,card",
-    "importOldCards": "set TS_NODE_PROJECT=dbUtil/tsconfig.json&& node -r ts-node/register --max-old-space-size=10240 dbUtil/importOldCards.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
