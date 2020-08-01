@@ -41,7 +41,7 @@
     "start:firebase": "yarn downloadWiki && firebase emulators:start --only firestore,functions --inspect-functions --import ./firebase-export",
     "start:react": "cross-env BROWSER=none react-scripts start",
     "start:inittts": "yarn build:tts && mkdir luaCache || echo && cp \"build/save.json\" \"$(wslpath $(powershell.exe '$env:UserProfile') | tr -d '\\r')/Documents/My Games/Tabletop Simulator/Saves/9999.json\"",
-    "start:tts": "yarn start:inittts && ts-node --project ttsBuild/tsconfig.json ttsBuild/watchTTS.ts",
+    "start:tts": "if $(uname -r | grep -qi microsoft); then yarn start:inittts && ts-node --project ttsBuild/tsconfig.json ttsBuild/watchTTS.ts; else echo Ignoring TTS when not running in windows.; fi",
     "build:react": "react-scripts build && rm -rf build/__",
     "build:functions": "cd functions && yarn build",
     "build:tts": "ts-node --project ttsBuild/tsconfig.json ttsBuild/buildTTS.ts",
