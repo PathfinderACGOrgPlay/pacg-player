@@ -3,6 +3,6 @@
   "firestore": {
     "version": "1.11.4",
     "path": "firebase-export",
-    "metadata_file": "firebase-export/firebase-export.overall_export_metadata"
+    "metadata_file": "firebase-export.overall_export_metadata"
   }
 }

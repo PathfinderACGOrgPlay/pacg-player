@@ -48,7 +48,7 @@
     "build": "concurrently \"yarn build:react\" \"yarn build:functions\" \"yarn build:tts\"",
     "updateSaveFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/updateSaveFile.ts \"$(wslpath $(powershell.exe '$env:UserProfile') | tr -d '\\r')/Documents/My Games/Tabletop Simulator/Saves/9999.json\"",
     "createConfigFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/createConfigFile.ts",
-    "downloadWiki": "gsutil -m cp -R gs://adventurecard-game.appspot.com/firebase-export ./firebase-export",
+    "downloadWiki": "gsutil -m rsync -d -r -x firebase-export-metadata.json gs://adventurecard-game.appspot.com/firebase-export/ ./firebase-export",
     "exportWiki": "gcloud firestore export gs://adventurecard-game.appspot.com/firebase-export --collection-ids=wiki,wiki_character,deck,card",
     "importOldCards": "set TS_NODE_PROJECT=dbUtil/tsconfig.json&& node -r ts-node/register --max-old-space-size=10240 dbUtil/importOldCards.ts",
     "test": "react-scripts test",
