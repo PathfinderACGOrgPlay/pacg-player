@@ -234,6 +234,7 @@ export function CharacterSheetRenderer({
         </div>
         <div className={containerStyles.description}>
           <WikiEditTextField
+            wikiEdit={wikiEdit}
             label="Description"
             {...useDebounceUpdate(
               characterData?.description || "",
