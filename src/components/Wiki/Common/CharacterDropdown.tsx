@@ -27,7 +27,7 @@ export function CharacterDropdown({
       characters &&
       characters.docs.length &&
       value &&
-      !characters.docs.find((v) => v.id === value)
+      !characters.docs.find((v) => v.id === value || v.data().name === value)
     ) {
       setValue("");
     }
