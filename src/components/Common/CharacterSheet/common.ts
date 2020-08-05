@@ -80,5 +80,6 @@ export const useCharacterStyles = makeStyles((theme) => ({
   },
   mainEdit: {
     float: "right",
+    "z-index": 1,
   },
 }));
