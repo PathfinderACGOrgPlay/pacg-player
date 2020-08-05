@@ -23,4 +23,5 @@
 
 ttsBuild/amalg.lua
 luaCache
-/firebase-export/firebase-export
+/firebase-export/all_namespaces
+/firebase-export/firebase-export.overall_export_metadata
