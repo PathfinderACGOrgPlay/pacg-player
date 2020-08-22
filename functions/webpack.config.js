@@ -1,6 +1,15 @@
 var nodeExternals = require("webpack-node-externals");
 
-const whitelist = [/^react/, /^@material-ui/, /^@babel/];
+const whitelist = [
+  /react/,
+  /^@material-ui/,
+  /^@babel/,
+  /^scheduler$/,
+  /^popper[.]js$/,
+  /^dnd-core$/,
+  /^redux$/,
+  /^symbol-observable$/,
+];
 
 module.exports = {
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
