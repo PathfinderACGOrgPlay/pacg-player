@@ -25,7 +25,7 @@ import {
   useUpdateDeck,
 } from "../../../firestore/wiki/deck";
 import { removeRecoverAdornment } from "./removeRecoverAdornment";
-import {UploadField} from "../../Common/UploadField";
+import { UploadField } from "../../Common/UploadField";
 
 const useStyles = makeStyles((theme) => ({
   removedSwitch: {
@@ -61,17 +61,17 @@ function DeckField({
           ),
         }}
       />
-        <UploadField
-            fullWidth
-            id={`logo-${systemId}-${deckId}`}
-            label="System Logo"
-            potentialFilePath={`/system/${systemId}/deck/logo/${deckId}`}
-            {...useDebounceUpdate(
-                deck.logo,
-                (logo: string) => logo,
-                (logo) => update({ ...deck, logo })
-            )}
-        />
+      <UploadField
+        fullWidth
+        id={`logo-${systemId}-${deckId}`}
+        label="System Logo"
+        potentialFilePath={`/system/${systemId}/deck/logo/${deckId}`}
+        {...useDebounceUpdate(
+          deck.logo,
+          (logo: string) => logo,
+          (logo) => update({ ...deck, logo })
+        )}
+      />
     </>
   );
 }
@@ -87,7 +87,7 @@ function System({
 }) {
   const [update, updateError] = useUpdateCardSystem(id);
   const [showRemoved, setShowRemoved] = useState(false);
-  const [decks, loading] = useDecks(id, showRemoved);
+  const [decks, loading] = useDecks(id, { deleted: showRemoved });
   const styles = useStyles();
   const createDeck = useCreateDeck(id);
 
@@ -95,32 +95,32 @@ function System({
     <Card>
       <CardContent>
         <ErrorDisplay error={updateError} label="Failed to update system" />
-          <TextField
-              fullWidth
-              id={`name-${id}`}
-              label="System Name"
-              {...useDebounceUpdate(
-                  system.name,
-                  (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
-                  (name) => update({ ...system, name })
-              )}
-              InputProps={{
-                  endAdornment: removeRecoverAdornment(system.removed, () =>
-                      update({ ...system, removed: !system.removed })
-                  ),
-              }}
-          />
-          <UploadField
-              fullWidth
-              id={`logo-${id}`}
-              label="System Logo"
-              potentialFilePath={`/system/logo/${id}`}
-              {...useDebounceUpdate(
-                  system.logo,
-                  (logo: string) => logo,
-                  (logo) => update({ ...system, logo })
-              )}
-          />
+        <TextField
+          fullWidth
+          id={`name-${id}`}
+          label="System Name"
+          {...useDebounceUpdate(
+            system.name,
+            (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
+            (name) => update({ ...system, name })
+          )}
+          InputProps={{
+            endAdornment: removeRecoverAdornment(system.removed, () =>
+              update({ ...system, removed: !system.removed })
+            ),
+          }}
+        />
+        <UploadField
+          fullWidth
+          id={`logo-${id}`}
+          label="System Logo"
+          potentialFilePath={`/system/logo/${id}`}
+          {...useDebounceUpdate(
+            system.logo,
+            (logo: string) => logo,
+            (logo) => update({ ...system, logo })
+          )}
+        />
 
         <Typography variant="h5">
           Decks
