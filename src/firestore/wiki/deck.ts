@@ -13,15 +13,28 @@ export interface Deck {
   logo?: string;
   subDecks: string[];
   removed: boolean;
+  hasCards: boolean;
 }
 
-export function useDecks(systemId: string, deleted?: boolean) {
-  return useCollection(
-    (deleted
-      ? collection(systemId)
-      : collection(systemId)?.where("removed", "==", false)
-    )?.orderBy("name")
-  ) as [firestore.QuerySnapshot<Deck> | undefined, boolean, Error | undefined];
+export function useDecks(
+  systemId: string,
+  options?: { deleted?: boolean; withCards?: boolean }
+) {
+  let coll:
+    | firestore.CollectionReference
+    | firestore.Query
+    | undefined = collection(systemId);
+  if (!options?.deleted) {
+    coll = coll?.where("removed", "==", false);
+  }
+  if (options?.withCards) {
+    coll = coll?.where("hasCards", "==", true);
+  }
+  return useCollection(coll?.orderBy("name")) as [
+    firestore.QuerySnapshot<Deck> | undefined,
+    boolean,
+    Error | undefined
+  ];
 }
 
 export function useCreateDeck(systemId: string) {
@@ -30,6 +43,7 @@ export function useCreateDeck(systemId: string) {
       collection(systemId)?.add({
         name: "New Deck",
         removed: false,
+        hasCards: false,
       }),
     [systemId]
   );
