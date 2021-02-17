@@ -37,7 +37,6 @@ export function getMarkup(
     const system = systemDoc.data() as CardSystem;
     const deck = deckDoc.data() as Deck;
     const character = characterDoc.data() as Character;
-    console.log("Data Fetched");
     const sheets = new ServerStyleSheets();
     const markup = renderToString(
       sheets.collect(
