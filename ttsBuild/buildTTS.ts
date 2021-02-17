@@ -1,16 +1,13 @@
 import { buildTTSLua } from "./buildTTSLua";
 import { readFile } from "./util";
 import fs from "fs";
-import bson from "bson";
+import { serialize } from "bson";
 
 Promise.all([buildTTSLua(), readFile("./tts/save.json")]).then(
   ([scripts, save]) => {
     const saveData = JSON.parse(save);
     const { "Global.-1.lua": Global, ...other } = scripts;
     saveData.LuaScript = Global[0];
-    if (process.env.NODE_ENV !== "production") {
-      saveData.LuaScriptState += '{"isTTSDebug":true}';
-    }
     saveData.XmlUI = Global[1];
     Object.keys(other).forEach((v) => {
       const name = v.split(".");
@@ -22,7 +19,7 @@ Promise.all([buildTTSLua(), readFile("./tts/save.json")]).then(
       }
     });
     return Promise.all([
-      new Promise((res, rej) => {
+      new Promise<void>((res, rej) => {
         fs.writeFile("build/save.json", JSON.stringify(saveData), (err) => {
           if (err) {
             rej(err);
@@ -31,8 +28,8 @@ Promise.all([buildTTSLua(), readFile("./tts/save.json")]).then(
           }
         });
       }),
-      new Promise((res, rej) => {
-        fs.writeFile("build/save.bson", bson.serialize(saveData), (err) => {
+      new Promise<void>((res, rej) => {
+        fs.writeFile("build/save.bson", serialize(saveData), (err) => {
           if (err) {
             rej(err);
           } else {

@@ -5,11 +5,10 @@ import "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { firestore } from "firebase/app";
 import { useEffect } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 
-export let db: firestore.Firestore;
+export let db: firebase.firestore.Firestore;
 export let storage: firebase.storage.Storage;
 
 export const initFirebase = process.env.FIREBASE_FUNCTIONS
@@ -26,7 +25,7 @@ export const initFirebase = process.env.FIREBASE_FUNCTIONS
           firebase.analytics();
         }
         firebase.performance();
-        db = firestore(app);
+        db = firebase.firestore(app);
         if (process.env.NODE_ENV !== "production") {
           db.settings({
             host: "localhost:8080",
@@ -82,7 +81,7 @@ export interface DbUser {
 
 export function useUsers() {
   return useCollection(db.collection("accounts")) as [
-    firestore.QuerySnapshot<DbUser> | undefined,
+          firebase.firestore.QuerySnapshot<DbUser> | undefined,
     boolean,
     Error | undefined
   ];

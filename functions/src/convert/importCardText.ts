@@ -2,9 +2,8 @@ import fs from "fs";
 import parse from "csv-parse";
 import * as admin from "firebase-admin";
 import { Card } from "../../../src/firestore/wiki/card";
-import { firestore } from "firebase";
+import firebase from "firebase";
 import deepEqual from "deep-equal";
-import DocumentData = firebase.firestore.DocumentData;
 
 const db = admin.firestore();
 let firstRow: string[] = [];
@@ -249,7 +248,7 @@ export function importCardText() {
             const cardDocs = cardSearches.reduce(
               // @ts-ignore
               (acc, v) => acc.concat(v.docs),
-              [] as firestore.QueryDocumentSnapshot[]
+              [] as firebase.firestore.QueryDocumentSnapshot[]
             );
             console.log(rows.length, row[1], row[3]);
             if (!cardDocs.length) {

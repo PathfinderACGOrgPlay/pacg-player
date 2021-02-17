@@ -33,7 +33,7 @@ import {
   useAccountCharacterList,
 } from "../../firestore/characters";
 import { useEqualsMemo } from "../../useEqualsMemo";
-import { firestore } from "firebase";
+import firebase from "firebase";
 import { useCharacter } from "../../firestore/wiki/character";
 import { useDeck } from "../../firestore/wiki/deck";
 
@@ -72,7 +72,7 @@ function CharacterDisplay({
 }: {
   id: string;
   data: PlayerCharacter | undefined;
-  users: firestore.QuerySnapshot<DbUser> | undefined;
+  users: firebase.firestore.QuerySnapshot<DbUser> | undefined;
   removeTableCharacterByDeckId(id: string): void;
 }) {
   const styles = useStyles();

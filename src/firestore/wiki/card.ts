@@ -1,6 +1,6 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
-import { firestore } from "firebase/app";
+import firebase from "firebase/app";
 import { useCallback, useState } from "react";
 
 const collection = (systemId: string, deckId: string) =>
@@ -33,7 +33,11 @@ export function useCards(systemId: string, deckId: string, deleted?: boolean) {
 
   return useCollection(
     (deleted ? start : start?.where("removed", "==", false))?.orderBy("name")
-  ) as [firestore.QuerySnapshot<Card> | undefined, boolean, Error | undefined];
+  ) as [
+    firebase.firestore.QuerySnapshot<Card> | undefined,
+    boolean,
+    Error | undefined
+  ];
 }
 
 export function useCreateCard(systemId: string, deckId: string) {
@@ -81,7 +85,7 @@ export function useUpdateCard(
 
 export function useCard(systemId: string, deckId: string, id: string) {
   return useDocument(id ? collection(systemId, deckId)?.doc(id) : null) as [
-    firestore.DocumentSnapshot<Card> | undefined,
+    firebase.firestore.DocumentSnapshot<Card> | undefined,
     boolean,
     Error | undefined
   ];

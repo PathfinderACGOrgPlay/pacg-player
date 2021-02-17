@@ -1,6 +1,6 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db, useUser } from "../firebase";
-import { firestore } from "firebase/app";
+import firebase from "firebase/app";
 import { useCallback, useState } from "react";
 import { getCharacterList, PlayerCharacter } from "./characters";
 
@@ -17,7 +17,11 @@ export function useManagedTables() {
 
   return useCollection(
     db.collection("tables").where("managers", "array-contains", user.uid)
-  ) as [firestore.QuerySnapshot<Table> | undefined, boolean, Error | undefined];
+  ) as [
+    firebase.firestore.QuerySnapshot<Table> | undefined,
+    boolean,
+    Error | undefined
+  ];
 }
 
 export function usePlayingTables() {
@@ -25,12 +29,16 @@ export function usePlayingTables() {
 
   return useCollection(
     db.collection("tables").where("players", "array-contains", user.uid)
-  ) as [firestore.QuerySnapshot<Table> | undefined, boolean, Error | undefined];
+  ) as [
+    firebase.firestore.QuerySnapshot<Table> | undefined,
+    boolean,
+    Error | undefined
+  ];
 }
 
 export function useTable(id: string) {
   return useDocument(db.collection("tables").doc(id)) as [
-    firestore.DocumentSnapshot<Table> | undefined,
+    firebase.firestore.DocumentSnapshot<Table> | undefined,
     boolean,
     Error | undefined
   ];
@@ -139,8 +147,8 @@ export function useRemoveTableCharacterByDeckId(
             return Promise.all([
               v,
               getCharacterList(
-                (v as firestore.DocumentSnapshot<Table>).data()?.characters ||
-                  []
+                (v as firebase.firestore.DocumentSnapshot<Table>).data()
+                  ?.characters || []
               ),
             ]);
           })

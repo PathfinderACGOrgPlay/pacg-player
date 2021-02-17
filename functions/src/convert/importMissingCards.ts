@@ -1,7 +1,7 @@
 import Jimp from "jimp";
 import admin from "firebase-admin";
 import { getDecks } from "./getDecks";
-import { firestore } from "firebase-admin";
+import firebase from "firebase-admin";
 import { Deck } from "../../../src/firestore/wiki/deck";
 import { Card } from "../../../src/firestore/wiki/card";
 
@@ -179,7 +179,9 @@ function getCards(oldJson: any, deck: string): Promise<Card[]> {
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const bucket = admin.storage().bucket("gs://adventurecard-game.appspot.com");
-function importNextDeck(decks: firestore.DocumentReference<Deck>[]): any {
+function importNextDeck(
+  decks: firebase.firestore.DocumentReference<Deck>[]
+): any {
   if (decks.length === 0) {
     return {};
   }

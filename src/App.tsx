@@ -40,8 +40,8 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <DndProvider backend={HTML5Backend}>
-        <MuiPickersUtilsProvider utils={LuxonUtils}>
+      <MuiPickersUtilsProvider utils={LuxonUtils}>
+        <DndProvider backend={HTML5Backend}>
           <CssBaseline />
           {loading ? null : user ? (
             <Router>
@@ -71,8 +71,8 @@ function App() {
               />
             </>
           )}
-        </MuiPickersUtilsProvider>
-      </DndProvider>
+        </DndProvider>
+      </MuiPickersUtilsProvider>
     </ThemeProvider>
   );
 }

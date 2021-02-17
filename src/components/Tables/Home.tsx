@@ -15,7 +15,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { firestore } from "firebase";
+import firebase from "firebase";
 import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +28,7 @@ function TableList({
   error,
   list,
 }: {
-  list: firestore.QuerySnapshot<TableType> | undefined;
+  list: firebase.firestore.QuerySnapshot<TableType> | undefined;
   error: Error | undefined;
 }) {
   const styles = useStyles();
