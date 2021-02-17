@@ -4,8 +4,11 @@ import nodeHtmlToImage from "node-html-to-image";
 import { getMarkup } from "./getMarkup";
 import { getCheckboxesRoles } from "../util";
 
-export const createCharacterImage = functions.https.onRequest(
-  (request, response) => {
+export const createCharacterImage = functions
+  .runWith({
+    memory: "4GB",
+  })
+  .https.onRequest((request, response) => {
     const [, systemId, deckId, characterId, role] = request.path.split("/");
     return getMarkup(
       systemId,
@@ -35,8 +38,7 @@ export const createCharacterImage = functions.https.onRequest(
           `The script uses approximately ${Math.round(used * 100) / 100} MB`
         );
       });
-  }
-);
+  });
 
 export const createCharacterMarkup = functions.https.onRequest(
   (request, response) => {
