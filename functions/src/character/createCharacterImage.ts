@@ -6,7 +6,7 @@ import { getCheckboxesRoles } from "../util";
 
 export const createCharacterImage = functions
   .runWith({
-    memory: "2GB",
+    memory: "4GB",
   })
   .https.onRequest((request, response) => {
     const [, systemId, deckId, characterId, role] = request.path.split("/");
