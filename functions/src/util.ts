@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-import { getMarkup } from "./character/getMarkup";
+import { getMarkup, getMarkupData } from "./character/getMarkup";
 
 export function getCheckboxesRoles(
   systemId: string,
@@ -16,7 +16,7 @@ export function getCheckboxesRoles(
         },
       })
       .then((browser) => browser.newPage().then((page) => ({ browser, page }))),
-    getMarkup(systemId, deckId, characterId, role, false),
+    getMarkupData(systemId, deckId, characterId, role, false).then(getMarkup),
   ])
     .then(([data, html]) => data.page.setContent(html).then(() => data))
     .then((data) =>

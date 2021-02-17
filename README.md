@@ -12,7 +12,7 @@ To get started developing with this project you will first need the following:
 Once you have all that installed open a terminal in this project and run `yarn`. When that completes run `yarn start` to start the development server(s).
 
 For TTS development you should now have a save file with no title or picture in TTS with the save ID 9999. When you load that save the development server will connect to TTS.
-Note: For WSL you need to run the following command in an admin cmd `netsh interface portproxy add v4tov4 listenport=39999 listenaddress=0.0.0.0 connectport=39999 connectaddress=127.0.0.1`
+Note: If running under wsl you will likely get an admin prompt when the server starts and stops, this is to add a proxy for the dev server can find TTS with 
 and allow port 39999/tcp through the firewall for public networks
 
 For Web development you only need to open a browser and visit http://localhost:3000/

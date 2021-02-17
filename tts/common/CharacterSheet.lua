@@ -11,17 +11,17 @@ function CharacterSheet.init(data)
     
     local role = saveData.characterData.role
     if(role == nil or role == -1) then
-        role = ""
+        role = "-1"
     end
     local cust = obj.getCustomObject()
-    local imageUrl = config.functionsBaseUrl .. "/createCharacterImage/" .. saveData.characterData.systemId .. "/" .. saveData.characterData.deckId .. "/" .. saveData.characterData.characterId .. "/" .. role
+    local imageUrl = config.functionsBaseUrl .. "/createCharacterImage/" .. saveData.characterData.systemId .. "/" .. saveData.characterData.deckId .. "/" .. saveData.characterData.characterId .. "/" .. role .. "/"
     if(cust.image != imageUrl) then
         cust.image = imageUrl
         cust.image_bottom = imageUrl
         cust.image_secondary = imageUrl
         local state = obj.script_state
         obj.setCustomObject(cust)
-        WebRequest.get(config.functionsBaseUrl .. "/createCharacterData/" .. saveData.characterData.systemId .. "/" .. saveData.characterData.deckId .. "/" .. saveData.characterData.characterId .. "/" .. role, function(result)
+        WebRequest.get(config.functionsBaseUrl .. "/createCharacterData/" .. saveData.characterData.systemId .. "/" .. saveData.characterData.deckId .. "/" .. saveData.characterData.characterId .. "/" .. role .. "/", function(result)
             if(result.is_done) then
                 local oldState = JSON.decode(state)
                 local newData = JSON.decode(result.text)

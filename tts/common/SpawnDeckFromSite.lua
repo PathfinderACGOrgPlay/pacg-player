@@ -105,9 +105,9 @@ function SpawnDeckFromSiteBuildDeck(result)
                 if(data.characterData and data.characterData.systemId and data.characterData.deckId and data.characterData.characterId) then
                     local role = data.characterData.role
                     if(role == nil or role == -1) then
-                        role = ""
+                        role = "-1"
                     end
-                    local imageUrl = config.functionsBaseUrl .. "/createCharacterImage/" .. data.characterData.systemId .. "/" .. data.characterData.deckId .. "/" .. data.characterData.characterId .. "/" .. role
+                    local imageUrl = config.functionsBaseUrl .. "/createCharacterImage/" .. data.characterData.systemId .. "/" .. data.characterData.deckId .. "/" .. data.characterData.characterId .. "/" .. role .. "/"
                     table.insert(results, {
                         Autoraise = true,
                         ColorDiffuse = {
