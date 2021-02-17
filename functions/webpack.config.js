@@ -1,6 +1,6 @@
 var nodeExternals = require("webpack-node-externals");
 
-const whitelist = [
+const allowlist = [
   /react/,
   /^@material-ui/,
   /^@babel/,
@@ -37,11 +37,11 @@ module.exports = {
   externals: [
     nodeExternals({
       modulesDir: "../node_modules",
-      whitelist,
+      allowlist,
     }),
     nodeExternals({
       modulesDir: "node_modules",
-      whitelist,
+      allowlist,
     }),
   ],
   plugins: [
