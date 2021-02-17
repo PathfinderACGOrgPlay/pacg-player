@@ -1,6 +1,6 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
-import { firestore } from "firebase/app";
+import firebase from "firebase/app";
 import { useCallback, useState } from "react";
 
 const collection = (systemId: string) =>
@@ -21,8 +21,8 @@ export function useDecks(
   options?: { deleted?: boolean; withCards?: boolean }
 ) {
   let coll:
-    | firestore.CollectionReference
-    | firestore.Query
+    | firebase.firestore.CollectionReference
+    | firebase.firestore.Query
     | undefined = collection(systemId);
   if (!options?.deleted) {
     coll = coll?.where("removed", "==", false);
@@ -31,7 +31,7 @@ export function useDecks(
     coll = coll?.where("hasCards", "==", true);
   }
   return useCollection(coll?.orderBy("name")) as [
-    firestore.QuerySnapshot<Deck> | undefined,
+    firebase.firestore.QuerySnapshot<Deck> | undefined,
     boolean,
     Error | undefined
   ];
@@ -67,7 +67,7 @@ export function useUpdateDeck(
 
 export function useDeck(systemId: string, id: string) {
   return useDocument(id ? collection(systemId)?.doc(id) : null) as [
-    firestore.DocumentSnapshot<Deck> | undefined,
+    firebase.firestore.DocumentSnapshot<Deck> | undefined,
     boolean,
     Error | undefined
   ];

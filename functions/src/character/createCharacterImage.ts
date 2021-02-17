@@ -30,6 +30,10 @@ export const createCharacterImage = functions.https.onRequest(
         response.set("Cache-Control", "public, max-age=300, s-maxage=600");
         response.writeHead(200, { "Content-Type": "image/png" });
         response.end(image, "binary");
+        const used = process.memoryUsage().heapUsed / 1024 / 1024;
+        console.log(
+          `The script uses approximately ${Math.round(used * 100) / 100} MB`
+        );
       });
   }
 );

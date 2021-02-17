@@ -16,8 +16,8 @@ import {
 } from "@material-ui/core";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import { DateTime } from "luxon";
-import { firestore } from "firebase";
 import { useDebounceUpdate } from "./useDebounceUpdate";
+import firebase from "firebase/app";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -129,7 +129,8 @@ export function Chronicle({
       ? {
           value:
             // @ts-ignore
-            ((sheet[sheetKey] || {})[subKey] as firestore.Timestamp) || null,
+            ((sheet[sheetKey] || {})[subKey] as firebase.firestore.Timestamp) ||
+            null,
           onChange: (date: DateTime | null) =>
             update({
               ...sheet,
@@ -141,7 +142,7 @@ export function Chronicle({
             }),
         }
       : {
-          value: (sheet[sheetKey] as firestore.Timestamp) || null,
+          value: (sheet[sheetKey] as firebase.firestore.Timestamp) || null,
           onChange: (date: DateTime | null) => {
             return update({ ...sheet, [sheetKey]: date?.toJSDate() || null });
           },

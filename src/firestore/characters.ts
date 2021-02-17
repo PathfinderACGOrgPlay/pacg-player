@@ -1,6 +1,6 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db, useUser } from "../firebase";
-import { firestore } from "firebase/app";
+import firebase from "firebase/app";
 import { useCallback, useEffect, useState } from "react";
 
 export interface Card {
@@ -44,7 +44,7 @@ export function useAccountCharacters() {
   return useCollection(
     db.collection("account_characters").where("uid", "==", user.uid)
   ) as [
-    firestore.QuerySnapshot<PlayerCharacter> | undefined,
+    firebase.firestore.QuerySnapshot<PlayerCharacter> | undefined,
     boolean,
     Error | undefined
   ];
@@ -52,7 +52,7 @@ export function useAccountCharacters() {
 
 export function getCharacter(id: string) {
   return db.collection("account_characters").doc(id).get() as Promise<
-    firestore.DocumentSnapshot<PlayerCharacter>
+    firebase.firestore.DocumentSnapshot<PlayerCharacter>
   >;
 }
 
@@ -60,7 +60,7 @@ export function useAccountCharacter(id: string) {
   return useDocument(
     id ? db.collection("account_characters").doc(id) : null
   ) as [
-    firestore.DocumentSnapshot<PlayerCharacter> | undefined,
+    firebase.firestore.DocumentSnapshot<PlayerCharacter> | undefined,
     boolean,
     Error | undefined
   ];
@@ -73,12 +73,12 @@ export function getCharacterList(ids: string[]) {
 export function useAccountCharacterList(
   ids: string[]
 ): [
-  firestore.DocumentSnapshot<PlayerCharacter>[] | undefined,
+  firebase.firestore.DocumentSnapshot<PlayerCharacter>[] | undefined,
   boolean,
   Error | undefined
 ] {
   const [documents, setDocuments] = useState<
-    firestore.DocumentSnapshot<PlayerCharacter>[] | undefined
+    firebase.firestore.DocumentSnapshot<PlayerCharacter>[] | undefined
   >(undefined);
   const [error, setError] = useState<Error | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);

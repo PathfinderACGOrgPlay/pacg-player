@@ -11,7 +11,7 @@ import { Redirect, Route, RouteComponentProps } from "react-router";
 import { Table as TableType, useTable } from "../../firestore/tables";
 import { Link as RouterLink } from "react-router-dom";
 import { useTabsWithRouter } from "../Characters/Character";
-import { User } from "firebase";
+import firebase from "firebase";
 import { useUser } from "../../firebase";
 import { Chronicles } from "./Chronicles";
 import { Players } from "./Players";
@@ -26,14 +26,14 @@ const tabs = [
   {
     to: "/tables/:id/players",
     label: "Player Information",
-    isVisible(user: User, table: TableType | undefined) {
+    isVisible(user: firebase.User, table: TableType | undefined) {
       return table?.managers.indexOf(user.uid) !== -1;
     },
   },
   {
     to: "/tables/:id/settings",
     label: "Settings",
-    isVisible(user: User, table: TableType | undefined) {
+    isVisible(user: firebase.User, table: TableType | undefined) {
       return table?.managers.indexOf(user.uid) !== -1;
     },
   },

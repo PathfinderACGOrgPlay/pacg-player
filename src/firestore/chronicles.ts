@@ -1,6 +1,6 @@
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../firebase";
-import { firestore } from "firebase";
+import firebase from "firebase";
 import { getCharacter, PlayerCharacter } from "./characters";
 import { useCallback, useState } from "react";
 
@@ -11,7 +11,7 @@ export interface ChronicleSheet {
   scenario: string;
   tier?: string;
   xp?: string;
-  date?: firestore.Timestamp;
+  date?: firebase.firestore.Timestamp;
   eventNumber?: string;
   coordinatorOP?: string;
   reported?: boolean;
@@ -39,7 +39,7 @@ export interface ChronicleSheet {
 
 export function useChronicleSheet(id: string) {
   return useDocument(db.collection("chronicles").doc(id)) as [
-    firestore.DocumentSnapshot<PlayerCharacter> | undefined,
+    firebase.firestore.DocumentSnapshot<PlayerCharacter> | undefined,
     boolean,
     Error | undefined
   ];
@@ -49,7 +49,7 @@ export function useChronicleSheetsForCharacter(id: string) {
   return useCollection(
     db.collection("chronicles").where("characterId", "==", id)
   ) as [
-    firestore.QuerySnapshot<ChronicleSheet> | undefined,
+    firebase.firestore.QuerySnapshot<ChronicleSheet> | undefined,
     boolean,
     Error | undefined
   ];
@@ -59,7 +59,7 @@ export function useChronicleSheetsForTable(id: string) {
   return useCollection(
     db.collection("chronicles").where("table", "==", id)
   ) as [
-    firestore.QuerySnapshot<ChronicleSheet> | undefined,
+    firebase.firestore.QuerySnapshot<ChronicleSheet> | undefined,
     boolean,
     Error | undefined
   ];
