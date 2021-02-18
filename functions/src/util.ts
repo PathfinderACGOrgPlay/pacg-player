@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 import { getMarkup, getMarkupData } from "./character/getMarkup";
+import * as admin from "firebase-admin";
 
 export function getCheckboxesRoles(
   systemId: string,
@@ -76,4 +77,35 @@ export function getCheckboxesRoles(
         }, {} as any),
       }));
     });
+}
+
+export function getPathParams(path: string) {
+  const splitPath = path.split("/");
+  return splitPath[1] === "f" ? splitPath.slice(3) : splitPath.slice(1);
+}
+
+export function isNumeric(str: string) {
+  return (
+    !isNaN((str as unknown) as number) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+    !isNaN(parseFloat(str))
+  ); // ...and ensure strings of whitespace fail
+}
+
+export function getDimensions(count: number) {
+  const height = Math.min(7, Math.ceil(Math.sqrt(count)));
+  const width = Math.min(10, Math.ceil(count / height));
+  return { width, height };
+}
+
+export function getDeckInfoObject(snapshot: admin.firestore.QuerySnapshot) {
+  const data = snapshot.docs.map((v) => v.data());
+  const length = data.length;
+  return {
+    ...getDimensions(length),
+    count: length,
+    info: snapshot.docs.map((v) => {
+      const { traits, count, type, subDeck, name } = v.data();
+      return { traits, count, type, subDeck, name };
+    }),
+  };
 }

@@ -1,5 +1,5 @@
 local CharacterSheet = {}
-local config = require("gameCore/config")
+local urls = require("common/urls")
 
 function CharacterSheet.init(data)
     local saveData = JSON.decode(data.save_state)
@@ -8,13 +8,9 @@ function CharacterSheet.init(data)
     if(saveData.characterData == nil) then
         saveData.characterData = {}
     end
-    
-    local role = saveData.characterData.role
-    if(role == nil or role == -1) then
-        role = "-1"
-    end
+
     local cust = obj.getCustomObject()
-    local imageUrl = config.functionsBaseUrl .. "/createCharacterImage/" .. saveData.characterData.systemId .. "/" .. saveData.characterData.deckId .. "/" .. saveData.characterData.characterId .. "/" .. role .. "/"
+    local imageUrl = urls.createCharacterImage(saveData.characterData.systemId, saveData.characterData.deckId, saveData.characterData.characterId, saveData.characterData.role)
     if(cust.image != imageUrl) then
         cust.image = imageUrl
         cust.image_bottom = imageUrl

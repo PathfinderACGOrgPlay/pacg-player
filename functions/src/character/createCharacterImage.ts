@@ -2,15 +2,8 @@ import * as functions from "firebase-functions";
 // @ts-ignore
 import nodeHtmlToImage from "node-html-to-image";
 import { getMarkup, getMarkupData, ThenArg } from "./getMarkup";
-import { getCheckboxesRoles } from "../util";
+import { getCheckboxesRoles, getPathParams, isNumeric } from "../util";
 import crypto from "crypto";
-
-function isNumeric(str: string) {
-  return (
-    !isNaN((str as unknown) as number) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-    !isNaN(parseFloat(str))
-  ); // ...and ensure strings of whitespace fail
-}
 
 function toJson([systemDoc, deckDoc, characterDoc, role, dark]: ThenArg<
   ReturnType<typeof getMarkupData>
@@ -29,9 +22,9 @@ export const createCharacterImage = functions
     memory: "2GB",
   })
   .https.onRequest((request, response) => {
-    const splitPath = request.path.split("/");
-    const [systemId, deckId, characterId, role, hash] =
-      splitPath[1] === "f" ? splitPath.slice(3) : splitPath.slice(1);
+    const [systemId, deckId, characterId, role, hash] = getPathParams(
+      request.path
+    );
     if (!systemId) {
       response.status(400).end("System Id is required");
     }
@@ -55,7 +48,6 @@ export const createCharacterImage = functions
       md5sum.update(toJson(data));
       const dataHash = md5sum.digest("hex");
       if (dataHash !== hash) {
-        console.log(toJson(data), dataHash, hash);
         if (hash) {
           response.redirect("../" + dataHash);
         } else {
@@ -74,11 +66,10 @@ export const createCharacterImage = functions
             },
           },
         }).then((image) => {
-          response.set(
-            "Cache-Control",
-            "public, max-age=31536000, s-maxage=31536000"
-          );
-          response.writeHead(200, { "Content-Type": "image/png" });
+          response.writeHead(200, {
+            "Content-Type": "image/png",
+            "Cache-Control": "public, max-age=31536000, s-maxage=31536000",
+          });
           response.end(image, "binary");
         });
       }
@@ -87,9 +78,19 @@ export const createCharacterImage = functions
 
 export const createCharacterMarkup = functions.https.onRequest(
   (request, response) => {
-    const splitPath = request.path.split("/");
-    const [systemId, deckId, characterId, role] =
-      splitPath[1] === "f" ? splitPath.slice(3) : splitPath.slice(1);
+    const [systemId, deckId, characterId, role] = getPathParams(request.path);
+    if (!systemId) {
+      response.status(400).end("System Id is required");
+    }
+    if (!deckId) {
+      response.status(400).end("Deck Id is required");
+    }
+    if (!characterId) {
+      response.status(400).end("Character Id is required");
+    }
+    if (!role || !isNumeric(role)) {
+      response.status(400).end("Role is required and must be a number");
+    }
     return getMarkupData(
       systemId,
       deckId,
@@ -106,9 +107,19 @@ export const createCharacterMarkup = functions.https.onRequest(
 
 export const createCharacterData = functions.https.onRequest(
   (request, response) => {
-    const splitPath = request.path.split("/");
-    const [systemId, deckId, characterId, role] =
-      splitPath[1] === "f" ? splitPath.slice(3) : splitPath.slice(1);
+    const [systemId, deckId, characterId, role] = getPathParams(request.path);
+    if (!systemId) {
+      response.status(400).end("System Id is required");
+    }
+    if (!deckId) {
+      response.status(400).end("Deck Id is required");
+    }
+    if (!characterId) {
+      response.status(400).end("Character Id is required");
+    }
+    if (!role || !isNumeric(role)) {
+      response.status(400).end("Role is required and must be a number");
+    }
     return getCheckboxesRoles(
       systemId,
       deckId,

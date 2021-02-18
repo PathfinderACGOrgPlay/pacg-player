@@ -43,6 +43,7 @@ module.exports = {
       modulesDir: "node_modules",
       allowlist,
     }),
+    { sharp: "commonjs sharp" },
   ],
   plugins: [
     new (require("webpack").DefinePlugin)({
