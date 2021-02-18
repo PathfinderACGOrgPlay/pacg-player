@@ -153,6 +153,7 @@ export function upConvertPowers(
             console.log(options);
             throw new Error("TODO: Multi Option Converge Found");
           }
+          options[0] = options[0] ?? [];
           const resultOpts = (options[0].length > (options[1]?.length || -1)
             ? options[0]
             : options[1]

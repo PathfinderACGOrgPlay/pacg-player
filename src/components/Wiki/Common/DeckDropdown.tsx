@@ -10,11 +10,13 @@ export function DeckDropdown({
   fullWidth,
   value,
   setValue,
+  label = "Deck",
 }: {
   id: string;
   systemId: string;
   fullWidth?: boolean;
   value: string;
+  label?: string;
   setValue(value: string): void;
 }) {
   const [decks, loading, error] = useDecks(systemId);
@@ -37,7 +39,7 @@ export function DeckDropdown({
       <TextField
         id={id}
         fullWidth={fullWidth}
-        label="Deck"
+        label={label}
         select
         value={loading ? "" : value}
         onChange={(e) => setValue(e.target.value as string)}

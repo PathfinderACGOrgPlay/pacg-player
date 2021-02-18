@@ -10,7 +10,7 @@ import * as admin from "firebase-admin";
 
 const firestore = admin.firestore();
 
-export function getMarkup(
+export function getMarkupData(
   systemId: string,
   deckId: string,
   characterId: string,
@@ -33,48 +33,60 @@ export function getMarkup(
       .collection("wiki_character")
       .doc(characterId)
       .get(),
-  ]).then(([systemDoc, deckDoc, characterDoc]) => {
-    const system = systemDoc.data() as CardSystem;
-    const deck = deckDoc.data() as Deck;
-    const character = characterDoc.data() as Character;
-    console.log("Data Fetched");
-    const sheets = new ServerStyleSheets();
-    const markup = renderToString(
-      sheets.collect(
-        <ThemeProvider
-          theme={createMuiTheme({
-            palette: {
-              type: dark ? "dark" : "light",
-            },
-          })}
-        >
-          <CssBaseline />
-          <div style={{ paddingLeft: "1em", paddingRight: "1em" }}>
-            <CharacterSheetRenderer
-              wikiMode={false}
-              allowCharacterEdit={true}
-              characterRawData={character}
-              deckData={deck}
-              systemData={system}
-              loading={false}
-              error={undefined}
-              deckError={undefined}
-              systemError={undefined}
-              updateCharacter={() => {}}
-              updateError={undefined}
-              role={role}
-            />
-          </div>
-        </ThemeProvider>
-      )
-    );
-    const css = sheets.toString();
-    return `<html>
+    role,
+    dark,
+  ]);
+}
+
+export type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
+
+export function getMarkup([
+  systemDoc,
+  deckDoc,
+  characterDoc,
+  role,
+  dark,
+]: ThenArg<ReturnType<typeof getMarkupData>>) {
+  console.log(systemDoc, deckDoc, characterDoc);
+  const system = systemDoc.data() as CardSystem;
+  const deck = deckDoc.data() as Deck;
+  const character = characterDoc.data() as Character;
+  const sheets = new ServerStyleSheets();
+  const markup = renderToString(
+    sheets.collect(
+      <ThemeProvider
+        theme={createMuiTheme({
+          palette: {
+            type: dark ? "dark" : "light",
+          },
+        })}
+      >
+        <CssBaseline />
+        <div style={{ paddingLeft: "1em", paddingRight: "1em" }}>
+          <CharacterSheetRenderer
+            wikiMode={false}
+            allowCharacterEdit={true}
+            characterRawData={character}
+            deckData={deck}
+            systemData={system}
+            loading={false}
+            error={undefined}
+            deckError={undefined}
+            systemError={undefined}
+            updateCharacter={() => {}}
+            updateError={undefined}
+            role={role}
+          />
+        </div>
+      </ThemeProvider>
+    )
+  );
+  const css = sheets.toString();
+  return `<html>
         <head>
             <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
             <style>${css}</style>
         </head>
         <body>${markup}</body>
       </html>`;
-  });
 }

@@ -1,9 +1,9 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import { PlayerCharacter } from "../../src/firestore/characters";
-import { Character } from "../../src/firestore/wiki/character";
-import { Deck } from "../../src/firestore/wiki/deck";
-import { getCheckboxesRoles } from "./util";
+import { PlayerCharacter } from "../../../src/firestore/characters";
+import { Character } from "../../../src/firestore/wiki/character";
+import { Deck } from "../../../src/firestore/wiki/deck";
+import { getCheckboxesRoles, getDeckInfoObject } from "../util";
 
 const firestore = admin.firestore();
 
@@ -49,6 +49,43 @@ const firestore = admin.firestore();
 //   return box;
 // }
 
+function getCards(
+  systemId: string,
+  deckId: string | undefined,
+  afterId?: string
+): Promise<ReturnType<typeof getDeckInfoObject>[]> {
+  if (!deckId) {
+    return Promise.resolve([]);
+  }
+  let query = firestore
+    .collection("wiki")
+    .doc(systemId)
+    .collection("deck")
+    .doc(deckId)
+    .collection("card")
+    .orderBy(admin.firestore.FieldPath.documentId())
+    .where("removed", "==", false);
+  if (afterId) {
+    query = query.startAfter(afterId);
+  }
+  return query
+    .limit(70)
+    .get()
+    .then((snap) => {
+      if (snap.docs.length) {
+        return Promise.resolve(
+          snap.docs.length >= 70
+            ? getCards(systemId, deckId, snap.docs[snap.docs.length - 1].id)
+            : []
+        ).then((next) => {
+          return [getDeckInfoObject(snap), ...next];
+        });
+      } else {
+        return [];
+      }
+    });
+}
+
 function addMetadata(data: PlayerCharacter) {
   const boxes: any = {};
 
@@ -87,6 +124,7 @@ function addMetadata(data: PlayerCharacter) {
   let deck = Promise.resolve<null | Deck>(null);
   let checkboxes = Promise.resolve<null | any>(null);
   let roles = Promise.resolve<null | any>(null);
+  let cards = Promise.resolve<null | any>(null);
   if (data.systemId && data.characterId && data.deckId) {
     wikiCharacter = firestore
       .collection("wiki")
@@ -104,6 +142,62 @@ function addMetadata(data: PlayerCharacter) {
       .doc(data.deckId)
       .get()
       .then((v) => v.data() as Deck);
+    cards = Promise.all([
+      data.deckOne
+        ? firestore
+            .collection("wiki")
+            .doc(data.systemId)
+            .collection("deck")
+            .doc(data.deckOne)
+            .get()
+            .then((v) => v.data() as Deck)
+        : null,
+      getCards(data.systemId, data.deckOne),
+      data.deckTwo
+        ? firestore
+            .collection("wiki")
+            .doc(data.systemId)
+            .collection("deck")
+            .doc(data.deckTwo)
+            .get()
+            .then((v) => v.data() as Deck)
+        : null,
+      getCards(data.systemId, data.deckTwo),
+      data.deckThree
+        ? firestore
+            .collection("wiki")
+            .doc(data.systemId)
+            .collection("deck")
+            .doc(data.deckThree)
+            .get()
+            .then((v) => v.data() as Deck)
+        : null,
+      getCards(data.systemId, data.deckThree),
+    ]).then(([deckOne, cardsOne, deckTwo, cardsTwo, deckThree, cardsThree]) => {
+      return {
+        one: {
+          deck: {
+            ...deckOne,
+            id: data.deckOne,
+          },
+          cards: cardsOne,
+        },
+        two: {
+          deck: {
+            ...deckTwo,
+            id: data.deckTwo,
+          },
+          cards: cardsTwo,
+        },
+        three: {
+          deck: {
+            ...deckThree,
+            id: data.deckThree,
+          },
+          cards: cardsThree,
+        },
+      };
+    });
     const chkRole = getCheckboxesRoles(
       data.systemId,
       data.deckId,
@@ -113,12 +207,13 @@ function addMetadata(data: PlayerCharacter) {
     checkboxes = chkRole.then((v) => v.checkboxes);
     roles = chkRole.then((v) => v.roles);
   }
-  return Promise.all([wikiCharacter, deck, checkboxes, roles]).then(
-    ([wikiCharacter, deck, checkboxes, roles]) => ({
+  return Promise.all([wikiCharacter, deck, checkboxes, roles, cards]).then(
+    ([wikiCharacter, deck, checkboxes, roles, cards]) => ({
       wikiCharacter,
       deck,
       checkboxes,
       roles,
+      cards,
       characterData: data,
     })
   );
