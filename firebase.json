@@ -27,6 +27,10 @@
         "function": "adventure"
       },
       {
+        "source": "/f/createDeckImage/**",
+        "function": "createDeckImage"
+      },
+      {
         "source": "/f/adventuresList/**",
         "function": "adventuresList"
       },

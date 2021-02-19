@@ -180,6 +180,7 @@ function addMetadata(data: PlayerCharacter) {
             ...deckOne,
             id: data.deckOne,
           },
+          selected: data.cardsOne?.map((v) => v.card) || [],
           cards: cardsOne,
         },
         two: {
@@ -187,6 +188,7 @@ function addMetadata(data: PlayerCharacter) {
             ...deckTwo,
             id: data.deckTwo,
           },
+          selected: data.cardsTwo?.map((v) => v.card) || [],
           cards: cardsTwo,
         },
         three: {
@@ -194,6 +196,7 @@ function addMetadata(data: PlayerCharacter) {
             ...deckThree,
             id: data.deckThree,
           },
+          selected: data.cardsThree?.map((v) => v.card) || [],
           cards: cardsThree,
         },
       };

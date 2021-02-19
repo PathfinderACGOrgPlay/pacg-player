@@ -110,11 +110,18 @@ function CardList({
   const cardsByAdventure =
     adventures &&
     new Map(adventures.map((v) => [v, [] as { id: string; data: CardType }[]]));
+  const cardsById = new Map();
   cardsObjects?.forEach((v) => {
-    cardsByAdventure!.get(v.data.subDeck || "Other")!.push(v);
+    const newCount =
+      (v.data.count || 1) - cards.filter((w) => w.card === v.id).length;
+    if (newCount > 0) {
+      cardsByAdventure!
+        .get(v.data.subDeck || "Other")!
+        .push({ ...v, data: { ...v.data, count: newCount } });
+    }
+    cardsById.set(v.id, v);
   });
 
-  // TODO: Make the deck dropdown have the correct number of cards
   return (
     <>
       <br />
@@ -125,6 +132,7 @@ function CardList({
         setValue={updateDeck}
         id={`deck-${number}-select`}
         label={`Deck ${number}`}
+        options={{ isClassDeck: true }}
       />
       <br />
       <br />
@@ -175,12 +183,27 @@ function CardList({
                     <MenuItem value="">&nbsp;</MenuItem>
                     {cardsByAdventure
                       ?.get(v.deck)
-                      ?.sort((a, b) =>
+                      ?.filter((w) => w.id !== v.card)
+                      .concat(
+                        cardsById.get(v.card)
+                          ? [
+                              {
+                                data: {
+                                  ...cardsById.get(v.card).data,
+                                  count: 1,
+                                },
+                                id: v.card,
+                              },
+                            ]
+                          : []
+                      )
+                      .sort((a, b) =>
                         (a.data.name || "").localeCompare(b.data.name || "")
                       )
                       .map((v) => (
                         <MenuItem value={v.id} key={v.id}>
                           {v.data.name}
+                          {(v.data.count || 0) > 1 ? ` (${v.data.count})` : ""}
                         </MenuItem>
                       ))}
                   </Select>

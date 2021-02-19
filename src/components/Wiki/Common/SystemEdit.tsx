@@ -7,6 +7,9 @@ import {
   Switch,
   CardContent,
   Card,
+  Grid,
+  FormGroup,
+  Checkbox,
 } from "@material-ui/core";
 import {
   CardSystem,
@@ -46,32 +49,56 @@ function DeckField({
   return (
     <>
       <ErrorDisplay error={updateError} label="Failed to update deck" />
-      <TextField
-        fullWidth
-        id={`deck-name-${systemId}-${deckId}`}
-        label="Deck Name"
-        {...useDebounceUpdate(
-          deck.name,
-          (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
-          (name) => update({ ...deck, name })
-        )}
-        InputProps={{
-          endAdornment: removeRecoverAdornment(deck.removed, () =>
-            update({ ...deck, removed: !deck.removed })
-          ),
-        }}
-      />
-      <UploadField
-        fullWidth
-        id={`logo-${systemId}-${deckId}`}
-        label="System Logo"
-        potentialFilePath={`/system/${systemId}/deck/logo/${deckId}`}
-        {...useDebounceUpdate(
-          deck.logo,
-          (logo: string) => logo,
-          (logo) => update({ ...deck, logo })
-        )}
-      />
+      <Grid container spacing={2}>
+        <Grid item lg={4}>
+          <TextField
+            fullWidth
+            id={`deck-name-${systemId}-${deckId}`}
+            label="Deck Name"
+            {...useDebounceUpdate(
+              deck.name,
+              (e: ChangeEvent<HTMLInputElement>) => e.currentTarget.value,
+              (name) => update({ ...deck, name })
+            )}
+            InputProps={{
+              endAdornment: removeRecoverAdornment(deck.removed, () =>
+                update({ ...deck, removed: !deck.removed })
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item lg={4}>
+          <UploadField
+            fullWidth
+            id={`logo-${systemId}-${deckId}`}
+            label="System Logo"
+            potentialFilePath={`/system/${systemId}/deck/logo/${deckId}`}
+            {...useDebounceUpdate(
+              deck.logo,
+              (logo: string) => logo,
+              (logo) => update({ ...deck, logo })
+            )}
+          />
+        </Grid>
+        <Grid item lg={4}>
+          <FormGroup className="checkbox" row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name={`isClassDeck-${systemId}-${deckId}`}
+                  checked={deck.isClassDeck || false}
+                  onChange={() =>
+                    update({ ...deck, isClassDeck: !deck.isClassDeck })
+                  }
+                />
+              }
+              label="Is Class Deck"
+              labelPlacement="end"
+            />
+          </FormGroup>
+        </Grid>
+      </Grid>
+      <br />
     </>
   );
 }

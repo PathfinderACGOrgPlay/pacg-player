@@ -11,6 +11,7 @@ export function DeckDropdown({
   value,
   setValue,
   label = "Deck",
+  options,
 }: {
   id: string;
   systemId: string;
@@ -18,8 +19,9 @@ export function DeckDropdown({
   value: string;
   label?: string;
   setValue(value: string): void;
+  options?: { deleted?: boolean; withCards?: boolean; isClassDeck?: boolean };
 }) {
-  const [decks, loading, error] = useDecks(systemId);
+  const [decks, loading, error] = useDecks(systemId, options);
 
   useEffect(() => {
     if (

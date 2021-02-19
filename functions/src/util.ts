@@ -105,7 +105,7 @@ export function getDeckInfoObject(snapshot: admin.firestore.QuerySnapshot) {
     count: length,
     info: snapshot.docs.map((v) => {
       const { traits, count, type, subDeck, name } = v.data();
-      return { traits, count, type, subDeck, name };
+      return { id: v.id, traits, count, type, subDeck, name };
     }),
   };
 }

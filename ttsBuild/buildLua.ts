@@ -21,12 +21,7 @@ function runCmd(command: string, options: ExecOptions) {
 
 export function buildLua(cwd: string, file: string, debug?: boolean) {
   return bundle(cwd + "/" + file, {
-    paths: [
-      process.cwd() + "/tts/?",
-      process.cwd() + "/tts/?.lua",
-      process.cwd() + "/?",
-      process.cwd() + "/?.lua",
-    ],
+    paths: [process.cwd() + "/tts/?", process.cwd() + "/tts/?.lua"],
   });
 }
 
