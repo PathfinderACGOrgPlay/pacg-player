@@ -3,7 +3,7 @@ import { db } from "../../firebase";
 import firebase from "firebase/app";
 import { useCallback, useState } from "react";
 
-const collection = (systemId: string, deckId: string) =>
+const collection = (systemId?: string, deckId?: string) =>
   systemId && deckId
     ? db
         ?.collection("wiki")
@@ -28,7 +28,11 @@ export interface Card {
   flavor?: string; // TODO
 }
 
-export function useCards(systemId: string, deckId: string, deleted?: boolean) {
+export function useCards(
+  systemId?: string,
+  deckId?: string,
+  deleted?: boolean
+) {
   const start = collection(systemId, deckId);
 
   return useCollection(

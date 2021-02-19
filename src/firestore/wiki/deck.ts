@@ -3,7 +3,7 @@ import { db } from "../../firebase";
 import firebase from "firebase/app";
 import { useCallback, useState } from "react";
 
-const collection = (systemId: string) =>
+const collection = (systemId?: string) =>
   systemId
     ? db?.collection("wiki").doc(systemId).collection("deck")
     : undefined;
@@ -14,11 +14,12 @@ export interface Deck {
   subDecks: string[];
   removed: boolean;
   hasCards: boolean;
+  isClassDeck?: boolean;
 }
 
 export function useDecks(
   systemId: string,
-  options?: { deleted?: boolean; withCards?: boolean }
+  options?: { deleted?: boolean; withCards?: boolean; isClassDeck?: boolean }
 ) {
   let coll:
     | firebase.firestore.CollectionReference
@@ -29,6 +30,9 @@ export function useDecks(
   }
   if (options?.withCards) {
     coll = coll?.where("hasCards", "==", true);
+  }
+  if (options?.isClassDeck !== undefined) {
+    coll = coll?.where("isClassDeck", "==", options.isClassDeck);
   }
   return useCollection(coll?.orderBy("name")) as [
     firebase.firestore.QuerySnapshot<Deck> | undefined,
@@ -65,7 +69,7 @@ export function useUpdateDeck(
   ];
 }
 
-export function useDeck(systemId: string, id: string) {
+export function useDeck(systemId?: string, id?: string) {
   return useDocument(id ? collection(systemId)?.doc(id) : null) as [
     firebase.firestore.DocumentSnapshot<Deck> | undefined,
     boolean,

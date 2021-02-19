@@ -190,14 +190,10 @@ export const createDeckImage = functions
     });
   });
 
-export const getDeckInfo = functions
-  .runWith({
-    memory: "2GB",
-  })
-  .https.onRequest((request, response) => {
-    getSnapshot(request, response).then(([snapshot, _]) => {
-      if (snapshot) {
-        response.status(200).end(JSON.stringify(getDeckInfoObject(snapshot)));
-      }
-    });
+export const getDeckInfo = functions.https.onRequest((request, response) => {
+  getSnapshot(request, response).then(([snapshot, _]) => {
+    if (snapshot) {
+      response.status(200).end(JSON.stringify(getDeckInfoObject(snapshot)));
+    }
   });
+});
