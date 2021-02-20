@@ -2,22 +2,23 @@ local CharacterSheet = {}
 local urls = require("common/urls")
 
 function CharacterSheet.init(data)
+    ---@type TTSPlayerDeck
     local saveData = JSON.decode(data.save_state)
     local obj = getObjectFromGUID(data.guid)
 
     if(saveData.characterData == nil) then
-        saveData.characterData = {}
+        saveData.characterData = --[[---@type any]]{}
     end
 
     local cust = obj.getCustomObject()
-    local imageUrl = urls.createCharacterImage(saveData.characterData.systemId, saveData.characterData.deckId, saveData.characterData.characterId, saveData.characterData.role)
-    if(cust.image != imageUrl) then
+    local imageUrl = urls.createCharacterImage(saveData.characterData)
+    if cust.image ~= imageUrl then
         cust.image = imageUrl
         cust.image_bottom = imageUrl
         cust.image_secondary = imageUrl
         local state = obj.script_state
         obj.setCustomObject(cust)
-        WebRequest.get(config.functionsBaseUrl .. "/createCharacterData/" .. saveData.characterData.systemId .. "/" .. saveData.characterData.deckId .. "/" .. saveData.characterData.characterId .. "/" .. role .. "/", function(result)
+        WebRequest.get(urls.createCharacterData(saveData.characterData), function(result)
             if(result.is_done) then
                 local oldState = JSON.decode(state)
                 local newData = JSON.decode(result.text)
@@ -77,6 +78,7 @@ function CharacterSheet.removeButtons(data)
 end
 
 function shallowCopy(t)
+  ---@type any
   local t2 = {}
   for k,v in ipairs(t) do
     t2[k] = v
@@ -167,7 +169,7 @@ function addCheckboxes(guid, data, characterData, path)
             local fn = guid .. '_CharacterSheet_checkbox_click_'..table.concat(newPath, ",")
             local label = getCheckLabel(newPath, characterData);
             _G[fn] = function(obj, player_color, alt)
-                setValue(obj, newPath, characterData)
+                setValue(obj, newPath, characterData, characterData)
             end
             obj.createButton({
                 click_function = fn,

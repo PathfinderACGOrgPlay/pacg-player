@@ -1,6 +1,10 @@
 import puppeteer from "puppeteer";
 import { getMarkup, getMarkupData } from "./character/getMarkup";
 import * as admin from "firebase-admin";
+import crypto from "crypto";
+
+type CoordDictionaryItem = { x: number; y: number } | CoordDictionary;
+type CoordDictionary = { [key: string]: CoordDictionaryItem };
 
 export function getCheckboxesRoles(
   systemId: string,
@@ -48,7 +52,7 @@ export function getCheckboxesRoles(
               rect.y,
               rect.width,
               rect.height,
-            ];
+            ] as const;
           });
         })
         .then((roles) => ({ ...data, roles }))
@@ -57,16 +61,16 @@ export function getCheckboxesRoles(
       return data.browser.close().then(() => ({
         checkboxes: data.checkboxes.reduce((acc, v) => {
           const idx = (v[0] as string).split("-");
-          const ele = idx.reduce((acc2, w) => {
-            if (!acc2[w]) {
-              acc2[w] = {};
+          const ele = idx.reduce((acc2: CoordDictionaryItem, w) => {
+            if (!(acc2 as CoordDictionary)[w]) {
+              (acc2 as CoordDictionary)[w] = {};
             }
-            return acc2[w];
-          }, acc);
+            return (acc2 as CoordDictionary)[w];
+          }, acc) as { x: number; y: number };
           ele.x = (v[1] as number) + (v[3] as number) / 2;
           ele.y = (v[2] as number) + (v[4] as number) / 2;
           return acc;
-        }, {} as any),
+        }, {} as CoordDictionary),
         roles: data.roles.map((v) => {
           return {
             value: v[0],
@@ -74,7 +78,7 @@ export function getCheckboxesRoles(
             x: (v[2] as number) + (v[4] as number) / 2,
             y: (v[3] as number) + (v[5] as number) / 2,
           };
-        }, {} as any),
+        }),
       }));
     });
 }
@@ -100,6 +104,7 @@ export function getDimensions(count: number) {
 export function getDeckInfoObject(snapshot: admin.firestore.QuerySnapshot) {
   const data = snapshot.docs.map((v) => v.data());
   const length = data.length;
+  const dataHash = getHash(JSON.stringify(data.map((v) => v.url)));
   return {
     ...getDimensions(length),
     count: length,
@@ -107,5 +112,12 @@ export function getDeckInfoObject(snapshot: admin.firestore.QuerySnapshot) {
       const { traits, count, type, subDeck, name } = v.data();
       return { id: v.id, traits, count, type, subDeck, name };
     }),
+    hash: dataHash,
   };
+}
+
+export function getHash(data: string) {
+  const md5sum = crypto.createHash("md5");
+  md5sum.update(data);
+  return md5sum.digest("hex");
 }

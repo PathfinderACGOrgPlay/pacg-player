@@ -15,30 +15,25 @@ export function Players({
   const [table, , error] = useTable(id);
 
   const tableData = table?.data();
-  const [
-    characters,
-    charactersLoading,
-    charactersError,
-  ] = useAccountCharacterList(
-    useEqualsMemo(() => tableData?.characters || [], [tableData])
-  );
+
   return (
     <div>
       {error ? <div>Error While Loading Table: {error.message}</div> : null}
-      {charactersError ? (
-        <div>Error While Loading Characters: {charactersError.message}</div>
-      ) : null}
-      {charactersLoading ? <CircularProgress /> : null}
       <AppBar position="static" color="default">
-        <Tabs value={characterId}>
-          {characters?.map((v) => (
-            <CharacterTab key={v.id} id={v.id} data={v.data()} />
+        <Tabs value={tableData?.characters?.indexOf(characterId)}>
+          {tableData?.characters?.map((v) => (
+            <CharacterTab
+              key={v}
+              tableId={id}
+              subPath="players"
+              characterId={v}
+            />
           ))}
         </Tabs>
       </AppBar>
-      {characters?.[0] ? (
+      {tableData?.characters?.[0] ? (
         <Route exact path={`/tables/${id}/players`}>
-          <Redirect to={`/tables/${id}/players/${characters[0].id}`} />
+          <Redirect to={`/tables/${id}/players/${tableData?.characters[0]}`} />
         </Route>
       ) : null}
       {characterId ? (

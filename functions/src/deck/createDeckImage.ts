@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import {
   getDeckInfoObject,
   getDimensions,
+  getHash,
   getPathParams,
   isNumeric,
 } from "../util";
@@ -10,7 +11,6 @@ import * as admin from "firebase-admin";
 import * as express from "express";
 import { https } from "firebase-functions";
 import axios from "axios";
-import crypto from "crypto";
 
 const firestore = admin.firestore();
 
@@ -88,15 +88,9 @@ export const createDeckImage = functions
             return Array.isArray(image) ? image[0] : image;
           })
         ).then((urls) => {
-          const md5sum = crypto.createHash("md5");
-          md5sum.update(JSON.stringify(urls));
-          const dataHash = md5sum.digest("hex");
+          const dataHash = getHash(JSON.stringify(urls));
           if (dataHash !== hash) {
-            if (hash) {
-              response.redirect("../" + dataHash);
-            } else {
-              response.redirect(dataHash);
-            }
+            response.redirect(dataHash);
             return Promise.resolve();
           } else {
             return Promise.all(

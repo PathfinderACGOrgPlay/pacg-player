@@ -1,16 +1,3 @@
-var nodeExternals = require("webpack-node-externals");
-
-const allowlist = [
-  /react/,
-  /^@material-ui/,
-  /^@babel/,
-  /^scheduler$/,
-  /^popper[.]js$/,
-  /^dnd-core$/,
-  /^redux$/,
-  /^symbol-observable$/,
-];
-
 module.exports = {
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
   entry: "./src/index.ts",
@@ -34,17 +21,17 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
   },
-  externals: [
-    nodeExternals({
-      modulesDir: "../node_modules",
-      allowlist,
-    }),
-    nodeExternals({
-      modulesDir: "node_modules",
-      allowlist,
-    }),
-    { sharp: "commonjs sharp" },
-  ],
+  externals: {
+    "@google-cloud/firestore": "commonjs @google-cloud/firestore",
+    "firebase-admin": "commonjs firebase-admin",
+    "firebase-functions": "commonjs firebase-functions",
+    jsondiffpatch: "commonjs jsondiffpatch",
+    "node-html-to-image": "commonjs node-html-to-image",
+    "prop-types": "commonjs prop-types",
+    puppeteer: "commonjs puppeteer",
+    "source-map-support": "commonjs source-map-support",
+    sharp: "commonjs sharp",
+  },
   plugins: [
     new (require("webpack").DefinePlugin)({
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),

@@ -45,13 +45,6 @@ export function Chronicles({
   const createSheet = useCreateChronicleSheet(characterId, id);
 
   const tableData = table?.data();
-  const [
-    characters,
-    charactersLoading,
-    charactersError,
-  ] = useAccountCharacterList(
-    useEqualsMemo(() => tableData?.characters || [], [tableData])
-  );
 
   const availableChronicles = tableData?.characters.reduce((acc, v) => {
     acc[v] = [
@@ -76,20 +69,24 @@ export function Chronicles({
           Error While Loading Chronicles: {tableChroniclesError.message}
         </div>
       ) : null}
-      {charactersError ? (
-        <div>Error While Loading Characters: {charactersError.message}</div>
-      ) : null}
-      {loadTableChronicles || charactersLoading ? <CircularProgress /> : null}
+      {loadTableChronicles ? <CircularProgress /> : null}
       <AppBar position="static" color="default">
-        <Tabs value={characterId}>
-          {characters?.map((v) => (
-            <CharacterTab key={v.id} id={v.id} data={v.data()} />
+        <Tabs value={tableData?.characters?.indexOf(characterId)}>
+          {tableData?.characters?.map((v) => (
+            <CharacterTab
+              key={v}
+              tableId={id}
+              subPath="chronicles"
+              characterId={v}
+            />
           ))}
         </Tabs>
       </AppBar>
-      {characters?.[0] ? (
+      {tableData?.characters?.[0] ? (
         <Route exact path={`/tables/${id}/chronicles`}>
-          <Redirect to={`/tables/${id}/chronicles/${characters[0].id}`} />
+          <Redirect
+            to={`/tables/${id}/chronicles/${tableData?.characters[0]}`}
+          />
         </Route>
       ) : null}
       {tableChronicles?.docs
