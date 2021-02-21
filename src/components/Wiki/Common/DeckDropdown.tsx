@@ -11,13 +11,15 @@ export function DeckDropdown({
   value,
   setValue,
   label = "Deck",
+  disabled,
   options,
 }: {
   id: string;
-  systemId: string;
+  systemId?: string;
   fullWidth?: boolean;
   value: string;
   label?: string;
+  disabled?: boolean;
   setValue(value: string): void;
   options?: { deleted?: boolean; withCards?: boolean; isClassDeck?: boolean };
 }) {
@@ -39,6 +41,7 @@ export function DeckDropdown({
     <>
       <ErrorDisplay label="Failed to load decks" error={error} />
       <TextField
+        disabled={disabled}
         id={id}
         fullWidth={fullWidth}
         label={label}

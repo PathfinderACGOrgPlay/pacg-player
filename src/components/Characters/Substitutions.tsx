@@ -73,40 +73,43 @@ function DeckSubstitutions({
       {deckLoading || cardListLoading ? <CircularProgress /> : null}
       <Typography>{deckData?.data()?.name}&nbsp;</Typography>
       <hr />
-      {cardList?.docs
-        .map((v) => ({ id: v.id, data: v.data() }))
-        .filter(
-          (v) => coreCards?.has(v.data.name) ?? crimsonCards?.has(v.data.name)
-        )
-        .map((v) => {
-          return (
-            <Grid container>
-              <Grid item lg={6}>
-                <Typography>{v.data.name}</Typography>
-              </Grid>
-              <Grid item lg={6}>
-                <Select
-                  value={""}
-                  onChange={(e) => update({ ...values })}
-                  disabled={disabled}
-                  className={styles.fill}
-                >
-                  <MenuItem value="">&nbsp;</MenuItem>
-                  {coreCards?.has(v.data.name) ? (
-                    <MenuItem value={`Core`} key={`Core`}>
-                      Core Set
-                    </MenuItem>
-                  ) : null}
-                  {crimsonCards?.has(v.data.name) ? (
-                    <MenuItem value={`Core`} key={`Core`}>
-                      Curse of the Crimson Throne
-                    </MenuItem>
-                  ) : null}
-                </Select>
-              </Grid>
-            </Grid>
-          );
-        })}
+      {deckData?.data()?.isCoreSet
+        ? "This deck is based on the Core Set or Curse of the Crimson Throne"
+        : cardList?.docs
+            .map((v) => ({ id: v.id, data: v.data() }))
+            .filter(
+              (v) =>
+                coreCards?.has(v.data.name) ?? crimsonCards?.has(v.data.name)
+            )
+            .map((v) => {
+              return (
+                <Grid container>
+                  <Grid item lg={6}>
+                    <Typography>{v.data.name}</Typography>
+                  </Grid>
+                  <Grid item lg={6}>
+                    <Select
+                      value={""}
+                      onChange={(e) => update({ ...values })}
+                      disabled={disabled}
+                      className={styles.fill}
+                    >
+                      <MenuItem value="">&nbsp;</MenuItem>
+                      {coreCards?.has(v.data.name) ? (
+                        <MenuItem value={`Core`} key={`Core`}>
+                          Core Set
+                        </MenuItem>
+                      ) : null}
+                      {crimsonCards?.has(v.data.name) ? (
+                        <MenuItem value={`Core`} key={`Core`}>
+                          Curse of the Crimson Throne
+                        </MenuItem>
+                      ) : null}
+                    </Select>
+                  </Grid>
+                </Grid>
+              );
+            })}
     </div>
   );
 }
@@ -156,6 +159,14 @@ export function Substitutions({
 
   return (
     <Container>
+      <br />
+      Per the Pathfinder® Adventure Card Society™ Guide "if your Class Deck box
+      contains boons that have the same name as boons in the <i>Core Set</i> or
+      the <i>Curse of the Crimson Throne Adventure Path</i>, in between
+      scenarios, you may replace these boons with the Core or Curse versions."
+      If you would like to make those substitutions use this tab
+      <br />
+      <br />
       <ErrorDisplay error={updateError} label="Failed to update substitions" />
       <ErrorDisplay error={coreCardListError} label="Failed to Core Set" />
       <ErrorDisplay

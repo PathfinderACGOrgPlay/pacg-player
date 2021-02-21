@@ -17,13 +17,14 @@ import {
 import { useUser } from "../../firebase";
 import { Link as RouterLink } from "react-router-dom";
 import { useRouteMatch } from "react-router-dom";
-import { Cards } from "./Cards";
+import { ClassDecks } from "./ClassDecks";
 import { Substitutions } from "./Substitutions";
 import { Settings } from "./Settings";
 import { Chronicles } from "./Chronicles";
 import { useDebounceUpdate } from "../Common/useDebounceUpdate";
 import { Sheet } from "./Sheet";
 import { ErrorDisplay } from "../Common/ErrorDisplay";
+import { AdditionalCards } from "./AddtionalCards";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -57,8 +58,9 @@ export function CharacterDisplay({
 }) {
   const tabs = [
     { to: `${baseRoute}/${id}/sheet`, label: "Character Sheet" },
-    { to: `${baseRoute}/${id}/cards`, label: "Cards" },
+    { to: `${baseRoute}/${id}/classDecks`, label: "Class Decks" },
     { to: `${baseRoute}/${id}/substitutions`, label: "Substitutions" },
+    { to: `${baseRoute}/${id}/additionalCards`, label: "Additional Cards" },
     { to: `${baseRoute}/${id}/chronicles`, label: "Chronicle Sheets" },
     { to: `${baseRoute}/${id}/settings`, label: "Settings" },
   ];
@@ -156,10 +158,14 @@ export function CharacterDisplay({
           <Redirect to={`${baseRoute}/${id}/sheet`} />
         </Route>
         <Route path={`${baseRoute}/:id/sheet`} component={Sheet} />
-        <Route path={`${baseRoute}/:id/cards`} component={Cards} />
+        <Route path={`${baseRoute}/:id/classDecks`} component={ClassDecks} />
         <Route
           path={`${baseRoute}/:id/substitutions`}
           component={Substitutions}
+        />
+        <Route
+          path={`${baseRoute}/:id/additionalCards`}
+          component={AdditionalCards}
         />
         <Route path={`${baseRoute}/:id/chronicles`} component={Chronicles} />
         <Route path={`${baseRoute}/:id/settings`} component={Settings} />

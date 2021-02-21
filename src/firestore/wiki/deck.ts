@@ -15,10 +15,11 @@ export interface Deck {
   removed: boolean;
   hasCards: boolean;
   isClassDeck?: boolean;
+  isCoreSet?: boolean;
 }
 
 export function useDecks(
-  systemId: string,
+  systemId?: string,
   options?: { deleted?: boolean; withCards?: boolean; isClassDeck?: boolean }
 ) {
   let coll:
