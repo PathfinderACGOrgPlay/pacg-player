@@ -37,6 +37,11 @@ export interface PlayerCharacter {
   handSize?: number;
   role?: number;
   dark?: boolean;
+  additionalCards?: {
+    deckId?: string;
+    subDeck?: string;
+    cardId?: string;
+  }[];
 }
 
 export function useAccountCharacters() {

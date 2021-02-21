@@ -95,6 +95,19 @@ function DeckField({
               label="Is Class Deck"
               labelPlacement="end"
             />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name={`isCoreSet-${systemId}-${deckId}`}
+                  checked={deck.isCoreSet || false}
+                  onChange={() =>
+                    update({ ...deck, isCoreSet: !deck.isCoreSet })
+                  }
+                />
+              }
+              label="Is Core Set / Curse of the Crimson Throne Cards"
+              labelPlacement="end"
+            />
           </FormGroup>
         </Grid>
       </Grid>
