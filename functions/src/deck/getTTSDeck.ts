@@ -185,7 +185,13 @@ function addMetadata(data: PlayerCharacter) {
     checkboxes,
     roles,
     cards,
-    getMarkupData(data.systemId!, data.deckId!, data.characterId!, -1, false),
+    getMarkupData(
+      data.systemId!,
+      data.deckId!,
+      data.characterId!,
+      -1,
+      !!data.dark
+    ),
   ])
     .then((items) => {
       return Promise.all([

@@ -5,11 +5,19 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   makeStyles,
+  Switch,
   TextField,
 } from "@material-ui/core";
-import { useDeleteAccountCharacter } from "../../firestore/characters";
+import {
+  useAccountCharacter,
+  useDeleteAccountCharacter,
+  useUpdateAccountCharacter,
+} from "../../firestore/characters";
 import { RouteComponentProps, useHistory } from "react-router";
+import { ToggleButton } from "@material-ui/lab";
+import { ErrorDisplay } from "../Common/ErrorDisplay";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -25,7 +33,10 @@ export function Settings({
     params: { id },
   },
 }: RouteComponentProps<{ id: string }>) {
+  const [character] = useAccountCharacter(id);
+  const data = character?.data();
   const [deleteAccountCharacter, deleteError] = useDeleteAccountCharacter(id);
+  const [updateAccountCharacter, updateError] = useUpdateAccountCharacter(id);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const styles = useStyles();
   const history = useHistory();
@@ -33,7 +44,8 @@ export function Settings({
   return (
     <div>
       <br />
-      {deleteError ? <div>{deleteError}</div> : null}
+      <ErrorDisplay label="Failed to update character" error={updateError} />
+      <ErrorDisplay label="Failed to delete character" error={deleteError} />
       <TextField
         id="deck-id"
         label="Deck Id"
@@ -44,6 +56,24 @@ export function Settings({
           readOnly: true,
         }}
       />
+      <FormControlLabel
+        control={
+          <Switch
+            checked={data?.dark ?? false}
+            onChange={() => {
+              if (data) {
+                updateAccountCharacter({
+                  ...data,
+                  dark: !data.dark,
+                });
+              }
+            }}
+            name="gilad"
+          />
+        }
+        label="Dark mode in TTS"
+      />
+      <br />
       <Button
         variant="contained"
         color="primary"

@@ -45,6 +45,7 @@
 ---@field role number
 ---@field baseHash string
 ---@field roleHashes string[]
+---@field dark boolean | nil
 
 ---@shape PowerText
 ---@field optional boolean

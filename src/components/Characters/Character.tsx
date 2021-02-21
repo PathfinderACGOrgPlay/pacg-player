@@ -23,6 +23,7 @@ import { Settings } from "./Settings";
 import { Chronicles } from "./Chronicles";
 import { useDebounceUpdate } from "../Common/useDebounceUpdate";
 import { Sheet } from "./Sheet";
+import { ErrorDisplay } from "../Common/ErrorDisplay";
 
 const useStyles = makeStyles((theme) => ({
   fill: {
@@ -105,8 +106,8 @@ export function CharacterDisplay({
 
   return (
     <Container>
-      {updateError ? <div>{updateError}</div> : null}
-      {error ? <div>Failed to read decks: {error.message}</div> : null}
+      <ErrorDisplay label="Character Update" error={updateError} />
+      <ErrorDisplay label="Failed to read decks" error={error} />
       <form noValidate autoComplete="off">
         <br className="chroniclePrintHide" />
         {loading ? null : (

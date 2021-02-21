@@ -12,7 +12,11 @@ function urls.createCharacterImage(character)
     if role == -1 then
         hash = character.baseHash
     end
-    return config.functionsBaseUrl .. "/createCharacterImage/" .. character.systemId .. "/" .. character.deckId .. "/" .. character.characterId .. "/" .. role .. "/" .. hash
+    local dark = ""
+    if character.dark then
+        dark = "?dark=1"
+    end
+    return config.functionsBaseUrl .. "/createCharacterImage/" .. character.systemId .. "/" .. character.deckId .. "/" .. character.characterId .. "/" .. role .. "/" .. hash .. dark
 end
 
 ---@param systemId string

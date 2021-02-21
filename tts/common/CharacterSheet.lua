@@ -48,16 +48,15 @@ function CharacterSheet.init(data)
             position = {
                 x = ((v.x / 1280) * 2) - 1,
                 z = ((v.y / 1280) * 2) - 1,
-                y = 0.1
+                y = 0
             },
-            width = 800,
-            height = 200,
+            width = 1200,
+            height = 300,
             scale = {
                 x = 0.1,
                 y = 0.1,
                 z = 0.1,
-            },
-            label = v.label
+            }
         })
     end
 end
@@ -86,7 +85,7 @@ function shallowCopy(t)
   return t2
 end
 
-local check = "✓"
+local check = "■"
 function getCheckboxCheckLabel(val, cmpVal)
     if (val == nil) then
         return ""
@@ -159,6 +158,11 @@ function addCheckboxes(guid, data, characterData, path)
     if(characterData.powers == nil) then
         characterData.powers = {}
     end
+    ---@type table
+    local fontColor = {0,0,0}
+    if(characterData.dark) then
+        fontColor = {1,1,1}
+    end
     local obj = getObjectFromGUID(guid)
     for i, v in pairs(data) do
         local newPath = shallowCopy(path)
@@ -176,15 +180,34 @@ function addCheckboxes(guid, data, characterData, path)
                 position = {
                     x = ((v.x / 1280) * 2) - 1,
                     z = ((v.y / 1280) * 2) - 1,
-                    y = 0.1
+                    y = 0
                 },
                 scale = {
                     x = 0.2,
                     y = 0.2,
                     z = 0.2,
                 },
-                label = label
+                font_color = fontColor
             })
+            if label ~= "" then
+                obj.createButton({
+                    click_function = fn,
+                    position = {
+                        x = ((v.x / 1280) * 2) - 1,
+                        z = ((v.y / 1280) * 2) - 1.002,
+                        y = 0.1
+                    },
+                    scale = {
+                        x = 0.2,
+                        y = 0.2,
+                        z = 0.2,
+                    },
+                    width = 0,
+                    height = 0,
+                    label = label,
+                    font_color = fontColor
+                })
+            end
         end
     end
 end
