@@ -2,12 +2,15 @@ import * as functions from "firebase-functions";
 // @ts-ignore
 import nodeHtmlToImage from "node-html-to-image";
 import { getMarkup, getMarkupData, ThenArg } from "./getMarkup";
-import { getCheckboxesRoles, getPathParams, isNumeric } from "../util";
-import crypto from "crypto";
+import { getCheckboxesRoles, getHash, getPathParams, isNumeric } from "../util";
 
-function toJson([systemDoc, deckDoc, characterDoc, role, dark]: ThenArg<
-  ReturnType<typeof getMarkupData>
->) {
+export function markupDataToJson([
+  systemDoc,
+  deckDoc,
+  characterDoc,
+  role,
+  dark,
+]: ThenArg<ReturnType<typeof getMarkupData>>) {
   return JSON.stringify([
     systemDoc.data(),
     deckDoc.data(),
@@ -44,15 +47,9 @@ export const createCharacterImage = functions
       parseInt(role, 10),
       !!request.query.dark
     ).then((data) => {
-      const md5sum = crypto.createHash("md5");
-      md5sum.update(toJson(data));
-      const dataHash = md5sum.digest("hex");
+      const dataHash = getHash(markupDataToJson(data));
       if (dataHash !== hash) {
-        if (hash) {
-          response.redirect("../" + dataHash);
-        } else {
-          response.redirect(dataHash);
-        }
+        response.redirect(dataHash);
         return Promise.resolve();
       } else {
         const html = getMarkup(data);

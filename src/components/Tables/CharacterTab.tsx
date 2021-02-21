@@ -1,27 +1,33 @@
-import { PlayerCharacter } from "../../firestore/characters";
+import {
+  PlayerCharacter,
+  useAccountCharacter,
+} from "../../firestore/characters";
 import { useCharacter } from "../../firestore/wiki/character";
 import { Tab } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
 
 export function CharacterTab({
-  id,
-  data,
+  tableId,
+  subPath,
+  characterId,
 }: {
-  id: string;
-  data: PlayerCharacter | undefined;
+  tableId: string;
+  subPath: string;
+  characterId: string;
 }) {
+  const [pcRecord] = useAccountCharacter(characterId);
+  const pcData = pcRecord?.data();
   const [characterRecord] = useCharacter(
-    data?.systemId || "",
-    data?.deckId || "",
-    data?.characterId || ""
+    pcData?.systemId || "",
+    pcData?.deckId || "",
+    pcData?.characterId || ""
   );
   const characterData = characterRecord?.data();
   return (
     <Tab
       component={RouterLink}
-      to={`/tables/${id}/chronicles/${id}`}
-      value={id}
+      to={`/tables/${tableId}/${subPath}/${characterId}`}
       label={characterData?.name}
     />
   );

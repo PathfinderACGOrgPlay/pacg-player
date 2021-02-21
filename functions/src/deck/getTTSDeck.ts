@@ -3,7 +3,9 @@ import * as functions from "firebase-functions";
 import { PlayerCharacter } from "../../../src/firestore/characters";
 import { Character } from "../../../src/firestore/wiki/character";
 import { Deck } from "../../../src/firestore/wiki/deck";
-import { getCheckboxesRoles, getDeckInfoObject } from "../util";
+import { getCheckboxesRoles, getDeckInfoObject, getHash } from "../util";
+import { getMarkupData } from "../character/getMarkup";
+import { markupDataToJson } from "../character";
 
 const firestore = admin.firestore();
 
@@ -87,39 +89,6 @@ function getCards(
 }
 
 function addMetadata(data: PlayerCharacter) {
-  const boxes: any = {};
-
-  // if (data.deckOne && (classDecks as any)[data.deckOne]) {
-  //   boxes[data.deckOne] = (classDecks as any)[data.deckOne];
-  //
-  //   if (data.deckOneSubstitutions) {
-  //     boxes[data.deckOne] = substituteCards(
-  //       boxes[data.deckOne],
-  //       data.deckOneSubstitutions
-  //     );
-  //   }
-  // }
-  // if (data.deckTwo && (classDecks as any)[data.deckTwo]) {
-  //   boxes[data.deckTwo] = (classDecks as any)[data.deckTwo];
-  //
-  //   if (data.deckTwoSubstitutions) {
-  //     boxes[data.deckTwo] = substituteCards(
-  //       boxes[data.deckTwo],
-  //       data.deckTwoSubstitutions
-  //     );
-  //   }
-  // }
-  // if (data.deckThree && (classDecks as any)[data.deckThree]) {
-  //   boxes[data.deckThree] = (classDecks as any)[data.deckThree];
-  //
-  //   if (data.deckThreeSubstitutions) {
-  //     boxes[data.deckThree] = substituteCards(
-  //       boxes[data.deckThree],
-  //       data.deckThreeSubstitutions
-  //     );
-  //   }
-  // }
-
   let wikiCharacter = Promise.resolve<null | Character>(null);
   let deck = Promise.resolve<null | Deck>(null);
   let checkboxes = Promise.resolve<null | any>(null);
@@ -210,16 +179,52 @@ function addMetadata(data: PlayerCharacter) {
     checkboxes = chkRole.then((v) => v.checkboxes);
     roles = chkRole.then((v) => v.roles);
   }
-  return Promise.all([wikiCharacter, deck, checkboxes, roles, cards]).then(
-    ([wikiCharacter, deck, checkboxes, roles, cards]) => ({
-      wikiCharacter,
-      deck,
-      checkboxes,
-      roles,
-      cards,
-      characterData: data,
+  return Promise.all([
+    wikiCharacter,
+    deck,
+    checkboxes,
+    roles,
+    cards,
+    getMarkupData(data.systemId!, data.deckId!, data.characterId!, -1, false),
+  ])
+    .then((items) => {
+      return Promise.all([
+        ...items,
+        Promise.all(
+          items[0]!.roles.map((_, i) =>
+            getMarkupData(
+              data.systemId!,
+              data.deckId!,
+              data.characterId!,
+              i,
+              false
+            )
+          )
+        ),
+      ]);
     })
-  );
+    .then(
+      ([
+        wikiCharacter,
+        deck,
+        checkboxes,
+        roles,
+        cards,
+        baseMarkupData,
+        rolesMarkupData,
+      ]) => ({
+        wikiCharacter,
+        deck,
+        checkboxes,
+        roles,
+        cards,
+        characterData: {
+          ...data,
+          baseHash: getHash(markupDataToJson(baseMarkupData)),
+          roleHashes: rolesMarkupData.map((v) => getHash(markupDataToJson(v))),
+        },
+      })
+    );
 }
 
 export const getTTSDeck = functions.https.onRequest((request, response) => {

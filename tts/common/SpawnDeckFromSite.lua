@@ -29,14 +29,15 @@ function random(length)
     math.randomseed(os.time())
 
     if length > 0 then
-        return random(length - 1) .. charset[math.random(1, #charset)]
+        return random(length - 1) .. (--[[---@type {[number]: string}]]charset)[math.random(1, #charset)]
     else
         return ""
     end
 end
 
+---@param data TTSPlayerDeck
 function getCharacterSheet(data)
-    local imageUrl = urls.createCharacterImage(data.characterData.systemId, data.characterData.deckId, data.characterData.characterId, data.characterData.role)
+    local imageUrl = urls.createCharacterImage(data.characterData)
     return {
         Autoraise = true,
         ColorDiffuse = {
@@ -170,11 +171,14 @@ local function hasAndRemoveValue (tab, val)
     return false
 end
 
+---@param systemId string
+---@param deckInfo CardsListItem
+---@param playerDeck table[]
 function getDeck(systemId, deckInfo, playerDeck)
-    local cards = {}
+    local cards = --[[---@type {[string]: table[]}]]{}
     for i, v in ipairs(deckInfo.cards) do
         local asset = Decker.Asset(
-                urls.createDeckImage(systemId, deckInfo.deck.id, i - 1),
+                urls.createDeckImage(systemId, deckInfo.deck.id, i - 1, deckInfo.deck.hash),
                 "http://cloud-3.steamusercontent.com/ugc/1021699804504901512/B0CCF926C6D9A53A30E1713DB7AD8738859E3E86/",
                 {
                     width = v.width,
@@ -277,9 +281,10 @@ function SpawnDeckFromSiteBuildDeck(result)
             print("Error while loading deck: " .. result.error)
             running = false
         else
+            ---@type TTSPlayerDeck
             data = JSON.decode(result.text)
-            if (data.error) then
-                print("Error while loading deck: " .. data.error)
+            if ((--[[---@type Error]] data).error) then
+                print("Error while loading deck: " .. (--[[---@type Error]] data).error)
                 running = false
             else
                 local boxes = {}
@@ -311,9 +316,15 @@ function SpawnDeckFromSiteBuildDeck(result)
                     table.insert(results, getDeck(data.characterData.systemId, data.cards.three, playerDeck))
                 end
 
-                table.insert(results, Decker.Deck(playerDeck, {
-                    name = ""
-                }).data)
+                if(#playerDeck > 0) then
+                    if(#playerDeck == 1) then
+                        table.insert(decks, playerDeck[1].data)
+                    else
+                        table.insert(decks, Decker.Deck(playerDeck, {
+                            name = ""
+                        }).data)
+                    end
+                end
 
                 spawnObjectJSON({
                     json = JSON.encode(makeBag("", results)),
