@@ -11,6 +11,7 @@ import { DeckDropdown } from "../Wiki/Common/DeckDropdown";
 import { CharacterDropdown } from "../Wiki/Common/CharacterDropdown";
 import { CharacterSheet } from "../Common/CharacterSheet";
 import { SystemDropdown } from "../Wiki/Common/SystemDropdown";
+import { ErrorDisplay } from "../Common/ErrorDisplay";
 
 export function Sheet({
   match: {
@@ -38,7 +39,7 @@ export function Sheet({
   return (
     <>
       <br />
-      {updateError ? <div>{updateError}</div> : null}
+      <ErrorDisplay label="Failed to update character" error={updateError} />
       <Grid container spacing={3}>
         <Grid item lg={4}>
           <SystemDropdown

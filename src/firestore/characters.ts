@@ -36,6 +36,7 @@ export interface PlayerCharacter {
   powers?: { [key: string]: boolean };
   handSize?: number;
   role?: number;
+  dark?: boolean;
 }
 
 export function useAccountCharacters() {

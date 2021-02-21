@@ -26,7 +26,7 @@ export const createCharacterImage = functions
   })
   .https.onRequest((request, response) => {
     const [systemId, deckId, characterId, role, hash] = getPathParams(
-      request.path
+      request.path.split("?")[0]
     );
     if (!systemId) {
       response.status(400).end("System Id is required");
@@ -49,7 +49,7 @@ export const createCharacterImage = functions
     ).then((data) => {
       const dataHash = getHash(markupDataToJson(data));
       if (dataHash !== hash) {
-        response.redirect(dataHash);
+        response.redirect(`${dataHash}?dark=${request.query.dark ?? ""}`);
         return Promise.resolve();
       } else {
         const html = getMarkup(data);
