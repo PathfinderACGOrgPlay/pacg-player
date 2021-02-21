@@ -47,7 +47,6 @@ export function getMarkup([
   role,
   dark,
 ]: ThenArg<ReturnType<typeof getMarkupData>>) {
-  console.log(systemDoc, deckDoc, characterDoc);
   const system = systemDoc.data() as CardSystem;
   const deck = deckDoc.data() as Deck;
   const character = characterDoc.data() as Character;

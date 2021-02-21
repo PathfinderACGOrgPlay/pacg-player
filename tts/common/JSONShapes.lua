@@ -91,15 +91,7 @@
 ---@shape Character
 ---@field name string
 ---@field description string | nil
----@field removed boolean
 ---@field image string
----@field traits string[]
----@field skills {[string]: Skill}
----@field base Powers
----@field roles NamedPowers[]
----@field cardsList {[string]: CardListRow}
----@field favoredCardType string | nil
----@field extraCardsText {[string]: string}
 
 ---@shape CardsListDeck
 ---@field id string
@@ -145,8 +137,8 @@
 
 ---@shape TTSPlayerDeck
 ---@field characterData CharacterData
----@field wikiCharacter Character
+---@field wikiCharacter Character | nil
 ---@field cards CardsList
----@field deck Deck
+---@field deck Deck | nil
 ---@field checkboxes CoordDictionary
 ---@field roles Role[]

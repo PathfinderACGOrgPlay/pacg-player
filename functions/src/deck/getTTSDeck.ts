@@ -219,8 +219,14 @@ function addMetadata(data: PlayerCharacter) {
         baseMarkupData,
         rolesMarkupData,
       ]) => ({
-        wikiCharacter,
-        deck,
+        wikiCharacter: wikiCharacter && {
+          name: wikiCharacter.name,
+          description: wikiCharacter.description,
+          image: wikiCharacter.image,
+        },
+        deck: deck && {
+          name: deck.name,
+        },
         checkboxes,
         roles,
         cards,
@@ -233,27 +239,41 @@ function addMetadata(data: PlayerCharacter) {
     );
 }
 
-export const getTTSDeck = functions.https.onRequest((request, response) => {
-  firestore
-    .collection("account_characters")
-    .doc(request.path.substr(1))
-    .get()
-    .then((doc: any) => {
-      if (!(doc && doc.exists)) {
-        return response.status(404).send({ error: "Unable to find the deck" });
-      }
-      return addMetadata(doc.data()).then((v) => response.status(200).send(v));
-    })
-    .catch((err: any) => {
-      console.error(err);
-      return response
-        .status(404)
-        .send({ error: "Unable to retrieve the deck" });
-    });
-});
+export const getTTSDeck = functions
+  .runWith({
+    memory: "512MB",
+  })
+  .https.onRequest((request, response) => {
+    console.log(JSON.stringify(request.path));
+    const splitPath = request.path.split("/");
+    firestore
+      .collection("account_characters")
+      .doc(splitPath[splitPath.length - 1])
+      .get()
+      .then((doc: any) => {
+        if (!(doc && doc.exists)) {
+          return response
+            .status(404)
+            .send({ error: "Unable to find the deck" });
+        }
+        return addMetadata(doc.data()).then((v) => {
+          console.log(process.memoryUsage());
+          return response.status(200).send(v);
+        });
+      })
+      .catch((err: any) => {
+        console.error(err.stack);
+        return response
+          .status(404)
+          .send({ error: "Unable to retrieve the deck" });
+      });
+  });
 
-export const getTTSDeckByOrgPlayId = functions.https.onRequest(
-  (request, response) => {
+export const getTTSDeckByOrgPlayId = functions
+  .runWith({
+    memory: "512MB",
+  })
+  .https.onRequest((request, response) => {
     firestore
       .collection("account_characters")
       .where("orgPlayId", "==", request.path.substr(1))
@@ -268,10 +288,9 @@ export const getTTSDeckByOrgPlayId = functions.https.onRequest(
         return addMetadata(data).then((v) => response.status(200).send(v));
       })
       .catch((err: any) => {
-        console.error(err);
+        console.error(err.stack);
         return response
           .status(404)
           .send({ error: "Unable to retrieve the deck" });
       });
-  }
-);
+  });
