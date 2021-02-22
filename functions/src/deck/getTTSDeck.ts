@@ -1,55 +1,13 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import { PlayerCharacter } from "../../../src/firestore/characters";
-import { Character } from "../../../src/firestore/wiki/character";
-import { Deck } from "../../../src/firestore/wiki/deck";
+import type { PlayerCharacter } from "../../../src/firestore/characters";
+import type { Character } from "../../../src/firestore/wiki/character";
+import type { Deck } from "../../../src/firestore/wiki/deck";
 import { getCheckboxesRoles, getDeckInfoObject, getHash } from "../util";
 import { getMarkupData } from "../character/getMarkup";
 import { markupDataToJson } from "../character";
 
 const firestore = admin.firestore();
-
-// function substituteCards(
-//   box: typeof classDecks["Alchemist Class Deck"],
-//   subs: { [adventure: string]: { [cards: string]: [string, string] } }
-// ) {
-//   const insertedImages: any = {};
-//   box.Decks = { ...box.Decks };
-//   box.DeckImages = { ...box.DeckImages };
-//   (Object.keys(subs) as (keyof typeof box.Decks)[]).forEach((adventureName) => {
-//     if (box.Decks[adventureName]) {
-//       box.Decks[adventureName] = { ...box.Decks[adventureName] } as any;
-//       const deck = box.Decks[adventureName] as any;
-//       Object.keys(subs[adventureName]).forEach((card) => {
-//         if (deck[card]) {
-//           const source =
-//             subs[adventureName][card][0] === "Core"
-//               ? adventures["Core Set"]
-//               : adventures["Curse of the Crimson Throne"];
-//           const sourceCard = (source.Decks as any)[
-//             subs[adventureName][card][1]
-//           ]?.[card];
-//
-//           if (sourceCard) {
-//             const sourceDeck = (source.DeckImages as any)[sourceCard.deck];
-//
-//             if (!insertedImages[sourceDeck.url]) {
-//               const newId = Object.keys(box.DeckImages).length.toString();
-//               (box.DeckImages as any)[newId] = sourceDeck;
-//               insertedImages[sourceDeck.url] = newId;
-//             }
-//
-//             deck[card].Description = deck[card].Description + ", Substitution";
-//             deck[card].deck = insertedImages[sourceDeck.url];
-//             deck[card].x = sourceCard.x;
-//             deck[card].y = sourceCard.y;
-//           }
-//         }
-//       });
-//     }
-//   });
-//   return box;
-// }
 
 function getCards(
   systemId: string,
@@ -89,16 +47,80 @@ function getCards(
 }
 
 interface DeckInfoData {
-  decks: {
-    [systemId: string]: Promise<System>;
+  cards: {
+    [systemId: string]: {
+      [deckId: string]: {
+        [afterId: string]: Promise<admin.firestore.QuerySnapshot>;
+      };
+    };
+  };
+  deckInfo: {
+    [systemId: string]: {
+      [deckId: string]: {
+        [afterId: string]: ReturnType<typeof getDeckInfoObject>;
+      };
+    };
   };
 }
+
 function getCardDeckInfo(
   systemId: string,
-  deckId: string,
+  deckId: string | undefined,
   cardId: string,
-  deckInfoData: DeckInfoData
-) {}
+  deckInfoData: DeckInfoData,
+  afterId?: string
+): Promise<ReturnType<typeof getDeckInfoObject> | null> {
+  if (!deckId) {
+    return Promise.resolve(null);
+  }
+  if (!deckInfoData.cards[systemId]) {
+    deckInfoData.cards[systemId] = {};
+    deckInfoData.deckInfo[systemId] = {};
+  }
+  if (!deckInfoData.cards[systemId][deckId]) {
+    deckInfoData.cards[systemId][deckId] = {};
+    deckInfoData.deckInfo[systemId][deckId] = {};
+  }
+  if (!deckInfoData.cards[systemId][deckId][afterId ?? ""]) {
+    let query = firestore
+      .collection("wiki")
+      .doc(systemId)
+      .collection("deck")
+      .doc(deckId)
+      .collection("card")
+      .orderBy(admin.firestore.FieldPath.documentId())
+      .where("removed", "==", false);
+    if (afterId) {
+      query = query.startAfter(afterId);
+    }
+    deckInfoData.cards[systemId][deckId][afterId ?? ""] = query.limit(70).get();
+  }
+  return deckInfoData.cards[systemId][deckId][afterId ?? ""].then((snap) => {
+    if (snap.docs.find((v) => v.id === cardId)) {
+      if (!deckInfoData.deckInfo[systemId][deckId][afterId ?? ""]) {
+        deckInfoData.deckInfo[systemId][deckId][
+          afterId ?? ""
+        ] = getDeckInfoObject(snap);
+      }
+      return deckInfoData.deckInfo[systemId][deckId][afterId ?? ""];
+    }
+    if (snap.docs.length) {
+      return Promise.resolve(
+        snap.docs.length >= 70
+          ? getCardDeckInfo(
+              systemId,
+              deckId,
+              cardId,
+              deckInfoData,
+              snap.docs[snap.docs.length - 1].id
+            )
+          : null
+      );
+    } else {
+      return null;
+    }
+  });
+}
 
 function addMetadata(data: PlayerCharacter) {
   let wikiCharacter = Promise.resolve<null | Character>(null);
@@ -191,26 +213,35 @@ function addMetadata(data: PlayerCharacter) {
     checkboxes = chkRole.then((v) => v.checkboxes);
     roles = chkRole.then((v) => v.roles);
   }
-  const deckInfoData: DeckInfoData = {};
+  const deckInfoData: DeckInfoData = { deckInfo: {}, cards: {} };
   const additionalCards = Promise.all([
     data.deckOneSubstitutions
       ? Promise.all(
           Object.values(data.deckOneSubstitutions).map((v) =>
-            getCardDeckInfo(data.systemId!, v[0], v[1], deckInfoData)
+            Promise.all([
+              ...v,
+              getCardDeckInfo(data.systemId!, v[0], v[1], deckInfoData),
+            ])
           )
         )
       : Promise.resolve([]),
     data.deckTwoSubstitutions
       ? Promise.all(
           Object.values(data.deckTwoSubstitutions).map((v) =>
-            getCardDeckInfo(data.systemId!, v[0], v[1], deckInfoData)
+            Promise.all([
+              ...v,
+              getCardDeckInfo(data.systemId!, v[0], v[1], deckInfoData),
+            ])
           )
         )
       : Promise.resolve([]),
     data.deckThreeSubstitutions
       ? Promise.all(
           Object.values(data.deckThreeSubstitutions).map((v) =>
-            getCardDeckInfo(data.systemId!, v[0], v[1], deckInfoData)
+            Promise.all([
+              ...v,
+              getCardDeckInfo(data.systemId!, v[0], v[1], deckInfoData),
+            ])
           )
         )
       : Promise.resolve([]),
@@ -268,6 +299,9 @@ function addMetadata(data: PlayerCharacter) {
         checkboxes,
         roles,
         cards,
+        deckOneSubstitutions: data.deckOneSubstitutions,
+        deckTwoSubstitutions: data.deckTwoSubstitutions,
+        deckThreeSubstitutions: data.deckThreeSubstitutions,
         characterData: data && {
           systemId: data.systemId,
           deckId: data.deckId,
@@ -275,9 +309,38 @@ function addMetadata(data: PlayerCharacter) {
           baseHash: getHash(markupDataToJson(baseMarkupData)),
           roleHashes: rolesMarkupData.map((v) => getHash(markupDataToJson(v))),
         },
-        additionalCards: additionalCards.reduce((acc, v) => {
-          return acc;
-        }, {} as { [key: string]: string }),
+        additionalCards: additionalCards.reduce(
+          (acc, v) =>
+            v.reduce((acc, [deckId, cardId, deckInfo]) => {
+              if (deckInfo) {
+                if (!acc[deckId]) {
+                  acc[deckId] = {};
+                }
+                const index = deckInfo.info.findIndex((v) => v.id === cardId);
+                acc[deckId][cardId] = {
+                  width: deckInfo.width,
+                  height: deckInfo.height,
+                  count: deckInfo.count,
+                  index,
+                  hash: deckInfo.hash,
+                  info: deckInfo.info[index],
+                };
+              }
+              return acc;
+            }, acc),
+          {} as {
+            [key: string]: {
+              [key: string]: {
+                width: number;
+                height: number;
+                count: number;
+                index: number;
+                hash: string;
+                info: ReturnType<typeof getDeckInfoObject>["info"][0];
+              };
+            };
+          }
+        ),
       })
     );
 }
