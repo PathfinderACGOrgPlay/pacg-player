@@ -118,7 +118,7 @@ new Promise((res, rej) => {
           );
           watch.on("add", run);
           watch.on("change", run);
-          run();
+          setTimeout(run);
         }, 100);
       }
     });
