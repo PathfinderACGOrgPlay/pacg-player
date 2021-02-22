@@ -55,7 +55,7 @@
     "createConfigFile": "ts-node --project ttsBuild/tsconfig.json ttsBuild/createConfigFile.ts",
     "downloadWiki": "gsutil -m rsync -d -r -x firebase-export-metadata.json gs://adventurecard-game.appspot.com/firebase-export/ ./firebase-export",
     "exportWiki": "gcloud firestore export --project adventurecard-game gs://adventurecard-game.appspot.com/firebase-export --collection-ids=wiki,wiki_character,deck,card",
-    "importWiki": "gcloud firestore export --project test-pacs-player-site gs://adventurecard-game.appspot.com/firebase-export --collection-ids=wiki,wiki_character,deck,card",
+    "importWiki": "gcloud firestore import --project test-pacs-player-site gs://adventurecard-game.appspot.com/firebase-export --collection-ids=wiki,wiki_character,deck,card",
     "importOldCards": "set TS_NODE_PROJECT=dbUtil/tsconfig.json&& node -r ts-node/register --max-old-space-size=10240 dbUtil/importOldCards.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
