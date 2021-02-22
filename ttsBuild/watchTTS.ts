@@ -17,7 +17,7 @@ new Promise((res, rej) => {
 })
   .then((v) => v.toString())
   .then((version) => {
-    if (version.indexOf("microsoft")) {
+    if (version.indexOf("microsoft") !== -1) {
       return new Promise((res, rej) => {
         exec(
           "ipconfig.exe | awk -v a=$WSL_ip_line '{if (NR==a) print $NF}' | tr -d \"\\r\"",

@@ -1,4 +1,4 @@
-require("common/Decker")
+require("common/Decker") 
 local SpawnDeckFromSite = require("common/SpawnDeckFromSite")
 local config = require("gameCore/config")
 local id = ""
