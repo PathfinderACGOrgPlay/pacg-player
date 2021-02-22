@@ -88,6 +88,18 @@ function getCards(
     });
 }
 
+interface DeckInfoData {
+  decks: {
+    [systemId: string]: Promise<System>;
+  };
+}
+function getCardDeckInfo(
+  systemId: string,
+  deckId: string,
+  cardId: string,
+  deckInfoData: DeckInfoData
+) {}
+
 function addMetadata(data: PlayerCharacter) {
   let wikiCharacter = Promise.resolve<null | Character>(null);
   let deck = Promise.resolve<null | Deck>(null);
@@ -179,12 +191,37 @@ function addMetadata(data: PlayerCharacter) {
     checkboxes = chkRole.then((v) => v.checkboxes);
     roles = chkRole.then((v) => v.roles);
   }
+  const deckInfoData: DeckInfoData = {};
+  const additionalCards = Promise.all([
+    data.deckOneSubstitutions
+      ? Promise.all(
+          Object.values(data.deckOneSubstitutions).map((v) =>
+            getCardDeckInfo(data.systemId!, v[0], v[1], deckInfoData)
+          )
+        )
+      : Promise.resolve([]),
+    data.deckTwoSubstitutions
+      ? Promise.all(
+          Object.values(data.deckTwoSubstitutions).map((v) =>
+            getCardDeckInfo(data.systemId!, v[0], v[1], deckInfoData)
+          )
+        )
+      : Promise.resolve([]),
+    data.deckThreeSubstitutions
+      ? Promise.all(
+          Object.values(data.deckThreeSubstitutions).map((v) =>
+            getCardDeckInfo(data.systemId!, v[0], v[1], deckInfoData)
+          )
+        )
+      : Promise.resolve([]),
+  ]);
   return Promise.all([
     wikiCharacter,
     deck,
     checkboxes,
     roles,
     cards,
+    additionalCards,
     getMarkupData(
       data.systemId!,
       data.deckId!,
@@ -192,7 +229,7 @@ function addMetadata(data: PlayerCharacter) {
       -1,
       !!data.dark
     ),
-  ])
+  ] as const)
     .then((items) => {
       return Promise.all([
         ...items,
@@ -207,7 +244,7 @@ function addMetadata(data: PlayerCharacter) {
             )
           )
         ),
-      ]);
+      ] as const);
     })
     .then(
       ([
@@ -216,6 +253,7 @@ function addMetadata(data: PlayerCharacter) {
         checkboxes,
         roles,
         cards,
+        additionalCards,
         baseMarkupData,
         rolesMarkupData,
       ]) => ({
@@ -230,11 +268,16 @@ function addMetadata(data: PlayerCharacter) {
         checkboxes,
         roles,
         cards,
-        characterData: {
-          ...data,
+        characterData: data && {
+          systemId: data.systemId,
+          deckId: data.deckId,
+          characterId: data.characterId,
           baseHash: getHash(markupDataToJson(baseMarkupData)),
           roleHashes: rolesMarkupData.map((v) => getHash(markupDataToJson(v))),
         },
+        additionalCards: additionalCards.reduce((acc, v) => {
+          return acc;
+        }, {} as { [key: string]: string }),
       })
     );
 }
@@ -244,7 +287,6 @@ export const getTTSDeck = functions
     memory: "512MB",
   })
   .https.onRequest((request, response) => {
-    console.log(JSON.stringify(request.path));
     const splitPath = request.path.split("/");
     firestore
       .collection("account_characters")

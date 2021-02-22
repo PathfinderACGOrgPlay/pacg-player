@@ -1,6 +1,4 @@
 import React from "react";
-import classDecks from "../../oldData/classDecks.json";
-import adventures from "../../oldData/adventures.json";
 import { RouteComponentProps } from "react-router";
 import {
   PlayerCharacter,
@@ -28,20 +26,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const core = adventures["Core Set"];
-const crimson = adventures["Curse of the Crimson Throne"];
-
-function findCards(set: typeof core | typeof crimson, cardName: string) {
-  return (Object.keys(set.Decks) as (keyof typeof set.Decks)[]).reduce(
-    (acc, v) => {
-      if ((set.Decks[v] as any)[cardName]) {
-        acc.push(v);
-      }
-      return acc;
-    },
-    [] as string[]
-  );
-}
+const coreId = "lK9Llwwx3lmNZ7gdLp54";
+const crimsonId = "Mimv8s5r0BxJMUIxOpfQ";
 
 function DeckSubstitutions({
   coreCards,
@@ -56,10 +42,8 @@ function DeckSubstitutions({
   crimsonCards?: Map<string, string>;
   systemId?: string;
   deck?: string;
-  values: { [adventure: string]: { [cards: string]: [string, string] } };
-  update(values: {
-    [adventure: string]: { [cards: string]: [string, string] };
-  }): void;
+  values: { [cardId: string]: [string, string] };
+  update(values: { [cardId: string]: [string, string] }): void;
   disabled: boolean;
 }) {
   const [deckData, deckLoading, deckError] = useDeck(systemId, deck);
@@ -89,19 +73,43 @@ function DeckSubstitutions({
                   </Grid>
                   <Grid item lg={6}>
                     <Select
-                      value={""}
-                      onChange={(e) => update({ ...values })}
+                      value={JSON.stringify(values[v.id])}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          update({
+                            ...values,
+                            [v.id]: JSON.parse(e.target.value as string) as [
+                              string,
+                              string
+                            ],
+                          });
+                        } else {
+                          const newValues = { ...values };
+                          delete newValues[v.id];
+                          update(newValues);
+                        }
+                      }}
                       disabled={disabled}
                       className={styles.fill}
                     >
-                      <MenuItem value="">&nbsp;</MenuItem>
+                      <MenuItem value={undefined}>&nbsp;</MenuItem>
                       {coreCards?.has(v.data.name) ? (
-                        <MenuItem value={`Core`} key={`Core`}>
+                        <MenuItem
+                          value={JSON.stringify([
+                            coreId,
+                            coreCards!.get(v.data.name)!,
+                          ])}
+                        >
                           Core Set
                         </MenuItem>
                       ) : null}
                       {crimsonCards?.has(v.data.name) ? (
-                        <MenuItem value={`Core`} key={`Core`}>
+                        <MenuItem
+                          value={JSON.stringify([
+                            crimsonId,
+                            crimsonCards!.get(v.data.name)!,
+                          ])}
+                        >
                           Curse of the Crimson Throne
                         </MenuItem>
                       ) : null}
@@ -126,7 +134,7 @@ export function Substitutions({
   const disabled = user?.uid !== data?.uid;
   const [coreCardList, coreCardListLoading, coreCardListError] = useCards(
     data?.systemId,
-    "lK9Llwwx3lmNZ7gdLp54"
+    coreId
   );
   const coreCards = coreCardList?.docs.reduce((acc, v) => {
     acc.set(v.data().name, v.id);
@@ -139,7 +147,7 @@ export function Substitutions({
     crimsonCardList,
     crimsonCardListLoading,
     crimsonCardListError,
-  ] = useCards(data?.systemId, "Mimv8s5r0BxJMUIxOpfQ");
+  ] = useCards(data?.systemId, crimsonId);
   const crimsonCards = crimsonCardList?.docs.reduce((acc, v) => {
     acc.set(v.data().name, v.id);
     if (v.data().name === "Shortsword") {
