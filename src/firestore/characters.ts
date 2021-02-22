@@ -17,17 +17,17 @@ export interface PlayerCharacter {
   orgPlayId?: string;
   deckOne?: string;
   deckOneSubstitutions?: {
-    [adventure: string]: { [cards: string]: [string, string] };
+    [cards: string]: [string, string];
   };
   cardsOne?: Card[];
   deckTwo?: string;
   deckTwoSubstitutions?: {
-    [adventure: string]: { [cards: string]: [string, string] };
+    [cards: string]: [string, string];
   };
   cardsTwo?: Card[];
   deckThree?: string;
   deckThreeSubstitutions?: {
-    [adventure: string]: { [cards: string]: [string, string] };
+    [cards: string]: [string, string];
   };
   cardsThree?: Card[];
   chronicleOrder?: string[];

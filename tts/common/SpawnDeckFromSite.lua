@@ -273,7 +273,6 @@ function makeBag(name, contents)
     }
 end
 
--- TODO: Handle substitutions
 function SpawnDeckFromSiteBuildDeck(result)
     if (result.is_done) then
         self.setColorTint({ 1, 1, 1 })

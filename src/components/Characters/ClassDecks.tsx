@@ -1,10 +1,8 @@
-import React, { Fragment, ReactElement, useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import {
   CircularProgress,
-  Container,
   FormControl,
   Grid,
-  InputLabel,
   makeStyles,
   MenuItem,
   Select,
@@ -17,10 +15,9 @@ import {
   useAccountCharacter,
   useUpdateAccountCharacter,
 } from "../../firestore/characters";
-import classDecks from "../../oldData/classDecks.json";
 import { useUser } from "../../firebase";
 import { DeckDropdown } from "../Wiki/Common/DeckDropdown";
-import { useCards, Card as CardType } from "../../firestore/wiki/card";
+import { useCards } from "../../firestore/wiki/card";
 import { useAdventureInfo } from "./common";
 
 const useStyles = makeStyles((theme) => ({
