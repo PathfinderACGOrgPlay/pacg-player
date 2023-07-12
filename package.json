@@ -23,7 +23,7 @@
     "firebase": "^8.2.7",
     "firebase-tools": "^9.4.0",
     "luabundle": "^1.6.0",
-    "luxon": "^1.24.1",
+    "luxon": "^1.28.1",
     "react": "^17.0.1",
     "react-dnd": "^11.1.3",
     "react-dnd-html5-backend": "^11.1.3",
